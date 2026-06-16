@@ -13,12 +13,13 @@ type Props = {
  * Tinted by the item's accent, with grain + a faint grid for depth. Looks
  * designed, never broken — real imagery can be layered in later.
  */
-export function CoverPanel({ accent = "#d49a2e", index, label, className, children }: Props) {
+// eslint-disable-next-line @typescript-eslint/no-unused-vars
+export function CoverPanel({ accent, index, label, className, children }: Props) {
   return (
     <div
-      className={cn("relative overflow-hidden bg-card", className)}
+      className={cn("relative overflow-hidden bg-card rounded-[var(--radius)]", className)}
       style={{
-        backgroundImage: `radial-gradient(110% 110% at 72% 18%, ${accent}40, transparent 55%), linear-gradient(155deg, ${accent}1f, #f5f5f5 72%)`,
+        backgroundImage: `radial-gradient(110% 110% at 72% 18%, rgba(10,10,10,0.10), transparent 55%), linear-gradient(155deg, rgba(10,10,10,0.06), var(--color-card) 72%)`,
       }}
     >
       <div
