@@ -19,7 +19,7 @@ export function WorkCard({ item, index, large, className }: Props) {
       data-cursor
       className={cn("group block", className)}
     >
-      <div className="relative overflow-hidden rounded-[10px] border border-line">
+      <div className="surface-card surface-card--hover relative overflow-hidden">
         <CoverPanel
           accent={item.accent}
           index={index}
