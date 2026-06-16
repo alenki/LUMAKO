@@ -14,15 +14,15 @@ export function Footer() {
   return (
     <footer className="footer-glow relative overflow-hidden text-[#fafafa]">
       <div className="container-x section relative">
-        <div className="grid gap-[var(--vw-6)] md:grid-cols-12">
+        <div className="grid-12">
           {/* Newsletter / pitch */}
-          <div className="md:col-span-5">
+          <div className="col-span-12 md:col-span-4">
             <Eyebrow className="!text-white/60">Stay in the light</Eyebrow>
             <p className="mt-6 font-display text-[length:var(--text-3xl)] font-light leading-tight text-balance text-[#fafafa]">
               Occasional notes on craft, product, and the web — no noise.
             </p>
             <form
-              className="mt-8 flex max-w-md items-center gap-3 border-b border-white/20 pb-3 focus-within:border-accent"
+              className="mt-8 flex max-w-md items-center gap-3 border-b border-white/20 pb-3 focus-within:border-white/50"
               onSubmit={(e) => {
                 e.preventDefault();
                 if (email.includes("@")) setDone(true);
@@ -40,14 +40,14 @@ export function Footer() {
               <button
                 type="submit"
                 data-cursor
-                className="shrink-0 label-caps !text-[#fafafa] transition-colors hover:!text-accent"
+                className="shrink-0 label-caps !text-[#fafafa] transition-colors hover:!text-white"
               >
                 {done ? "Joined ✓" : "Join →"}
               </button>
             </form>
           </div>
 
-          <div className="md:col-span-2 md:col-start-8">
+          <div className="col-span-6 md:col-span-2 md:col-start-6">
             <FooterCol title="Pages">
               {site.nav.map((item) => (
                 <Link
@@ -62,7 +62,7 @@ export function Footer() {
             </FooterCol>
           </div>
 
-          <div className="md:col-span-2">
+          <div className="col-span-6 md:col-span-2">
             <FooterCol title="Social">
               {site.socials.map((s) => (
                 <a
@@ -79,8 +79,8 @@ export function Footer() {
             </FooterCol>
           </div>
 
-          <div className="md:col-span-2">
-            <FooterCol title="Contact">
+          <div className="col-span-12 md:col-span-3 md:col-start-10">
+            <FooterCol title="Contact" alignEnd>
               <a
                 href={`mailto:${site.email}`}
                 data-cursor
@@ -96,7 +96,7 @@ export function Footer() {
         {/* Monumental wordmark */}
         <div className="mt-[var(--vw-8)] select-none">
           <span className="block bg-gradient-to-b from-white/85 to-white/5 bg-clip-text font-display leading-[0.8] tracking-tight text-transparent [font-size:clamp(5rem,22vw,20rem)]">
-            Lumako<span className="text-accent/60">.</span>
+            Lumako<span className="text-white/20">.</span>
           </span>
         </div>
 
@@ -114,14 +114,16 @@ export function Footer() {
 function FooterCol({
   title,
   children,
+  alignEnd,
 }: {
   title: string;
   children: React.ReactNode;
+  alignEnd?: boolean;
 }) {
   return (
-    <div>
+    <div className={cn(alignEnd && "md:text-right")}>
       <span className="label-caps !text-white/50">{title}</span>
-      <div className={cn("mt-5 flex flex-col gap-3 text-[length:var(--text-lg)]")}>
+      <div className={cn("mt-5 flex flex-col gap-3 text-[length:var(--text-lg)]", alignEnd && "md:items-end")}>
         {children}
       </div>
     </div>
