@@ -1,7 +1,8 @@
 @import "tailwindcss";
 
 /* ----------------------------------------------------------------------------
-   Lumako design tokens — light + lume gold ("built in the light")
+   Lumako design tokens — airy neutral: warm-gray page, white soft-shadow cards,
+   ink-only accent (no chroma), full-width layout
 ---------------------------------------------------------------------------- */
 @theme {
   /* Surfaces — airy: gray page, white cards */
@@ -27,7 +28,6 @@
   --color-accent: #171717;
   --color-accent-deep: #000000;
   --color-accent-soft: rgba(0, 0, 0, 0.05);
-  --color-lume-soft: #ececeb;
 
   /* Brand ink fill (buttons/CTA) + footer glow */
   --color-ink: #171717;
