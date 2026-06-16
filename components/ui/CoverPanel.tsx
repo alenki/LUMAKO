@@ -17,9 +17,9 @@ type Props = {
 export function CoverPanel({ accent, index, label, className, children }: Props) {
   return (
     <div
-      className={cn("relative overflow-hidden bg-card rounded-[var(--radius)]", className)}
+      className={cn("relative overflow-hidden bg-[#d8d8d7] rounded-[var(--radius)]", className)}
       style={{
-        backgroundImage: `radial-gradient(110% 110% at 72% 18%, rgba(10,10,10,0.10), transparent 55%), linear-gradient(155deg, rgba(10,10,10,0.06), var(--color-card) 72%)`,
+        backgroundImage: `radial-gradient(120% 100% at 75% 15%, rgba(255,255,255,0.55), transparent 48%), linear-gradient(150deg, #e9e9e8 0%, #d6d6d5 55%, #c8c8c7 100%)`,
       }}
     >
       <div
