@@ -2,85 +2,85 @@ import type { Service, ProcessPhase, Engagement } from "./types";
 
 export const services: Service[] = [
   {
-    id: "strategy",
+    id: "web",
     index: "01",
-    title: "Strategy & Positioning",
+    title: "Web — sites & platforms",
     blurb:
-      "We find the sharpest version of the idea before a single pixel is drawn. Clarity is the cheapest performance gain you'll ever buy.",
+      "Marketing sites, booking systems, and dashboards that load fast and do a job. Typed, accessible, and built the way I'd want to maintain it.",
     deliverables: [
-      "Brand & product strategy",
-      "Market & user research",
-      "Positioning & messaging",
-      "Naming",
-      "Roadmaps & north-star definition",
+      "Marketing & campaign sites",
+      "Booking & scheduling systems",
+      "Dashboards & internal tools",
+      "Headless CMS",
+      "Performance & accessibility",
+    ],
+  },
+  {
+    id: "ai",
+    index: "02",
+    title: "AI — assistants & automation",
+    blurb:
+      "Assistants that answer on WhatsApp or Telegram, book the appointment, and send the reminder — plus LLM features and retrieval wired into real workflows.",
+    deliverables: [
+      "WhatsApp & Telegram booking assistants",
+      "LLM features in product",
+      "Retrieval over your own data",
+      "Internal automation tools",
+      "Integration with existing systems",
+    ],
+  },
+  {
+    id: "apps",
+    index: "03",
+    title: "Apps — product builds",
+    blurb:
+      "End-to-end product, from the data model to the screen. Web apps, mobile-web, and internal apps — built whole and handed over working.",
+    deliverables: [
+      "Web & mobile-web apps",
+      "Internal & operations apps",
+      "End-to-end product builds",
+      "Auth, data, and API work",
+      "Maintenance & iteration",
     ],
   },
   {
     id: "brand",
-    index: "02",
-    title: "Brand & Identity",
+    index: "04",
+    title: "Brand & identity",
     blurb:
-      "Identity systems that hold up across every surface — confident at a billboard's scale and a favicon's. Built to be lived in, not just admired.",
+      "A wordmark, a type and color system, and the rules to use them — enough identity to make the product feel like one thing, held by the person who builds it.",
     deliverables: [
-      "Identity systems",
-      "Logo & wordmark",
+      "Wordmark & identity",
       "Type & color systems",
       "Art direction",
       "Brand guidelines",
+      "Asset & template kit",
     ],
   },
   {
-    id: "web",
-    index: "03",
-    title: "Web Design",
-    blurb:
-      "Sites that feel inevitable — fast, considered, and impossible to mistake for anyone else. Editorial craft, engineered to convert.",
-    deliverables: [
-      "Marketing & campaign sites",
-      "Design systems",
-      "Editorial & storytelling",
-      "Microsites",
-      "Headless CMS",
-    ],
-  },
-  {
-    id: "product",
-    index: "04",
-    title: "Product & UX",
-    blurb:
-      "Interfaces people reach for without thinking. We design the whole arc — from first run to power user — with the same obsessive detail.",
-    deliverables: [
-      "Product & UX design",
-      "Design systems",
-      "Prototyping",
-      "Dashboards & web apps",
-      "Usability & flow design",
-    ],
-  },
-  {
-    id: "engineering",
+    id: "strategy",
     index: "05",
-    title: "Engineering & Build",
+    title: "Positioning & proof",
     blurb:
-      "We don't hand off — we ship. Production front-ends built the way we'd want to maintain them: typed, fast, and accessible by default.",
+      "Finding the sharpest version of the idea, then leading with the demo. Clarity is the cheapest performance gain you'll ever buy.",
     deliverables: [
-      "Front-end engineering",
-      "Next.js & React",
-      "Headless & CMS integration",
-      "WebGL & motion systems",
-      "Performance & accessibility",
+      "Positioning & messaging",
+      "Proof & receipts framing",
+      "Naming",
+      "Scope & roadmap",
+      "Demo-first launch plan",
     ],
   },
   {
     id: "motion",
     index: "06",
-    title: "Motion & 3D",
+    title: "Motion & cinematic AI",
     blurb:
-      "The difference between good and unforgettable is usually motion. Interaction, real-time 3D, and brand animation that earns its frame rate.",
+      "Three.js hero work and composed AI brand frames — one deliberate motion choice per view, golden-hour light, never gimmicky.",
     deliverables: [
-      "Interaction design",
-      "WebGL / Three.js",
-      "Brand & UI motion",
+      "Three.js / WebGL hero work",
+      "Interaction & UI motion",
+      "Cinematic AI brand frames",
       "Real-time 3D",
       "Prototyped animation",
     ],
@@ -90,39 +90,39 @@ export const services: Service[] = [
 export const processPhases: ProcessPhase[] = [
   {
     index: "01",
-    name: "Discover",
+    name: "Scope",
     detail:
-      "We immerse — audits, interviews, and a hard look at the market. We leave with the questions worth answering.",
+      "We agree on the problem and what done looks like. One outcome the build has to deliver — written down before anything is made.",
   },
   {
     index: "02",
-    name: "Define",
+    name: "Build",
     detail:
-      "Strategy, positioning, and scope. We agree on the one thing this work has to do before we make anything.",
+      "I build the working thing across the stack — web, AI, app. No handoff, no telephone game: the person planning it writes the code.",
   },
   {
     index: "03",
-    name: "Design",
+    name: "Demo",
     detail:
-      "Concept, system, and craft. We design in the medium — real type, real motion, real data — not flat mockups.",
+      "You get a working product to click, not a deck to imagine. The demo opens the conversation; words only fill the gaps.",
   },
   {
     index: "04",
-    name: "Build",
+    name: "Price",
     detail:
-      "Engineering in parallel with design. Typed, tested, and reviewed — the polish is in the code, not bolted on.",
+      "With the build in front of you, I name the price. Proof carries the sale — the outcome comes before the invoice.",
   },
   {
     index: "05",
-    name: "Launch",
+    name: "Ship",
     detail:
-      "We ship with you: performance budgets, QA across the matrix, and a launch that doesn't keep anyone up at night.",
+      "We put it live: performance budget, QA across the matrix, and a handover that leaves the product yours and running.",
   },
   {
     index: "06",
-    name: "Evolve",
+    name: "Support",
     detail:
-      "Great products are never finished. We measure, sharpen, and keep the system healthy long after go-live.",
+      "Shipped isn't finished. I stay on to measure, sharpen, and keep the system healthy long after go-live.",
   },
 ];
 
@@ -132,24 +132,24 @@ export const engagements: Engagement[] = [
     blurb: "A defined outcome, start to finish.",
     detail: [
       "Fixed scope & timeline",
-      "Brand, site, or product build",
-      "Typically 6–14 weeks",
+      "Web, AI, or app build — shipped",
+      "Demo before the price",
     ],
   },
   {
     name: "Retainer",
-    blurb: "An ongoing partner on call.",
+    blurb: "One operator on call, every month.",
     detail: [
-      "Monthly design + build capacity",
-      "Roadmap & iteration",
-      "Best for scaling teams",
+      "Monthly build & iteration capacity",
+      "Roadmap and ongoing work",
+      "Best for products in motion",
     ],
   },
   {
     name: "Embedded",
-    blurb: "We join your team as one of you.",
+    blurb: "The builder in your room, full-time.",
     detail: [
-      "Dedicated squad",
+      "Dedicated, full-stack capacity",
       "Your tools, your standups",
       "For deep, long-haul work",
     ],

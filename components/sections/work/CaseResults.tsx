@@ -13,7 +13,7 @@ export function CaseResults({ item }: Props) {
     <section className="border-t border-line section-lg">
       <div className="container-x">
         <Eyebrow index="05">Results</Eyebrow>
-        <dl className="mt-12 grid gap-px overflow-hidden rounded-xl border border-line bg-line sm:grid-cols-3">
+        <dl className="mt-12 grid gap-px overflow-hidden rounded-[10px] border border-line bg-line sm:grid-cols-3">
           {item.results.map((r, i) => (
             <Reveal as="div" key={r.label} index={i} className="bg-bg">
               <div className="flex h-full flex-col justify-between gap-10 p-9">
@@ -25,7 +25,7 @@ export function CaseResults({ item }: Props) {
                     decimals={Number.isInteger(r.value) ? 0 : 1}
                   />
                 </dd>
-                <dt className="font-mono text-[length:var(--text-mono)] uppercase tracking-[0.2em] text-fg-muted">
+                <dt className="label-caps">
                   {r.label}
                 </dt>
               </div>

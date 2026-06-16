@@ -28,9 +28,9 @@ export function ContactDetails() {
       </Reveal>
 
       <Reveal index={1}>
-        <div className="grid grid-cols-1 gap-px overflow-hidden rounded-xl border border-line bg-line sm:grid-cols-2">
+        <div className="grid grid-cols-1 gap-px overflow-hidden rounded-[10px] border border-line bg-line sm:grid-cols-2">
           <div className="bg-bg p-7">
-            <span className="font-mono text-[length:var(--text-mono)] uppercase tracking-[0.2em] text-fg-dim">
+            <span className="label-caps text-fg-dim">
               Based in
             </span>
             <p className="mt-3 text-[length:var(--text-lg)] text-fg">
@@ -38,7 +38,7 @@ export function ContactDetails() {
             </p>
           </div>
           <div className="bg-bg p-7">
-            <span className="font-mono text-[length:var(--text-mono)] uppercase tracking-[0.2em] text-fg-dim">
+            <span className="label-caps text-fg-dim">
               Local time
             </span>
             <p className="mt-3">
@@ -50,7 +50,7 @@ export function ContactDetails() {
 
       <Reveal index={2}>
         <div className="flex flex-col gap-5">
-          <span className="font-mono text-[length:var(--text-mono)] uppercase tracking-[0.2em] text-fg-dim">
+          <span className="label-caps text-fg-dim">
             Elsewhere
           </span>
           <ul className="flex flex-wrap gap-x-8 gap-y-3">

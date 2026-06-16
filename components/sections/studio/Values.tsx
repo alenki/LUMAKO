@@ -10,7 +10,7 @@ export function Values() {
       <div className="container-x">
         <Eyebrow index="02">{s.valuesEyebrow}</Eyebrow>
 
-        <div className="mt-14 grid gap-px overflow-hidden rounded-xl border border-line bg-line sm:grid-cols-2">
+        <div className="mt-14 grid gap-px overflow-hidden rounded-[10px] border border-line bg-line sm:grid-cols-2">
           {values.map((value, i) => (
             <Reveal key={value.title} index={i % 2} className="bg-bg">
               <div className="flex h-full flex-col gap-4 p-10">

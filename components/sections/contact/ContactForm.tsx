@@ -79,9 +79,9 @@ export function ContactForm() {
         initial={{ opacity: 0, y: 24 }}
         animate={{ opacity: 1, y: 0 }}
         transition={{ duration: 0.9, ease: easeOutExpo }}
-        className="flex min-h-[24rem] flex-col justify-center rounded-xl border border-line bg-card p-10"
+        className="flex min-h-[24rem] flex-col justify-center rounded-[10px] border border-line bg-card p-10"
       >
-        <span className="font-mono text-[length:var(--text-mono)] uppercase tracking-[0.25em] text-accent">
+        <span className="label-caps !text-accent-deep">
           (✓) Sent
         </span>
         <h2 className="mt-6 font-display text-[length:var(--text-4xl)] font-light leading-tight tracking-tight text-balance">
@@ -140,7 +140,7 @@ export function ContactForm() {
       />
 
       <fieldset className="flex flex-col gap-4">
-        <legend className="font-mono text-[length:var(--text-mono)] uppercase tracking-[0.2em] text-fg-muted">
+        <legend className="label-caps">
           Budget
         </legend>
         <div className="flex flex-wrap gap-3">
@@ -157,7 +157,7 @@ export function ContactForm() {
       </fieldset>
 
       <fieldset className="flex flex-col gap-4">
-        <legend className="font-mono text-[length:var(--text-mono)] uppercase tracking-[0.2em] text-fg-muted">
+        <legend className="label-caps">
           What you need{" "}
           <span className="text-fg-dim">— pick any</span>
         </legend>
@@ -204,7 +204,7 @@ export function ContactForm() {
             animate={{ opacity: 1, y: 0 }}
             exit={{ opacity: 0 }}
             transition={{ duration: 0.4, ease: easeOutExpo }}
-            className="font-mono text-[length:var(--text-mono)] text-spark"
+            className="label-caps !text-accent-deep"
           >
             Please fix the highlighted fields and try again.
           </motion.p>

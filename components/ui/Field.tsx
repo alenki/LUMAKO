@@ -15,7 +15,7 @@ type Props = {
   className?: string;
 };
 
-/** Hairline-underline form field with mono label + accent focus. */
+/** Hairline-underline form field with label-caps label + lume focus. */
 export function Field({
   label,
   name,
@@ -30,13 +30,13 @@ export function Field({
 }: Props) {
   const fieldCls = cn(
     "mt-3 w-full bg-transparent border-b py-3 text-[length:var(--text-xl)] text-fg outline-none transition-colors duration-300 placeholder:text-fg-dim focus:border-accent",
-    error ? "border-spark" : "border-line",
+    error ? "border-accent-deep" : "border-line",
     as === "textarea" && "min-h-36 resize-none",
   );
 
   return (
     <label className={cn("block", className)}>
-      <span className="font-mono text-[length:var(--text-mono)] uppercase tracking-[0.2em] text-fg-muted">
+      <span className="label-caps">
         {label}
         {required ? <span className="text-accent"> *</span> : null}
       </span>
@@ -63,7 +63,7 @@ export function Field({
         />
       )}
       {error ? (
-        <span className="mt-2 block font-mono text-[length:var(--text-mono)] text-spark">
+        <span className="mt-2 block label-caps !text-accent-deep">
           {error}
         </span>
       ) : null}

@@ -1,5 +1,5 @@
 import type { Metadata } from "next";
-import { Fraunces, Hanken_Grotesk } from "next/font/google";
+import { Inter_Tight } from "next/font/google";
 import { GeistMono } from "geist/font/mono";
 import "@/styles/globals.css";
 import { Providers } from "@/components/layout/Providers";
@@ -9,41 +9,33 @@ import { Nav } from "@/components/layout/Nav";
 import { Footer } from "@/components/layout/Footer";
 import { PageTransition, RouteCurtain } from "@/components/layout/PageTransition";
 
-const fraunces = Fraunces({
+const interTight = Inter_Tight({
   subsets: ["latin"],
   display: "swap",
-  variable: "--font-fraunces",
-  axes: ["opsz", "SOFT", "WONK"],
-});
-
-const hanken = Hanken_Grotesk({
-  subsets: ["latin"],
-  display: "swap",
-  variable: "--font-hanken",
+  variable: "--font-inter-tight",
 });
 
 export const metadata: Metadata = {
-  metadataBase: new URL("https://lumako.studio"),
+  metadataBase: new URL("https://lumako.com"),
   title: {
-    default: "Lumako — Web & Product Studio",
+    default: "Lumako — Web · AI · Apps",
     template: "%s — Lumako",
   },
   description:
-    "Lumako is a web & product design and build studio. We design and build the digital products people don't forget.",
+    "Lumako is a solo full-stack studio that ships web, AI, and app products — and shows the working build before the pitch.",
   keywords: [
-    "web design studio",
-    "product design",
     "web development",
-    "digital agency",
-    "creative studio",
+    "AI products",
+    "app development",
+    "product studio",
     "Lumako",
   ],
   openGraph: {
     type: "website",
     siteName: "Lumako",
-    title: "Lumako — Web & Product Studio",
+    title: "Lumako — Web · AI · Apps",
     description:
-      "We design and build the digital products people don't forget.",
+      "Lumako is a solo full-stack studio that ships web, AI, and app products — and shows the working build before the pitch.",
   },
   twitter: { card: "summary_large_image" },
 };
@@ -54,12 +46,12 @@ export default function RootLayout({
   return (
     <html
       lang="en"
-      className={`${fraunces.variable} ${hanken.variable} ${GeistMono.variable}`}
+      className={`${interTight.variable} ${GeistMono.variable}`}
     >
       <body className="min-h-dvh">
         <a
           href="#main"
-          className="sr-only focus:not-sr-only focus:fixed focus:left-4 focus:top-4 focus:z-[500] focus:rounded-full focus:bg-accent focus:px-5 focus:py-2.5 focus:text-bg"
+          className="sr-only focus:not-sr-only focus:fixed focus:left-4 focus:top-4 focus:z-[500] focus:rounded-full focus:bg-ink focus:px-5 focus:py-2.5 focus:text-[#fafafa]"
         >
           Skip to content
         </a>

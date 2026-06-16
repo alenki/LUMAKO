@@ -22,7 +22,7 @@ describe("work content invariants", () => {
     });
   });
   it("getCase resolves and getNextCase cycles", () => {
-    expect(getCase("aether")?.client).toBe("Aether");
+    expect(getCase("clinic-booking")?.client).toBe("Clinic group");
     expect(getCase("does-not-exist")).toBeUndefined();
     const last = work[work.length - 1].slug;
     expect(getNextCase(last).slug).toBe(work[0].slug);

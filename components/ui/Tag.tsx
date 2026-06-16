@@ -12,10 +12,10 @@ type Props = {
 /** Hairline pill. Renders a button when `onClick` is provided (filters), else a span. */
 export function Tag({ children, active, onClick, className }: Props) {
   const cls = cn(
-    "rounded-full border px-4 py-1.5 font-mono text-[length:var(--text-mono)] uppercase tracking-wider transition-colors duration-300",
+    "rounded-full border px-4 py-1.5 label-caps transition-colors duration-300",
     active
-      ? "border-accent bg-accent-soft text-fg"
-      : "border-line text-fg-muted hover:border-line-strong hover:text-fg",
+      ? "border-accent bg-accent-soft !text-fg"
+      : "border-line hover:border-line-strong hover:!text-fg",
     className,
   );
   if (onClick) {

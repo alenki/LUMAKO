@@ -25,7 +25,7 @@ export function CaseGallery({ item }: Props) {
               <CoverPanel
                 accent={panel.accent ?? item.accent}
                 label={panel.caption}
-                className="aspect-[16/10] rounded-xl border border-line"
+                className="aspect-[16/10] rounded-[10px] border border-line"
               />
             </Reveal>
           ))}

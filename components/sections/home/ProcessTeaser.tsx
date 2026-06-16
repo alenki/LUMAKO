@@ -21,7 +21,7 @@ export function ProcessTeaser() {
           </p>
         </div>
 
-        <ol className="mt-16 grid gap-px overflow-hidden rounded-xl border border-line bg-line sm:grid-cols-2 md:grid-cols-3">
+        <ol className="mt-16 grid gap-px overflow-hidden rounded-[10px] border border-line bg-line sm:grid-cols-2 md:grid-cols-3">
           {processPhases.map((phase, i) => (
             <Reveal as="li" key={phase.index} index={i % 3} className="bg-bg">
               <div className="h-full p-9">
@@ -43,7 +43,7 @@ export function ProcessTeaser() {
           <Link
             href={p.link.href}
             data-cursor
-            className="group inline-flex items-center gap-2 font-mono text-[length:var(--text-mono)] uppercase tracking-widest text-fg-muted transition-colors hover:text-fg"
+            className="group inline-flex items-center gap-2 label-caps transition-colors hover:text-fg"
           >
             {p.link.label}
             <span className="transition-transform duration-300 group-hover:translate-x-1">

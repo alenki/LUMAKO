@@ -1,10 +1,4 @@
-export type Discipline =
-  | "Strategy"
-  | "Brand"
-  | "Web"
-  | "Product"
-  | "Engineering"
-  | "Motion";
+export type Discipline = "Web" | "AI" | "Apps" | "Brand" | "Strategy" | "Motion";
 
 export interface Service {
   id: string;

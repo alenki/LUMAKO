@@ -20,14 +20,14 @@ export function PageTransition({ children }: { children: React.ReactNode }) {
   );
 }
 
-/** Electric-blue curtain that retracts upward to reveal each new route. */
+/** Ink curtain that retracts upward to reveal each new route. */
 export function RouteCurtain() {
   const pathname = usePathname();
   return (
     <motion.div
       key={pathname}
       aria-hidden
-      className="pointer-events-none fixed inset-0 z-[350] origin-top bg-accent"
+      className="pointer-events-none fixed inset-0 z-[350] origin-top bg-ink"
       initial={{ scaleY: 1 }}
       animate={{ scaleY: 0 }}
       transition={{ duration: 0.8, ease: easeInOutExpo }}

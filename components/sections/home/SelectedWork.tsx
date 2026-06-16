@@ -21,7 +21,7 @@ export function SelectedWork() {
           <Link
             href={w.link.href}
             data-cursor
-            className="group flex items-center gap-2 font-mono text-[length:var(--text-mono)] uppercase tracking-widest text-fg-muted transition-colors hover:text-fg"
+            className="group flex items-center gap-2 label-caps transition-colors hover:text-fg"
           >
             {w.link.label}
             <span className="transition-transform duration-300 group-hover:translate-x-1">

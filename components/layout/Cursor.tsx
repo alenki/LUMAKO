@@ -62,7 +62,7 @@ export function Cursor() {
           height: active ? 56 : 32,
           marginLeft: active ? -28 : -16,
           marginTop: active ? -28 : -16,
-          borderColor: active ? "var(--color-accent)" : "rgba(250,250,250,0.4)",
+          borderColor: active ? "var(--color-accent)" : "rgba(10,10,10,0.35)",
           transition: "width 0.25s, height 0.25s, margin 0.25s, border-color 0.25s",
         }}
       />

@@ -6,7 +6,7 @@ type Props = {
   className?: string;
 };
 
-/** Fraunces display heading. Wrap accent words in <em> for italic-accent styling. */
+/** Inter Tight display heading. Wrap accent words in <em> for italic-accent styling. */
 export function SectionHeading({ children, as = "h2", className }: Props) {
   const Tag = as;
   return (

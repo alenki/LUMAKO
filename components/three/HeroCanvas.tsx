@@ -4,11 +4,10 @@
 
 import { useMemo, useRef } from "react";
 import { Canvas, useFrame, useThree } from "@react-three/fiber";
-import { EffectComposer, Bloom } from "@react-three/postprocessing";
 import * as THREE from "three";
 
 /** Drifting starfield — instanced points with a slow rotation + pointer parallax. */
-function Starfield({ count = 1500 }: { count?: number }) {
+function Starfield({ count = 700 }: { count?: number }) {
   const ref = useRef<THREE.Points>(null);
   const positions = useMemo(() => {
     const arr = new Float32Array(count * 3);
@@ -34,9 +33,9 @@ function Starfield({ count = 1500 }: { count?: number }) {
       </bufferGeometry>
       <pointsMaterial
         size={0.025}
-        color="#ffffff"
+        color="#0a0a0a"
         transparent
-        opacity={0.65}
+        opacity={0.18}
         sizeAttenuation
       />
     </points>
@@ -61,15 +60,15 @@ function WireframeForm() {
     <group ref={group}>
       <mesh>
         <icosahedronGeometry args={[1.85, 3]} />
-        <meshBasicMaterial color="#9fc1ff" wireframe transparent opacity={0.22} />
+        <meshBasicMaterial color="#0a0a0a" wireframe transparent opacity={0.12} />
       </mesh>
       <mesh>
         <icosahedronGeometry args={[1.25, 2]} />
-        <meshBasicMaterial color="#3080ff" wireframe transparent opacity={0.55} />
+        <meshBasicMaterial color="#737373" wireframe transparent opacity={0.35} />
       </mesh>
       <mesh>
         <icosahedronGeometry args={[0.62, 1]} />
-        <meshBasicMaterial color="#e4edff" wireframe transparent opacity={0.95} />
+        <meshBasicMaterial color="#d49a2e" wireframe transparent opacity={0.95} />
       </mesh>
     </group>
   );
@@ -102,14 +101,6 @@ export default function HeroCanvas() {
       <Starfield />
       <WireframeForm />
       <CameraRig />
-      <EffectComposer>
-        <Bloom
-          intensity={1.15}
-          luminanceThreshold={0.12}
-          luminanceSmoothing={0.9}
-          mipmapBlur
-        />
-      </EffectComposer>
     </Canvas>
   );
 }

@@ -26,7 +26,7 @@ export function CaseBody({ item }: Props) {
             {item.approach.map((step, i) => (
               <Reveal as="li" key={step.title} index={i} className="border-b border-line">
                 <div className="grid grid-cols-[auto_1fr] gap-x-6 py-9">
-                  <span className="font-mono text-[length:var(--text-mono)] tracking-widest text-accent">
+                  <span className="label-caps !text-accent">
                     {String(i + 1).padStart(2, "0")}.
                   </span>
                   <div>

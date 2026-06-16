@@ -24,6 +24,8 @@ export function Hero() {
 
   return (
     <section className="relative flex min-h-dvh items-center overflow-hidden">
+      {/* single lume glow behind the scene */}
+      <div className="glow-accent pointer-events-none absolute inset-0" />
       <div className="absolute inset-0">
         {showCanvas ? <HeroCanvas /> : <HeroFallback />}
       </div>
@@ -32,7 +34,7 @@ export function Hero() {
         className="pointer-events-none absolute inset-0"
         style={{
           background:
-            "radial-gradient(120% 80% at 30% 40%, rgba(10,10,10,0.2), rgba(10,10,10,0.75) 80%)",
+            "radial-gradient(120% 80% at 30% 40%, rgba(255,255,255,0), rgba(255,255,255,0.65) 80%)",
         }}
       />
       <div className="noise-veil" />
@@ -72,7 +74,7 @@ export function Hero() {
           <MagneticButton href={hero.ctaPrimary.href}>
             {hero.ctaPrimary.label}
           </MagneticButton>
-          <Button href={hero.ctaSecondary.href} variant="ghost">
+          <Button href={hero.ctaSecondary.href} variant="lume">
             {hero.ctaSecondary.label}
           </Button>
         </motion.div>
@@ -85,7 +87,7 @@ export function Hero() {
         transition={{ delay: 1.6, duration: 1 }}
         className="absolute inset-x-0 bottom-8 z-10 flex justify-center"
       >
-        <span className="flex flex-col items-center gap-3 font-mono text-[length:var(--text-mono)] uppercase tracking-[0.3em] text-fg-dim">
+        <span className="label-caps flex flex-col items-center gap-3">
           Scroll
           <span className="relative h-10 w-px overflow-hidden bg-line">
             <span className="absolute inset-x-0 top-0 h-3 animate-[scrollcue_1.8s_ease-in-out_infinite] bg-accent" />

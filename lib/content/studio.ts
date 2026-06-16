@@ -1,59 +1,47 @@
 import type { Value, TeamMember, Recognition } from "./types";
 
 export const studioManifesto = {
-  lead: "We're a small studio with an unfashionable belief: that the web can still feel made — by people, for people, with care you can feel.",
+  lead: "Lumako is one full-stack operator out of Nalchik, shipping web, AI, and app products and handing them over working.",
   body: [
-    "Lumako designs and builds digital products end to end. No handoffs to lose the thread, no agency theater. The people who shape the strategy are the people who draw the screens and ship the code.",
-    "We work with founders and teams who treat their product as a craft — and want a partner who treats it the same way.",
+    "Not a vendor, not a freelancer-for-hire, not a deck. A single practice that builds across the whole stack — web, AI, apps — and is judged by what reaches market. The person who scopes the work is the person who writes the code and ships it.",
+    "The portfolio is the credential: government and university builds, a won university AI competition, 1.5+ years in production. Show, don't sell — the demo opens every conversation and the work does the arguing.",
   ],
 };
 
 export const values: Value[] = [
   {
-    title: "Clarity is a feature.",
-    body: "The hardest, most valuable work is making the complicated feel obvious. We chase clarity before decoration — every time.",
+    title: "Proof.",
+    body: "Shipped work for government bodies and universities, a won university AI competition, 1.5+ years in production. The portfolio is the credential — not a résumé, not a pitch deck.",
   },
   {
-    title: "Craft compounds.",
-    body: "The thousand small decisions are the work. Kerning, easing, the empty state — they add up to the feeling of inevitability.",
+    title: "Range.",
+    body: "Web, AI, and apps from one operator on one engine. Not a menu of outsourced specialists — a single practice that builds across the whole stack and hands it over finished.",
   },
   {
-    title: "We ship what we design.",
-    body: "Design and engineering aren't a relay race. We hold the whole thing, so nothing precious gets lost in translation.",
+    title: "Outcome.",
+    body: "The deliverable is a product live in market, doing a job — not a retainer of activity or a slide library. Measured by what ships and what it moves.",
   },
   {
-    title: "Light over noise.",
-    body: "We'd rather make one quiet, exact thing than ten loud ones. Restraint is a competitive advantage.",
+    title: "Solo, stated plainly.",
+    body: "One operator is a feature, not a thing to hide: one point of contact, no handoff between you and the person building. The builder is in the room.",
   },
 ];
 
 export const team: TeamMember[] = [
-  { name: "Mara Vance", role: "Founder & Creative Director", accent: "#3080ff" },
-  { name: "Theo Okonkwo", role: "Design Director", accent: "#19c39b" },
-  { name: "Ines Halvorsen", role: "Engineering Lead", accent: "#8b5cf6" },
-  { name: "Daniel Reyes", role: "Strategy Lead", accent: "#e8a13c" },
+  { name: "Solo founder", role: "Full-stack — web · AI · apps", accent: "#d49a2e" },
 ];
 
 export const recognition: Recognition[] = [
-  { award: "Site of the Day", org: "Awwwards", year: "2025" },
-  { award: "FWA of the Day", org: "The FWA", year: "2025" },
-  { award: "Best UI Design", org: "CSS Design Awards", year: "2024" },
-  { award: "Webby Nominee", org: "The Webbys", year: "2024" },
-  { award: "Site of the Month", org: "Awwwards", year: "2024" },
-  { award: "Developer Award", org: "Awwwards", year: "2023" },
+  { award: "Won — University AI Competition", org: "University", year: "2025" },
+  { award: "Government & university builds", org: "Delivered", year: "—" },
+  { award: "1.5+ years in production", org: "Live", year: "—" },
 ];
 
 export const clients = [
-  "Aether",
-  "Volta",
-  "Marrow & Co",
-  "Corder",
-  "Lumen Atlas",
-  "Soleil",
-  "Northwind",
-  "Faro",
-  "Cobalt",
-  "Meridian",
-  "Halcyon",
-  "Verdant",
+  "Government bodies",
+  "Universities",
+  "Clinics & dental",
+  "Medspa & salons",
+  "Real-estate teams",
+  "Founders & operators",
 ];

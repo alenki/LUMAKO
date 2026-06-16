@@ -8,7 +8,7 @@ type Props = {
   item: CaseStudy;
 };
 
-/** Cinematic case-study opener: mono meta row, big Fraunces title, banner cover, lead. */
+/** Cinematic case-study opener: label meta row, big display title, banner cover, lead. */
 export function CaseHero({ item }: Props) {
   const meta = [item.client, item.sector, item.year, item.role];
 
@@ -23,7 +23,7 @@ export function CaseHero({ item }: Props) {
       <div className="container-x relative">
         <Eyebrow index="01">Case study</Eyebrow>
 
-        <ul className="mt-8 flex flex-wrap items-center gap-x-4 gap-y-2 font-mono text-[length:var(--text-mono)] uppercase tracking-[0.2em] text-fg-muted">
+        <ul className="mt-8 flex flex-wrap items-center gap-x-4 gap-y-2 label-caps">
           {meta.map((m, i) => (
             <li key={m} className="flex items-center gap-4">
               {i > 0 ? <span className="text-fg-dim">·</span> : null}
@@ -43,7 +43,7 @@ export function CaseHero({ item }: Props) {
           <Reveal as="figure" index={1} className="md:col-span-8">
             <CoverPanel
               accent={item.accent}
-              className="aspect-[16/9] rounded-xl border border-line"
+              className="aspect-[16/9] rounded-[10px] border border-line"
             />
           </Reveal>
           <Reveal index={2} className="md:col-span-4">

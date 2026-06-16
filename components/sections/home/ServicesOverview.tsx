@@ -58,7 +58,7 @@ export function ServicesOverview() {
           <Link
             href={s.link.href}
             data-cursor
-            className="group flex items-center gap-2 font-mono text-[length:var(--text-mono)] uppercase tracking-widest text-fg-muted transition-colors hover:text-fg"
+            className="group flex items-center gap-2 label-caps transition-colors hover:text-fg"
           >
             {s.link.label}
             <span className="transition-transform duration-300 group-hover:translate-x-1">

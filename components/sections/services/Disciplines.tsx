@@ -12,7 +12,7 @@ export function Disciplines() {
             className="grid gap-x-12 gap-y-8 border-t border-line py-16 first:border-t-0 first:pt-0 md:grid-cols-12"
           >
             <div className="md:col-span-7">
-              <span className="font-mono text-[length:var(--text-mono)] tracking-widest text-fg-dim">
+              <span className="label-caps text-fg-dim">
                 {service.index}
               </span>
               <h2 className="mt-5 max-w-[14ch] font-display text-[length:var(--text-5xl)] font-light leading-tight tracking-tight text-balance">
@@ -23,7 +23,7 @@ export function Disciplines() {
               </p>
             </div>
             <div className="md:col-span-5">
-              <p className="font-mono text-[length:var(--text-mono)] uppercase tracking-[0.25em] text-fg-dim">
+              <p className="label-caps text-fg-dim">
                 Deliverables
               </p>
               <ul className="mt-6 border-t border-line">
@@ -32,7 +32,7 @@ export function Disciplines() {
                     key={item}
                     className="flex items-baseline gap-4 border-b border-line py-4 text-[length:var(--text-lg)] text-fg"
                   >
-                    <span className="font-mono text-[length:var(--text-mono)] text-accent">
+                    <span className="text-[length:var(--text-mono)] text-accent">
                       +
                     </span>
                     <span>{item}</span>

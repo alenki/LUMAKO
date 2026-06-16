@@ -4,7 +4,7 @@ import { useEffect, useState } from "react";
 import { site } from "@/lib/content/site";
 import { cn } from "@/lib/utils";
 
-/** Live studio time (SF), updated each second. */
+/** Live studio time (Nalchik), updated each second. */
 export function LocalTime({ className }: { className?: string }) {
   const [time, setTime] = useState<string>("");
 
@@ -28,11 +28,11 @@ export function LocalTime({ className }: { className?: string }) {
   return (
     <span
       className={cn(
-        "font-mono text-[length:var(--text-mono)] uppercase tracking-[0.18em] text-fg-muted tabular-nums",
+        "label-caps tabular-nums",
         className,
       )}
     >
-      SF {time || "--:--:--"}
+      NAL {time || "--:--:--"}
     </span>
   );
 }

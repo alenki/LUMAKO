@@ -2,132 +2,129 @@
 export const copy = {
   home: {
     hero: {
-      eyebrow: "Web & Product Studio",
-      headline: "We design & build the products people don't forget.",
-      highlight: "don't forget.",
-      sub: "Lumako is a small studio that takes ideas from strategy to shipped — brand, interface, and engineering held by one team that sweats every detail.",
+      eyebrow: "Web · AI · Apps",
+      headline: "Built first. Pitched second.",
+      highlight: "Pitched second.",
+      sub: "Lumako is a single full-stack practice that ships web, AI, and app products and hands them over working. One operator, one engine — judged by what reaches market, not by the pitch.",
       ctaPrimary: { label: "Start a project", href: "/contact" },
-      ctaSecondary: { label: "See the work", href: "/work" },
+      ctaSecondary: { label: "See the build", href: "/work" },
     },
     manifesto: {
-      eyebrow: "What we believe",
+      eyebrow: "The stance",
       headline:
-        "Software should feel like it was made by someone who cared. So we sweat the details most teams skip — because that's exactly what people remember.",
-      highlight: "someone who cared.",
+        "The demo is the pitch. Most studios sell a proposal and a promise — Lumako shows a working product first, then names the price. Proof carries the sale.",
+      highlight: "The demo is the pitch.",
     },
     services: {
-      eyebrow: "What we do",
-      headline: "Everything between the idea and the people who'll love it.",
-      highlight: "love it.",
+      eyebrow: "What I build",
+      headline: "Web, AI, and apps — from one operator on one engine.",
+      highlight: "one engine.",
       link: { label: "All services", href: "/services" },
     },
     work: {
       eyebrow: "Selected work",
-      headline: "A few things we're proud of.",
+      headline: "Shipped, not proposed.",
       link: { label: "View all work", href: "/work" },
     },
     process: {
-      eyebrow: "How we work",
-      headline: "One team, the whole way through.",
-      sub: "No handoffs, no telephone game. From the first question to the last commit, the people who plan it make it.",
-      link: { label: "Our process", href: "/services" },
+      eyebrow: "How it works",
+      headline: "The builder is in the room.",
+      sub: "No agency handoff between you and the person writing the code. You talk to the operator who ships it — start to finish.",
+      link: { label: "The process", href: "/services" },
     },
-    stats: [
-      { value: 9, suffix: "+", label: "Years in craft" },
-      { value: 60, suffix: "+", label: "Products shipped" },
-      { value: 12, suffix: "", label: "Industry awards" },
-      { value: 98, suffix: "%", label: "Client return rate" },
+    proof: [
+      { value: "1.5+ yrs", label: "in production" },
+      { value: "Gov + university", label: "delivered builds" },
+      { value: "AI competition", label: "won · university" },
+      { value: "Web · AI · Apps", label: "one engine" },
     ],
-    testimonial: {
-      quote:
-        "Lumako operate like an in-house team that happens to be better than yours. They held the vision from the first call to the last commit — and the result moved every number that mattered.",
-      name: "Elena Cho",
-      role: "VP Product",
-      company: "Aether",
+    receipts: {
+      eyebrow: "Receipts",
+      headline: "The portfolio is the credential.",
+      highlight: "the credential.",
+      items: [
+        "Shipped builds for government bodies and universities.",
+        "Won a university AI competition.",
+        "1.5+ years live in production.",
+        "Live products you can click — not slides.",
+      ],
     },
     cta: {
       eyebrow: "Start here",
-      headline: "Let's build something worth remembering.",
-      highlight: "worth remembering.",
-      sub: "Tell us what you're making. We'll tell you how we'd approach it — no pitch theater.",
+      headline: "Tell me what you're building.",
+      highlight: "building.",
+      sub: "Send the problem and what done looks like. You'll get a working direction back — proof before pitch, the outcome before the invoice.",
       button: { label: "Start a project", href: "/contact" },
     },
   },
 
   work: {
     eyebrow: "Work",
-    headline: "Products, brands, and the occasional obsession.",
-    highlight: "obsession.",
-    sub: "A selection of recent work across fintech, hospitality, developer tools, and more.",
+    headline: "Shipped products, doing a job.",
+    highlight: "doing a job.",
+    sub: "A selection of builds across web, AI, and apps — for businesses that wanted the outcome, not a brochure.",
   },
 
   services: {
     eyebrow: "Services",
-    headline: "We hold the whole thing — strategy to shipped.",
-    highlight: "shipped.",
-    sub: "Six disciplines, one team. Engage us for the part you need, or the entire arc.",
-    processEyebrow: "The process",
-    processHeadline: "Six phases, no surprises.",
+    headline: "Web, AI, and apps — one operator, end to end.",
+    highlight: "end to end.",
+    sub: "Engage Lumako for the part you need, or the whole build. One person across the stack — no handoff, no telephone game.",
+    processEyebrow: "How it works",
+    processHeadline: "Demo-first, then pitch.",
     engagementsEyebrow: "Engagements",
     engagementsHeadline: "Ways to work together.",
   },
 
   studio: {
     eyebrow: "Studio",
-    headline: "A studio built for the work, not the org chart.",
-    highlight: "the work,",
-    valuesEyebrow: "What we value",
-    teamEyebrow: "The people",
-    teamHeadline: "Small on purpose.",
-    recognitionEyebrow: "Recognition",
-    clientsEyebrow: "In good company",
+    headline: "One operator. The whole stack.",
+    highlight: "The whole stack.",
+    valuesEyebrow: "What holds",
+    teamEyebrow: "Who",
+    teamHeadline: "Solo, on purpose.",
+    recognitionEyebrow: "Proof",
+    clientsEyebrow: "Shipped for",
   },
 
   contact: {
     eyebrow: "Start a project",
-    headline: "Tell us what you're building.",
+    headline: "Tell me what you're building.",
     highlight: "building.",
-    sub: "The more you share, the sharper our first response. We reply to every serious inquiry within two business days.",
-    budgets: ["< $25k", "$25k–$50k", "$50k–$100k", "$100k+", "Not sure yet"],
-    serviceOptions: [
-      "Strategy",
-      "Brand",
-      "Web",
-      "Product",
-      "Engineering",
-      "Motion",
-    ],
+    sub: "The more you share, the sharper the first response. Every serious inquiry gets a reply — proof before pitch.",
+    budgets: ["< $5k", "$5k–$15k", "$15k–$40k", "$40k+", "Not sure yet"],
+    serviceOptions: ["Web", "AI", "Apps", "Brand", "Motion"],
     success: {
-      title: "Message received.",
-      body: "Thanks — we've got it. Expect a thoughtful reply within two business days.",
+      title: "Got it.",
+      body: "Message received. Expect a working, specific reply — not a templated pitch.",
     },
   },
 
   meta: {
     home: {
-      title: "Lumako — Web & Product Studio",
+      title: "Lumako — Web · AI · Apps",
       description:
-        "Lumako is a web & product design and build studio. We design and build the digital products people don't forget.",
+        "Lumako is a solo full-stack studio that ships web, AI, and app products — and shows the working build before the pitch.",
     },
     work: {
       title: "Work",
       description:
-        "Selected work from Lumako across fintech, hospitality, developer tools, energy, and commerce.",
+        "Shipped web, AI, and app builds from Lumako — products live in market, doing a job.",
     },
     services: {
       title: "Services",
       description:
-        "Strategy, brand, web, product, engineering, and motion — held end to end by one team.",
+        "Web, AI, and apps from one operator, end to end. Demo-first, then pitch.",
     },
     studio: {
       title: "Studio",
       description:
-        "Lumako is a small, craft-led studio that designs and builds digital products end to end.",
+        "Lumako is one full-stack operator shipping web, AI, and apps — proof over promise.",
     },
     contact: {
       title: "Contact",
       description:
-        "Start a project with Lumako. Tell us what you're building and we'll tell you how we'd approach it.",
+        "Start a project with Lumako. Tell me what you're building and you'll get a working direction back.",
     },
   },
 } as const;

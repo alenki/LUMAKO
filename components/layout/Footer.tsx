@@ -12,17 +12,17 @@ export function Footer() {
   const year = new Date().getFullYear();
 
   return (
-    <footer className="relative overflow-hidden border-t border-line bg-bg">
-      <div className="container-x section">
+    <footer className="footer-glow relative overflow-hidden text-[#fafafa]">
+      <div className="container-x section relative">
         <div className="grid gap-[var(--vw-6)] md:grid-cols-12">
           {/* Newsletter / pitch */}
           <div className="md:col-span-5">
-            <Eyebrow>Stay in the light</Eyebrow>
-            <p className="mt-6 font-display text-[length:var(--text-3xl)] font-light leading-tight text-balance">
+            <Eyebrow className="!text-white/60">Stay in the light</Eyebrow>
+            <p className="mt-6 font-display text-[length:var(--text-3xl)] font-light leading-tight text-balance text-[#fafafa]">
               Occasional notes on craft, product, and the web — no noise.
             </p>
             <form
-              className="mt-8 flex max-w-md items-center gap-3 border-b border-line pb-3 focus-within:border-accent"
+              className="mt-8 flex max-w-md items-center gap-3 border-b border-white/20 pb-3 focus-within:border-accent"
               onSubmit={(e) => {
                 e.preventDefault();
                 if (email.includes("@")) setDone(true);
@@ -34,13 +34,13 @@ export function Footer() {
                 value={email}
                 onChange={(e) => setEmail(e.target.value)}
                 placeholder="you@studio.com"
-                className="w-full bg-transparent text-fg outline-none placeholder:text-fg-dim"
+                className="w-full bg-transparent text-[#fafafa] outline-none placeholder:text-white/40"
                 aria-label="Email address"
               />
               <button
                 type="submit"
                 data-cursor
-                className="shrink-0 font-mono text-[length:var(--text-mono)] uppercase tracking-widest text-fg transition-colors hover:text-accent"
+                className="shrink-0 label-caps !text-[#fafafa] transition-colors hover:!text-accent"
               >
                 {done ? "Joined ✓" : "Join →"}
               </button>
@@ -50,7 +50,12 @@ export function Footer() {
           <div className="md:col-span-2 md:col-start-8">
             <FooterCol title="Pages">
               {site.nav.map((item) => (
-                <Link key={item.href} href={item.href} data-cursor className="footer-link">
+                <Link
+                  key={item.href}
+                  href={item.href}
+                  data-cursor
+                  className="w-fit text-[length:var(--text-lg)] text-white/60 transition-colors hover:text-[#fafafa]"
+                >
                   {item.label}
                 </Link>
               ))}
@@ -66,7 +71,7 @@ export function Footer() {
                   target="_blank"
                   rel="noopener noreferrer"
                   data-cursor
-                  className="footer-link"
+                  className="w-fit text-[length:var(--text-lg)] text-white/60 transition-colors hover:text-[#fafafa]"
                 >
                   {s.label}
                 </a>
@@ -76,22 +81,26 @@ export function Footer() {
 
           <div className="md:col-span-2">
             <FooterCol title="Contact">
-              <a href={`mailto:${site.email}`} data-cursor className="footer-link">
+              <a
+                href={`mailto:${site.email}`}
+                data-cursor
+                className="w-fit text-[length:var(--text-lg)] text-white/60 transition-colors hover:text-[#fafafa]"
+              >
                 {site.email}
               </a>
-              <span className="text-fg-dim">{site.locale}</span>
+              <span className="text-[length:var(--text-lg)] text-white/40">{site.locale}</span>
             </FooterCol>
           </div>
         </div>
 
         {/* Monumental wordmark */}
         <div className="mt-[var(--vw-8)] select-none">
-          <span className="block bg-gradient-to-b from-fg/85 to-fg/5 bg-clip-text font-display lowercase leading-[0.8] tracking-tight text-transparent [font-size:clamp(5rem,22vw,20rem)]">
-            lumako<span className="text-accent/30">.</span>
+          <span className="block bg-gradient-to-b from-white/85 to-white/5 bg-clip-text font-display leading-[0.8] tracking-tight text-transparent [font-size:clamp(5rem,22vw,20rem)]">
+            Lumako<span className="text-accent/60">.</span>
           </span>
         </div>
 
-        <div className="mt-8 flex flex-col gap-3 border-t border-line pt-6 font-mono text-[length:var(--text-mono)] uppercase tracking-[0.18em] text-fg-dim md:flex-row md:items-center md:justify-between">
+        <div className="mt-8 flex flex-col gap-3 border-t border-white/10 pt-6 label-caps !text-white/40 md:flex-row md:items-center md:justify-between">
           <span>
             © {year} {site.name} — Built in the light.
           </span>
@@ -111,9 +120,7 @@ function FooterCol({
 }) {
   return (
     <div>
-      <span className="font-mono text-[length:var(--text-mono)] uppercase tracking-[0.2em] text-fg-dim">
-        {title}
-      </span>
+      <span className="label-caps !text-white/50">{title}</span>
       <div className={cn("mt-5 flex flex-col gap-3 text-[length:var(--text-lg)]")}>
         {children}
       </div>

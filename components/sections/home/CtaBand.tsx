@@ -8,7 +8,6 @@ export function CtaBand() {
   const c = copy.home.cta;
   return (
     <section className="relative overflow-hidden border-t border-line section-lg">
-      <div className="glow-accent absolute inset-0" />
       <div className="container-x relative flex flex-col items-center text-center">
         <Eyebrow index="06">{c.eyebrow}</Eyebrow>
         <TextReveal

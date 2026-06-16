@@ -1,9 +1,9 @@
 export const site = {
   name: "Lumako",
-  tagline: "Web & Product Studio",
-  email: "hello@lumako.studio",
-  locale: "San Francisco / Remote",
-  timezone: "America/Los_Angeles",
+  tagline: "Web · AI · Apps — shipped, not proposed",
+  email: "hello@lumako.com",
+  locale: "Nalchik, KBR → Global",
+  timezone: "Europe/Moscow",
   nav: [
     { label: "Work", href: "/work" },
     { label: "Services", href: "/services" },
@@ -12,9 +12,9 @@ export const site = {
   ],
   socials: [
     { label: "Instagram", href: "https://instagram.com" },
-    { label: "Dribbble", href: "https://dribbble.com" },
-    { label: "LinkedIn", href: "https://linkedin.com" },
     { label: "X", href: "https://x.com" },
+    { label: "WhatsApp", href: "https://wa.me/" },
+    { label: "Telegram", href: "https://t.me/" },
   ],
 } as const;
 

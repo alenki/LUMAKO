@@ -18,7 +18,7 @@ export function Recognition() {
                   {item.award}
                 </h3>
                 <span className="text-fg-muted">{item.org}</span>
-                <span className="ml-auto font-mono text-[length:var(--text-mono)] tracking-widest text-fg-dim">
+                <span className="ml-auto label-caps text-fg-dim">
                   {item.year}
                 </span>
               </div>

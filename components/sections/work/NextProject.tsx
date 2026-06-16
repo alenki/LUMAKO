@@ -26,7 +26,7 @@ export function NextProject({ item }: Props) {
             <p className="mt-7 max-w-[44ch] text-[length:var(--text-lg)] text-fg-muted text-pretty">
               {item.client} — {item.sector}
             </p>
-            <span className="mt-9 inline-flex items-center gap-3 font-mono text-[length:var(--text-mono)] uppercase tracking-widest text-fg-muted transition-colors group-hover:text-fg">
+            <span className="mt-9 inline-flex items-center gap-3 label-caps transition-colors group-hover:!text-fg">
               View case study
               <span className="transition-transform duration-300 group-hover:translate-x-1">
                 →
@@ -35,7 +35,7 @@ export function NextProject({ item }: Props) {
           </div>
 
           <div className="md:col-span-5">
-            <div className="overflow-hidden rounded-xl border border-line">
+            <div className="overflow-hidden rounded-[10px] border border-line">
               <CoverPanel
                 accent={item.accent}
                 className="aspect-[4/3] transition-transform duration-700 ease-[cubic-bezier(.22,1,.36,1)] group-hover:scale-[1.04]"

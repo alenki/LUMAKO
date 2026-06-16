@@ -1,10 +1,10 @@
-# Lumako — Web & Product Studio
+# Lumako — Web · AI · Apps
 
-The official website for **Lumako**, a craft-led web & product design and build studio.
-A high-end, award-winning marketing site: dark monochrome + electric-blue palette,
-editorial Fraunces typography, a cinematic Three.js hero, and orchestrated motion.
+The official website for **Lumako**, a solo full-stack studio that ships web, AI, and
+app products. A high-end, proof-led marketing site: light monochrome + a single lume-gold
+accent, Inter Tight typography, a cinematic (light-graded) Three.js hero, and orchestrated motion.
 
-**Live concept:** "Products built in the light."
+**Live concept:** "The demo is the pitch."
 
 ---
 
@@ -15,7 +15,7 @@ editorial Fraunces typography, a cinematic Three.js hero, and orchestrated motio
 - **Motion** (Framer Motion) for animation + page transitions
 - **three** + **@react-three/fiber** + **drei** + **postprocessing** — the WebGL hero
 - **Lenis** smooth scroll
-- Fonts: **Fraunces** (display) · **Hanken Grotesk** (body) · **Geist Mono** (labels)
+- Fonts: **Inter Tight** (display + body) · **Geist Mono** (code only)
 - **Vitest** for unit tests
 
 ## Getting started
@@ -39,7 +39,7 @@ npm run test       # vitest (utils, content invariants, contact validation)
 
 | Route | Description |
 |---|---|
-| `/` | Home — 3D hero, manifesto, services, selected work, process, stats, testimonial, CTA |
+| `/` | Home — 3D hero, manifesto, services, selected work, process, proof, receipts, CTA |
 | `/work` | Filterable case-study index |
 | `/work/[slug]` | Case study detail (statically generated) |
 | `/services` | Disciplines, process, engagement models |
@@ -70,8 +70,11 @@ docs/superpowers/  # design spec + implementation plan
   toggles, full `prefers-reduced-motion` support (3D, smooth scroll, transitions, and
   reveals all degrade gracefully). The WebGL hero falls back to a static luminous
   gradient on low-power / touch devices.
-- **Performance:** the 3D canvas is client-only (`ssr: false`), DPR-capped, with cheap
-  bloom; all routes are statically prerendered.
+- **Performance:** the 3D canvas is client-only (`ssr: false`), DPR-capped, and light-graded
+  (no postprocessing bloom); all routes are statically prerendered.
+- **Color discipline:** lume gold (`#D49A2E`) is the only accent — wordmark dot, focus rings,
+  key rules, and the single dark footer glow. No second accent, no drop shadows, no gradients
+  except that one footer glow. Ink primary buttons; one lume button per view.
 
 ---
 

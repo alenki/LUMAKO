@@ -19,7 +19,7 @@ export function WorkCard({ item, index, large, className }: Props) {
       data-cursor
       className={cn("group block", className)}
     >
-      <div className="relative overflow-hidden rounded-xl border border-line">
+      <div className="relative overflow-hidden rounded-[10px] border border-line">
         <CoverPanel
           accent={item.accent}
           index={index}
@@ -42,7 +42,7 @@ export function WorkCard({ item, index, large, className }: Props) {
             {item.client} — {item.sector}
           </p>
         </div>
-        <span className="shrink-0 font-mono text-[length:var(--text-mono)] text-fg-dim">
+        <span className="shrink-0 label-caps !text-fg-dim">
           {item.year}
         </span>
       </div>
@@ -51,7 +51,7 @@ export function WorkCard({ item, index, large, className }: Props) {
         {item.disciplines.map((d) => (
           <span
             key={d}
-            className="rounded-full border border-line px-3 py-1 font-mono text-[length:var(--text-mono)] uppercase tracking-wider text-fg-muted"
+            className="rounded-full border border-line px-3 py-1 label-caps"
           >
             {d}
           </span>

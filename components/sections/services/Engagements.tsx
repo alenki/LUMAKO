@@ -20,7 +20,7 @@ export function Engagements() {
             <Reveal
               key={engagement.name}
               index={i}
-              className="flex h-full flex-col rounded-xl border border-line bg-bg-elev p-8"
+              className="flex h-full flex-col rounded-[10px] border border-line bg-bg-elev p-8"
             >
               <h3 className="font-display text-[length:var(--text-3xl)] font-light tracking-tight">
                 {engagement.name}
@@ -34,7 +34,7 @@ export function Engagements() {
                     key={item}
                     className="flex items-baseline gap-3 border-b border-line py-3 text-[length:var(--text-base)] text-fg-muted"
                   >
-                    <span className="font-mono text-[length:var(--text-mono)] text-accent">
+                    <span className="text-[length:var(--text-mono)] text-accent">
                       ·
                     </span>
                     <span>{item}</span>

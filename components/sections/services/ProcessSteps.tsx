@@ -23,7 +23,7 @@ export function ProcessSteps() {
               index={i % 3}
               className="grid items-baseline gap-x-10 gap-y-3 border-b border-line py-10 md:grid-cols-12"
             >
-              <span className="font-mono text-[length:var(--text-mono)] tracking-widest text-accent md:col-span-1">
+              <span className="label-caps !text-accent md:col-span-1">
                 {phase.index}
               </span>
               <h3 className="font-display text-[length:var(--text-4xl)] font-light leading-tight tracking-tight md:col-span-4">
