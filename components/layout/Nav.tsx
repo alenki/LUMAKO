@@ -27,7 +27,7 @@ export function Nav() {
           "fixed inset-x-0 top-0 z-[200] transition-colors duration-500",
           scrolled || open
             ? "border-b border-line bg-bg/70 backdrop-blur-xl"
-            : "border-b border-transparent",
+            : "border-b border-transparent bg-gradient-to-b from-bg/80 to-transparent backdrop-blur-sm",
         )}
         style={{ height: "var(--header-h)" }}
       >
@@ -49,7 +49,7 @@ export function Nav() {
                 </span>
                 <span
                   className={cn(
-                    "absolute inset-x-0 -bottom-0.5 h-px origin-left bg-accent transition-transform duration-300",
+                    "absolute inset-x-0 -bottom-0.5 h-px origin-left bg-fg transition-transform duration-300",
                     isActive(item.href)
                       ? "scale-x-100"
                       : "scale-x-0 group-hover:scale-x-100",
@@ -61,7 +61,7 @@ export function Nav() {
 
           <div className="hidden items-center gap-[var(--vw-3)] md:flex">
             <LocalTime />
-            <MagneticButton href="/contact" className="px-5 py-2.5 text-[length:var(--text-base)]">
+            <MagneticButton href="/contact" className="rounded-full px-5 py-2.5 text-[length:var(--text-base)]">
               Start a project
             </MagneticButton>
           </div>
