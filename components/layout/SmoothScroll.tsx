@@ -19,6 +19,9 @@ export function SmoothScroll({ children }: { children: React.ReactNode }) {
       smoothWheel: true,
     });
     lenisInstance = lenis;
+    if (process.env.NODE_ENV !== "production") {
+      (window as unknown as { __lenis?: Lenis }).__lenis = lenis;
+    }
 
     let rafId = 0;
     const raf = (time: number) => {

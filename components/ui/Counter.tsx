@@ -1,13 +1,8 @@
 "use client";
 
-import { useEffect, useRef } from "react";
-import {
-  motion,
-  useInView,
-  useMotionValue,
-  useSpring,
-  useTransform,
-} from "motion/react";
+import { useEffect, useRef, useState } from "react";
+import { animate, useInView } from "motion/react";
+import { easeOutExpo } from "@/lib/motion";
 
 type Props = {
   value: number;
@@ -26,24 +21,26 @@ export function Counter({
   className,
 }: Props) {
   const ref = useRef<HTMLSpanElement>(null);
-  const inView = useInView(ref, { once: true, margin: "-20%" });
-  const mv = useMotionValue(0);
-  const spring = useSpring(mv, { duration: 1700, bounce: 0 });
-  const text = useTransform(spring, (v) =>
-    v.toLocaleString("en-US", {
-      minimumFractionDigits: decimals,
-      maximumFractionDigits: decimals,
-    }),
-  );
+  const inView = useInView(ref, { once: true, margin: "-15%" });
+  const [display, setDisplay] = useState(0);
 
   useEffect(() => {
-    if (inView) mv.set(value);
-  }, [inView, value, mv]);
+    if (!inView) return;
+    const controls = animate(0, value, {
+      duration: 1.6,
+      ease: easeOutExpo,
+      onUpdate: (v) => setDisplay(v),
+    });
+    return () => controls.stop();
+  }, [inView, value]);
 
   return (
     <span ref={ref} className={className}>
       {prefix}
-      <motion.span>{text}</motion.span>
+      {display.toLocaleString("en-US", {
+        minimumFractionDigits: decimals,
+        maximumFractionDigits: decimals,
+      })}
       {suffix}
     </span>
   );
