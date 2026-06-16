@@ -21,7 +21,6 @@ export function WorkCard({ item, index, large, className }: Props) {
     >
       <div className="surface-card surface-card--hover relative overflow-hidden">
         <CoverPanel
-          accent={item.accent}
           index={index}
           className={cn(
             "transition-transform duration-700 ease-[cubic-bezier(.22,1,.36,1)] group-hover:scale-[1.04]",

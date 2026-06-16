@@ -204,7 +204,7 @@ export function ContactForm() {
             animate={{ opacity: 1, y: 0 }}
             exit={{ opacity: 0 }}
             transition={{ duration: 0.4, ease: easeOutExpo }}
-            className="label-caps !text-[#c0392b]"
+            className="label-caps !text-error"
           >
             Please fix the highlighted fields and try again.
           </motion.p>

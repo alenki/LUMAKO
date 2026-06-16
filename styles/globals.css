@@ -20,6 +20,9 @@
   --color-line: #e5e5e5;
   --color-line-strong: #d4d4d4;
 
+  /* Error — validation red */
+  --color-error: #c0392b;
+
   /* Accent — neutralized to ink (no chroma) */
   --color-accent: #171717;
   --color-accent-deep: #000000;

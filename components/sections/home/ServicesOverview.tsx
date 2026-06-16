@@ -24,7 +24,7 @@ function ServiceRow({ service }: { service: Service }) {
         <h3 className="font-display text-[length:var(--text-4xl)] font-light tracking-tight text-fg-muted transition-colors duration-300 group-hover:text-fg">
           {service.title}
         </h3>
-        <span className="ml-auto text-[length:var(--text-2xl)] text-fg-dim transition-transform duration-300 group-hover:rotate-45 group-hover:text-accent">
+        <span className="ml-auto text-[length:var(--text-2xl)] text-fg-dim transition-transform duration-300 group-hover:rotate-45 group-hover:text-fg">
           +
         </span>
       </div>
@@ -50,7 +50,7 @@ export function ServicesOverview() {
         <div className="grid-12 items-end">
           <div className="col-span-12 md:col-span-6">
             <Eyebrow index="03">{s.eyebrow}</Eyebrow>
-            <h2 className="mt-6 font-display text-[length:var(--text-4xl)] font-light leading-tight tracking-tight text-balance [&_em]:italic [&_em]:text-accent">
+            <h2 className="mt-6 font-display text-[length:var(--text-4xl)] font-light leading-tight tracking-tight text-balance [&_em]:italic [&_em]:text-fg">
               Everything between the idea and the people who&apos;ll{" "}
               <em>love it.</em>
             </h2>

@@ -98,7 +98,7 @@ export function Hero() {
         <span className="label-caps flex flex-col items-center gap-3">
           Scroll
           <span className="relative h-10 w-px overflow-hidden bg-line">
-            <span className="absolute inset-x-0 top-0 h-3 animate-[scrollcue_1.8s_ease-in-out_infinite] bg-accent" />
+            <span className="absolute inset-x-0 top-0 h-3 animate-[scrollcue_1.8s_ease-in-out_infinite] bg-fg" />
           </span>
         </span>
       </motion.div>

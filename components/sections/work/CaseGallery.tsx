@@ -24,7 +24,6 @@ export function CaseGallery({ item }: Props) {
             >
               <div className="surface-card overflow-hidden">
                 <CoverPanel
-                  accent={panel.accent ?? item.accent}
                   label={panel.caption}
                   className="aspect-[16/10] rounded-[var(--radius)]"
                 />

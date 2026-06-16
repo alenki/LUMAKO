@@ -13,7 +13,7 @@ export function Logo({ className }: Props) {
         className,
       )}
     >
-      Lumako<span className="text-accent">.</span>
+      Lumako<span className="text-fg">.</span>
     </span>
   );
 }

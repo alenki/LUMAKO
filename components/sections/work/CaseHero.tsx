@@ -43,7 +43,6 @@ export function CaseHero({ item }: Props) {
           <Reveal as="figure" index={1} className="col-span-12 md:col-span-8">
             <div className="surface-card overflow-hidden rounded-[var(--radius)] shadow-[var(--shadow-card)]">
               <CoverPanel
-                accent={item.accent}
                 className="aspect-[16/9]"
               />
             </div>

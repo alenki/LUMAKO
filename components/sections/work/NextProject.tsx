@@ -37,7 +37,6 @@ export function NextProject({ item }: Props) {
           <div className="md:col-span-5">
             <div className="surface-card overflow-hidden rounded-[var(--radius)]">
               <CoverPanel
-                accent={item.accent}
                 className="aspect-[4/3] transition-transform duration-700 ease-[cubic-bezier(.22,1,.36,1)] group-hover:scale-[1.04]"
               />
             </div>

@@ -1,7 +1,6 @@
 import { cn } from "@/lib/utils";
 
 type Props = {
-  accent?: string;
   index?: string;
   label?: string;
   className?: string;
@@ -10,11 +9,10 @@ type Props = {
 
 /**
  * Intentional gradient placeholder standing in for project / portrait imagery.
- * Tinted by the item's accent, with grain + a faint grid for depth. Looks
- * designed, never broken — real imagery can be layered in later.
+ * Neutral gray with grain + a faint grid for depth. Looks designed, never
+ * broken — real imagery can be layered in later.
  */
-// eslint-disable-next-line @typescript-eslint/no-unused-vars
-export function CoverPanel({ accent, index, label, className, children }: Props) {
+export function CoverPanel({ index, label, className, children }: Props) {
   return (
     <div
       className={cn("relative overflow-hidden bg-[#d8d8d7] rounded-[var(--radius)]", className)}
