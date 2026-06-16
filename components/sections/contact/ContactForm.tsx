@@ -79,9 +79,9 @@ export function ContactForm() {
         initial={{ opacity: 0, y: 24 }}
         animate={{ opacity: 1, y: 0 }}
         transition={{ duration: 0.9, ease: easeOutExpo }}
-        className="flex min-h-[24rem] flex-col justify-center rounded-[10px] border border-line bg-card p-10"
+        className="surface-card flex min-h-[24rem] flex-col justify-center rounded-[var(--radius)] p-10"
       >
-        <span className="label-caps !text-accent-deep">
+        <span className="label-caps text-fg-muted">
           (✓) Sent
         </span>
         <h2 className="mt-6 font-display text-[length:var(--text-4xl)] font-light leading-tight tracking-tight text-balance">
@@ -95,7 +95,7 @@ export function ContactForm() {
           <a
             href={`mailto:${site.email}`}
             data-cursor
-            className="text-fg underline decoration-line underline-offset-4 transition-colors hover:text-accent hover:decoration-accent"
+            className="text-fg underline decoration-line underline-offset-4 transition-colors hover:text-fg-muted hover:decoration-fg-muted"
           >
             {site.email}
           </a>
@@ -204,7 +204,7 @@ export function ContactForm() {
             animate={{ opacity: 1, y: 0 }}
             exit={{ opacity: 0 }}
             transition={{ duration: 0.4, ease: easeOutExpo }}
-            className="label-caps !text-accent-deep"
+            className="label-caps !text-[#c0392b]"
           >
             Please fix the highlighted fields and try again.
           </motion.p>
