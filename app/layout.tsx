@@ -2,6 +2,12 @@ import type { Metadata } from "next";
 import { Fraunces, Hanken_Grotesk } from "next/font/google";
 import { GeistMono } from "geist/font/mono";
 import "@/styles/globals.css";
+import { Providers } from "@/components/layout/Providers";
+import { SmoothScroll } from "@/components/layout/SmoothScroll";
+import { Cursor } from "@/components/layout/Cursor";
+import { Nav } from "@/components/layout/Nav";
+import { Footer } from "@/components/layout/Footer";
+import { PageTransition, RouteCurtain } from "@/components/layout/PageTransition";
 
 const fraunces = Fraunces({
   subsets: ["latin"],
@@ -50,7 +56,17 @@ export default function RootLayout({
       lang="en"
       className={`${fraunces.variable} ${hanken.variable} ${GeistMono.variable}`}
     >
-      <body className="min-h-dvh">{children}</body>
+      <body className="min-h-dvh">
+        <Providers>
+          <SmoothScroll>
+            <Cursor />
+            <RouteCurtain />
+            <Nav />
+            <PageTransition>{children}</PageTransition>
+            <Footer />
+          </SmoothScroll>
+        </Providers>
+      </body>
     </html>
   );
 }
