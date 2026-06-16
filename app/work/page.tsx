@@ -16,23 +16,30 @@ export default function WorkPage() {
     <>
       <section className="section-lg pt-[calc(var(--header-h)+var(--vw-8))]">
         <div className="container-x">
-          <Eyebrow index="01">{w.eyebrow}</Eyebrow>
-          <TextReveal
-            as="h1"
-            text={w.headline}
-            highlight={w.highlight}
-            delay={0.1}
-            className="mt-8 block max-w-[18ch] font-display text-[length:var(--text-7xl)] font-light leading-[0.95] tracking-tight text-balance"
-          />
-          <Reveal index={1}>
-            <p className="mt-8 max-w-[48ch] text-[length:var(--text-xl)] text-fg-muted text-pretty">
-              {w.sub}
-            </p>
-          </Reveal>
+          <div className="grid-12 items-end">
+            {/* Left: eyebrow + headline */}
+            <div className="col-span-12 md:col-span-7">
+              <Eyebrow index="01">{w.eyebrow}</Eyebrow>
+              <TextReveal
+                as="h1"
+                text={w.headline}
+                highlight={w.highlight}
+                delay={0.1}
+                className="mt-8 block font-display text-[length:var(--text-7xl)] font-light leading-[0.95] tracking-tight text-balance"
+              />
+            </div>
+
+            {/* Right: sub paragraph, anchored to baseline */}
+            <Reveal index={1} className="col-span-12 md:col-start-9 md:col-span-4 md:pb-2">
+              <p className="text-[length:var(--text-xl)] text-fg-muted text-pretty">
+                {w.sub}
+              </p>
+            </Reveal>
+          </div>
         </div>
       </section>
 
-      <section className="section-lg border-t border-line">
+      <section className="section-lg">
         <div className="container-x">
           <WorkGrid />
         </div>

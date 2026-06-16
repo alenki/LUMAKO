@@ -40,13 +40,14 @@ export function WorkGrid() {
       {/* Animated grid */}
       <motion.div
         layout
-        className="mt-16 grid gap-x-8 gap-y-16 md:grid-cols-2"
+        className="grid-12 mt-16 gap-x-8 gap-y-12"
       >
         <AnimatePresence mode="popLayout">
           {filtered.map((item, i) => (
             <motion.div
               key={item.slug}
               layout
+              className="col-span-12 md:col-span-6"
               initial={{ opacity: 0, y: 28 }}
               animate={{
                 opacity: 1,
