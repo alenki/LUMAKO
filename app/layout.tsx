@@ -57,6 +57,12 @@ export default function RootLayout({
       className={`${fraunces.variable} ${hanken.variable} ${GeistMono.variable}`}
     >
       <body className="min-h-dvh">
+        <a
+          href="#main"
+          className="sr-only focus:not-sr-only focus:fixed focus:left-4 focus:top-4 focus:z-[500] focus:rounded-full focus:bg-accent focus:px-5 focus:py-2.5 focus:text-bg"
+        >
+          Skip to content
+        </a>
         <Providers>
           <SmoothScroll>
             <Cursor />

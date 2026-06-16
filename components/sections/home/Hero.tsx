@@ -2,7 +2,7 @@
 
 import dynamic from "next/dynamic";
 import { motion, useReducedMotion } from "motion/react";
-import { useDeviceTier } from "@/lib/useDeviceTier";
+import { useDeviceTier } from "@/lib/mediaHooks";
 import { HeroFallback } from "@/components/three/HeroFallback";
 import { TextReveal } from "@/components/ui/TextReveal";
 import { Eyebrow } from "@/components/ui/Eyebrow";

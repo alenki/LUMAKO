@@ -2,13 +2,14 @@
 
 import { useEffect, useState } from "react";
 import { motion, useMotionValue, useSpring } from "motion/react";
+import { useCursorEnabled } from "@/lib/mediaHooks";
 
 /**
  * Custom cursor: a precise dot + a lagging ring that grows over interactive
  * elements (anything with [data-cursor] or a/button). Pointer-fine only.
  */
 export function Cursor() {
-  const [enabled, setEnabled] = useState(false);
+  const enabled = useCursorEnabled();
   const [active, setActive] = useState(false);
   const [hidden, setHidden] = useState(true);
 
@@ -18,11 +19,8 @@ export function Cursor() {
   const ringY = useSpring(y, { stiffness: 350, damping: 28, mass: 0.4 });
 
   useEffect(() => {
-    const fine = window.matchMedia("(pointer: fine)").matches;
-    const reduce = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
-    if (!fine || reduce) return;
+    if (!enabled) return;
 
-    setEnabled(true);
     document.documentElement.classList.add("has-cursor");
 
     const move = (e: MouseEvent) => {
@@ -41,7 +39,7 @@ export function Cursor() {
       document.removeEventListener("mouseleave", leave);
       document.documentElement.classList.remove("has-cursor");
     };
-  }, [x, y]);
+  }, [enabled, x, y]);
 
   if (!enabled) return null;
 

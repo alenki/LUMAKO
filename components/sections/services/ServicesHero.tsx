@@ -6,7 +6,7 @@ import { copy } from "@/lib/content/copy";
 export function ServicesHero() {
   const s = copy.services;
   return (
-    <section className="relative overflow-hidden border-line section-lg pt-[calc(var(--header-h)+var(--vw-8))]">
+    <section className="relative overflow-hidden section-lg pt-[calc(var(--header-h)+var(--vw-8))]">
       <div className="glow-accent absolute inset-0" />
       <div className="container-x relative">
         <Eyebrow index="01">{s.eyebrow}</Eyebrow>

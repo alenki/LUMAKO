@@ -20,10 +20,11 @@ export function WorkGrid() {
 
   return (
     <div>
+      <h2 className="sr-only">All projects</h2>
       {/* Filter row */}
       <div
         className="flex flex-wrap items-center gap-2"
-        role="tablist"
+        role="group"
         aria-label="Filter work by discipline"
       >
         <Tag active={filter === "All"} onClick={() => setFilter("All")}>

@@ -28,7 +28,7 @@ export function StudioHero() {
             {studioManifesto.body.map((paragraph, i) => (
               <Reveal
                 as="p"
-                key={i}
+                key={paragraph}
                 index={i + 1}
                 className="max-w-[42ch] text-[length:var(--text-lg)] text-fg-muted text-pretty"
               >

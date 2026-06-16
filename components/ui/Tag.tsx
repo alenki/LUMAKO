@@ -20,7 +20,13 @@ export function Tag({ children, active, onClick, className }: Props) {
   );
   if (onClick) {
     return (
-      <button type="button" onClick={onClick} className={cls} data-cursor>
+      <button
+        type="button"
+        onClick={onClick}
+        aria-pressed={active}
+        className={cls}
+        data-cursor
+      >
         {children}
       </button>
     );

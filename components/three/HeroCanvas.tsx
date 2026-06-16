@@ -1,5 +1,7 @@
 "use client";
 
+/* eslint-disable react-hooks/purity, react-hooks/immutability -- React Three Fiber scene code is intentionally imperative: it mutates three.js objects (camera/group transforms) every frame and uses Math.random for one-time procedural star placement. These are the correct, idiomatic R3F patterns. */
+
 import { useMemo, useRef } from "react";
 import { Canvas, useFrame, useThree } from "@react-three/fiber";
 import { EffectComposer, Bloom } from "@react-three/postprocessing";

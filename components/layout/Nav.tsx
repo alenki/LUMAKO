@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { AnimatePresence, motion } from "motion/react";
@@ -10,21 +10,12 @@ import { MagneticButton } from "@/components/ui/MagneticButton";
 import { LocalTime } from "./LocalTime";
 import { cn } from "@/lib/utils";
 import { easeOutExpo } from "@/lib/motion";
+import { useScrolled } from "@/lib/mediaHooks";
 
 export function Nav() {
   const pathname = usePathname();
   const [open, setOpen] = useState(false);
-  const [scrolled, setScrolled] = useState(false);
-
-  useEffect(() => {
-    const onScroll = () => setScrolled(window.scrollY > 24);
-    onScroll();
-    window.addEventListener("scroll", onScroll, { passive: true });
-    return () => window.removeEventListener("scroll", onScroll);
-  }, []);
-
-  // Close the mobile menu whenever the route changes.
-  useEffect(() => setOpen(false), [pathname]);
+  const scrolled = useScrolled(24);
 
   const isActive = (href: string) =>
     href === "/" ? pathname === "/" : pathname.startsWith(href);
@@ -120,6 +111,7 @@ export function Nav() {
                 >
                   <Link
                     href={item.href}
+                    onClick={() => setOpen(false)}
                     className="font-display text-[length:var(--text-6xl)] font-light leading-tight text-fg"
                   >
                     {item.label}

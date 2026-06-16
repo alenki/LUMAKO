@@ -8,14 +8,15 @@ import { easeOutExpo, easeInOutExpo } from "@/lib/motion";
 export function PageTransition({ children }: { children: React.ReactNode }) {
   const pathname = usePathname();
   return (
-    <motion.div
+    <motion.main
       key={pathname}
+      id="main"
       initial={{ opacity: 0, y: 12 }}
       animate={{ opacity: 1, y: 0 }}
       transition={{ duration: 0.6, ease: easeOutExpo, delay: 0.15 }}
     >
       {children}
-    </motion.div>
+    </motion.main>
   );
 }
 

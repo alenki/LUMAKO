@@ -84,9 +84,9 @@ export function ContactForm() {
         <span className="font-mono text-[length:var(--text-mono)] uppercase tracking-[0.25em] text-accent">
           (✓) Sent
         </span>
-        <h3 className="mt-6 font-display text-[length:var(--text-4xl)] font-light leading-tight tracking-tight text-balance">
+        <h2 className="mt-6 font-display text-[length:var(--text-4xl)] font-light leading-tight tracking-tight text-balance">
           {s.title}
-        </h3>
+        </h2>
         <p className="mt-4 max-w-[44ch] text-[length:var(--text-lg)] text-fg-muted text-pretty">
           {s.body}
         </p>

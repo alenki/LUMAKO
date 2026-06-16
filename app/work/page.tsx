@@ -16,7 +16,7 @@ export default function WorkPage() {
     <>
       <section className="section-lg pt-[calc(var(--header-h)+var(--vw-8))]">
         <div className="container-x">
-          <Eyebrow index="00">{w.eyebrow}</Eyebrow>
+          <Eyebrow index="01">{w.eyebrow}</Eyebrow>
           <TextReveal
             as="h1"
             text={w.headline}

@@ -28,7 +28,7 @@ export function ContactDetails() {
       </Reveal>
 
       <Reveal index={1}>
-        <div className="grid grid-cols-2 gap-px overflow-hidden rounded-xl border border-line bg-line">
+        <div className="grid grid-cols-1 gap-px overflow-hidden rounded-xl border border-line bg-line sm:grid-cols-2">
           <div className="bg-bg p-7">
             <span className="font-mono text-[length:var(--text-mono)] uppercase tracking-[0.2em] text-fg-dim">
               Based in

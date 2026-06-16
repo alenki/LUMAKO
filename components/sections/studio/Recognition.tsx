@@ -13,7 +13,7 @@ export function Recognition() {
         <ul className="mt-14">
           {recognition.map((item, i) => (
             <Reveal as="li" key={`${item.award}-${item.year}`} index={i % 3}>
-              <div className="group flex items-baseline gap-6 border-t border-line py-7">
+              <div className="group flex flex-wrap items-baseline gap-x-6 gap-y-2 border-t border-line py-7">
                 <h3 className="font-display text-[length:var(--text-2xl)] font-light leading-tight tracking-tight text-fg">
                   {item.award}
                 </h3>
