@@ -40,44 +40,52 @@ export function Hero() {
       <div className="noise-veil" />
 
       <div className="container-x relative z-10 pt-[var(--header-h)]">
-        <motion.div
-          initial={{ opacity: 0, y: 12 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.8, ease: easeOutExpo, delay: 0.4 }}
-        >
-          <Eyebrow index="01">{hero.eyebrow}</Eyebrow>
-        </motion.div>
+        <div className="grid-12 items-end gap-y-10">
+          {/* LEFT column — headline + CTAs */}
+          <div className="col-span-12 md:col-span-7">
+            <TextReveal
+              as="h1"
+              text={hero.headline}
+              highlight={hero.highlight}
+              delay={0.55}
+              className="block max-w-[22ch] font-display text-[length:var(--text-7xl)] font-light leading-[0.95] tracking-tight text-balance"
+            />
 
-        <TextReveal
-          as="h1"
-          text={hero.headline}
-          highlight={hero.highlight}
-          delay={0.55}
-          className="mt-8 block max-w-[20ch] font-display text-[length:var(--text-7xl)] font-light leading-[0.95] tracking-tight text-balance"
-        />
+            <motion.div
+              initial={{ opacity: 0, y: 16 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.9, ease: easeOutExpo, delay: 1.25 }}
+              className="mt-11 flex flex-wrap items-center gap-4"
+            >
+              <MagneticButton href={hero.ctaPrimary.href}>
+                {hero.ctaPrimary.label}
+              </MagneticButton>
+              <Button href={hero.ctaSecondary.href} variant="lume">
+                {hero.ctaSecondary.label}
+              </Button>
+            </motion.div>
+          </div>
 
-        <motion.p
-          initial={{ opacity: 0, y: 16 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.9, ease: easeOutExpo, delay: 1.1 }}
-          className="mt-8 max-w-[46ch] text-[length:var(--text-xl)] text-fg-muted text-pretty"
-        >
-          {hero.sub}
-        </motion.p>
+          {/* RIGHT column — eyebrow + supporting paragraph */}
+          <div className="col-span-12 md:col-start-9 md:col-span-4 order-first md:order-none">
+            <motion.div
+              initial={{ opacity: 0, y: 12 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.8, ease: easeOutExpo, delay: 0.4 }}
+            >
+              <Eyebrow index="01">{hero.eyebrow}</Eyebrow>
+            </motion.div>
 
-        <motion.div
-          initial={{ opacity: 0, y: 16 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.9, ease: easeOutExpo, delay: 1.25 }}
-          className="mt-11 flex flex-wrap items-center gap-4"
-        >
-          <MagneticButton href={hero.ctaPrimary.href}>
-            {hero.ctaPrimary.label}
-          </MagneticButton>
-          <Button href={hero.ctaSecondary.href} variant="lume">
-            {hero.ctaSecondary.label}
-          </Button>
-        </motion.div>
+            <motion.p
+              initial={{ opacity: 0, y: 16 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.9, ease: easeOutExpo, delay: 1.1 }}
+              className="mt-8 max-w-[46ch] text-[length:var(--text-xl)] text-fg-muted text-pretty"
+            >
+              {hero.sub}
+            </motion.p>
+          </div>
+        </div>
       </div>
 
       {/* Scroll cue */}
