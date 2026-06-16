@@ -11,7 +11,7 @@ type Props = {
 /** Full-width cinematic link to the next project. */
 export function NextProject({ item }: Props) {
   return (
-    <section className="border-t border-line">
+    <section>
       <Link
         href={`/work/${item.slug}`}
         data-cursor
@@ -35,7 +35,7 @@ export function NextProject({ item }: Props) {
           </div>
 
           <div className="md:col-span-5">
-            <div className="overflow-hidden rounded-[10px] border border-line">
+            <div className="surface-card overflow-hidden rounded-[var(--radius)]">
               <CoverPanel
                 accent={item.accent}
                 className="aspect-[4/3] transition-transform duration-700 ease-[cubic-bezier(.22,1,.36,1)] group-hover:scale-[1.04]"
