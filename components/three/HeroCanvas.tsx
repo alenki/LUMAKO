@@ -68,7 +68,7 @@ function WireframeForm() {
       </mesh>
       <mesh>
         <icosahedronGeometry args={[0.62, 1]} />
-        <meshBasicMaterial color="#d49a2e" wireframe transparent opacity={0.95} />
+        <meshBasicMaterial color="#404040" wireframe transparent opacity={0.95} />
       </mesh>
     </group>
   );

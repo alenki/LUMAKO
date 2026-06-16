@@ -46,7 +46,7 @@ export function TextReveal({
   highlight,
   as = "span",
   className,
-  highlightClassName = "italic text-accent",
+  highlightClassName = "italic text-fg",
   delay = 0,
   stagger = 0.06,
 }: Props) {

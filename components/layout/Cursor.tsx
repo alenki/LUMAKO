@@ -50,7 +50,7 @@ export function Cursor() {
       style={{ opacity: hidden ? 0 : 1, transition: "opacity 0.25s" }}
     >
       <motion.span
-        className="absolute -ml-[3px] -mt-[3px] size-1.5 rounded-full bg-accent"
+        className="absolute -ml-[3px] -mt-[3px] size-1.5 rounded-full bg-fg"
         style={{ x, y }}
       />
       <motion.span
@@ -62,7 +62,7 @@ export function Cursor() {
           height: active ? 56 : 32,
           marginLeft: active ? -28 : -16,
           marginTop: active ? -28 : -16,
-          borderColor: active ? "var(--color-accent)" : "rgba(10,10,10,0.35)",
+          borderColor: active ? "var(--color-fg)" : "rgba(10,10,10,0.35)",
           transition: "width 0.25s, height 0.25s, margin 0.25s, border-color 0.25s",
         }}
       />

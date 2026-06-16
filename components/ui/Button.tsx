@@ -5,13 +5,13 @@ export type ButtonVariant = "primary" | "lume" | "ghost" | "outline-dark" | "lin
 
 export function buttonClasses(variant: ButtonVariant = "primary", className?: string) {
   const base =
-    "inline-flex items-center justify-center gap-2 rounded-[10px] px-7 py-3 font-medium tracking-tight transition-colors duration-300";
+    "inline-flex items-center justify-center gap-2 rounded-[var(--radius)] px-7 py-3 font-medium tracking-tight transition-colors duration-300";
   const map: Record<ButtonVariant, string> = {
     primary: "bg-ink text-[#fafafa] hover:bg-[#2a2a2a]",
-    lume: "bg-accent text-[#1a1206] hover:bg-accent-deep",
+    lume: "bg-ink text-[#fafafa] hover:bg-[#2a2a2a]",
     ghost: "border border-line bg-transparent text-fg hover:border-line-strong",
     "outline-dark": "border border-white/20 bg-transparent text-[#fafafa] hover:border-white/40",
-    link: "relative rounded-none px-0 py-0 text-fg after:absolute after:inset-x-0 after:-bottom-1 after:h-px after:origin-left after:scale-x-0 after:bg-accent after:transition-transform after:duration-300 hover:after:scale-x-100",
+    link: "relative rounded-none px-0 py-0 text-fg after:absolute after:inset-x-0 after:-bottom-1 after:h-px after:origin-left after:scale-x-0 after:bg-fg after:transition-transform after:duration-300 hover:after:scale-x-100",
   };
   return cn(base, map[variant], className);
 }

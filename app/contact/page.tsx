@@ -16,26 +16,32 @@ export default function ContactPage() {
   return (
     <section className="section-lg pt-[calc(var(--header-h)+var(--vw-8))]">
       <div className="container-x">
-        <header className="max-w-[34ch]">
-          <Eyebrow index="01">{c.eyebrow}</Eyebrow>
-          <TextReveal
-            as="h1"
-            text={c.headline}
-            highlight={c.highlight}
-            className="mt-8 block font-display text-[length:var(--text-6xl)] font-light leading-[1.02] tracking-tight text-balance"
-          />
-          <Reveal index={1}>
-            <p className="mt-8 max-w-[48ch] text-[length:var(--text-xl)] text-fg-muted text-pretty">
-              {c.sub}
-            </p>
-          </Reveal>
+        <header className="grid-12 items-end">
+          <div className="col-span-12 md:col-span-7">
+            <Eyebrow index="01">{c.eyebrow}</Eyebrow>
+            <TextReveal
+              as="h1"
+              text={c.headline}
+              highlight={c.highlight}
+              className="mt-8 block font-display text-[length:var(--text-6xl)] font-light leading-[1.02] tracking-tight text-balance"
+            />
+          </div>
+          {c.sub && (
+            <div className="col-span-12 md:col-start-9 md:col-span-4">
+              <Reveal index={1}>
+                <p className="text-[length:var(--text-xl)] text-fg-muted text-pretty">
+                  {c.sub}
+                </p>
+              </Reveal>
+            </div>
+          )}
         </header>
 
-        <div className="mt-20 grid gap-x-16 gap-y-16 border-t border-line pt-16 md:grid-cols-2">
-          <div>
+        <div className="mt-20 grid-12 gap-y-16">
+          <div className="col-span-12 md:col-span-7">
             <ContactForm />
           </div>
-          <div className="md:pl-8">
+          <div className="col-span-12 md:col-start-9 md:col-span-4">
             <ContactDetails />
           </div>
         </div>

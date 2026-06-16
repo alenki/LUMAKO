@@ -3,7 +3,6 @@ import { StudioHero } from "@/components/sections/studio/StudioHero";
 import { Values } from "@/components/sections/studio/Values";
 import { Team } from "@/components/sections/studio/Team";
 import { Recognition } from "@/components/sections/studio/Recognition";
-import { Clients } from "@/components/sections/studio/Clients";
 import { CtaBand } from "@/components/sections/home/CtaBand";
 import { copy } from "@/lib/content/copy";
 
@@ -19,7 +18,6 @@ export default function StudioPage() {
       <Values />
       <Team />
       <Recognition />
-      <Clients />
       <CtaBand />
     </>
   );

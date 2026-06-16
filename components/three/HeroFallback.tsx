@@ -8,7 +8,7 @@ export function HeroFallback() {
         className="absolute left-1/2 top-1/2 size-[42rem] max-w-[90vw] -translate-x-1/2 -translate-y-1/2 rounded-full"
         style={{
           background:
-            "radial-gradient(circle, rgba(212,154,46,0.28), rgba(212,154,46,0.05) 45%, transparent 70%)",
+            "radial-gradient(circle, rgba(100,100,100,0.18), rgba(100,100,100,0.04) 45%, transparent 70%)",
           filter: "blur(30px)",
         }}
       />

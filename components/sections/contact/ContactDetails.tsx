@@ -13,7 +13,7 @@ export function ContactDetails() {
           <a
             href={`mailto:${site.email}`}
             data-cursor
-            className="group block w-fit font-display text-[length:var(--text-4xl)] font-light leading-tight tracking-tight text-fg transition-colors duration-300 hover:text-accent"
+            className="group block w-fit font-display text-[length:var(--text-4xl)] font-light leading-tight tracking-tight text-fg transition-colors duration-300 hover:text-fg"
           >
             {site.email}
             <span className="ml-1 inline-block transition-transform duration-300 group-hover:translate-x-1 group-hover:-translate-y-1">
@@ -28,8 +28,8 @@ export function ContactDetails() {
       </Reveal>
 
       <Reveal index={1}>
-        <div className="grid grid-cols-1 gap-px overflow-hidden rounded-[10px] border border-line bg-line sm:grid-cols-2">
-          <div className="bg-bg p-7">
+        <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
+          <div className="surface-card rounded-[var(--radius)] p-7">
             <span className="label-caps text-fg-dim">
               Based in
             </span>
@@ -37,7 +37,7 @@ export function ContactDetails() {
               {site.locale}
             </p>
           </div>
-          <div className="bg-bg p-7">
+          <div className="surface-card rounded-[var(--radius)] p-7">
             <span className="label-caps text-fg-dim">
               Local time
             </span>
@@ -64,7 +64,7 @@ export function ContactDetails() {
                   className="group inline-flex items-center gap-1.5 text-[length:var(--text-lg)] text-fg-muted transition-colors duration-300 hover:text-fg"
                 >
                   {social.label}
-                  <span className="text-fg-dim transition-transform duration-300 group-hover:translate-x-0.5 group-hover:-translate-y-0.5 group-hover:text-accent">
+                  <span className="text-fg-dim transition-transform duration-300 group-hover:translate-x-0.5 group-hover:-translate-y-0.5 group-hover:text-fg">
                     ↗
                   </span>
                 </a>

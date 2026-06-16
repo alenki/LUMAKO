@@ -1,7 +1,6 @@
 import { cn } from "@/lib/utils";
 
 type Props = {
-  accent?: string;
   index?: string;
   label?: string;
   className?: string;
@@ -10,15 +9,15 @@ type Props = {
 
 /**
  * Intentional gradient placeholder standing in for project / portrait imagery.
- * Tinted by the item's accent, with grain + a faint grid for depth. Looks
- * designed, never broken — real imagery can be layered in later.
+ * Neutral gray with grain + a faint grid for depth. Looks designed, never
+ * broken — real imagery can be layered in later.
  */
-export function CoverPanel({ accent = "#d49a2e", index, label, className, children }: Props) {
+export function CoverPanel({ index, label, className, children }: Props) {
   return (
     <div
-      className={cn("relative overflow-hidden bg-card", className)}
+      className={cn("relative overflow-hidden bg-[#d8d8d7] rounded-[var(--radius)]", className)}
       style={{
-        backgroundImage: `radial-gradient(110% 110% at 72% 18%, ${accent}40, transparent 55%), linear-gradient(155deg, ${accent}1f, #f5f5f5 72%)`,
+        backgroundImage: `radial-gradient(120% 100% at 75% 15%, rgba(255,255,255,0.55), transparent 48%), linear-gradient(150deg, #e9e9e8 0%, #d6d6d5 55%, #c8c8c7 100%)`,
       }}
     >
       <div

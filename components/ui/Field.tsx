@@ -29,8 +29,8 @@ export function Field({
   className,
 }: Props) {
   const fieldCls = cn(
-    "mt-3 w-full bg-transparent border-b py-3 text-[length:var(--text-xl)] text-fg outline-none transition-colors duration-300 placeholder:text-fg-dim focus:border-accent",
-    error ? "border-accent-deep" : "border-line",
+    "mt-3 w-full bg-transparent border-b py-3 text-[length:var(--text-xl)] text-fg outline-none transition-colors duration-300 placeholder:text-fg-dim focus:border-fg",
+    error ? "border-error" : "border-line",
     as === "textarea" && "min-h-36 resize-none",
   );
 
@@ -38,7 +38,7 @@ export function Field({
     <label className={cn("block", className)}>
       <span className="label-caps">
         {label}
-        {required ? <span className="text-accent"> *</span> : null}
+        {required ? <span className="text-fg-muted"> *</span> : null}
       </span>
       {as === "textarea" ? (
         <textarea
@@ -63,7 +63,7 @@ export function Field({
         />
       )}
       {error ? (
-        <span className="mt-2 block label-caps !text-accent-deep">
+        <span className="mt-2 block label-caps !text-error">
           {error}
         </span>
       ) : null}

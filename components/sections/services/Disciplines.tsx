@@ -3,15 +3,15 @@ import { services } from "@/lib/content/services";
 
 export function Disciplines() {
   return (
-    <section className="border-t border-line section-lg">
+    <section className="section-lg">
       <div className="container-x">
         {services.map((service) => (
           <Reveal
             key={service.id}
             as="div"
-            className="grid gap-x-12 gap-y-8 border-t border-line py-16 first:border-t-0 first:pt-0 md:grid-cols-12"
+            className="grid-12 gap-y-8 border-t border-line py-16 first:pt-0 last:border-b last:border-line"
           >
-            <div className="md:col-span-7">
+            <div className="col-span-12 md:col-span-6">
               <span className="label-caps text-fg-dim">
                 {service.index}
               </span>
@@ -22,7 +22,7 @@ export function Disciplines() {
                 {service.blurb}
               </p>
             </div>
-            <div className="md:col-span-5">
+            <div className="col-span-12 md:col-start-8 md:col-span-5">
               <p className="label-caps text-fg-dim">
                 Deliverables
               </p>
@@ -32,7 +32,7 @@ export function Disciplines() {
                     key={item}
                     className="flex items-baseline gap-4 border-b border-line py-4 text-[length:var(--text-lg)] text-fg"
                   >
-                    <span className="text-[length:var(--text-mono)] text-accent">
+                    <span className="text-[length:var(--text-mono)] text-fg-dim">
                       +
                     </span>
                     <span>{item}</span>
