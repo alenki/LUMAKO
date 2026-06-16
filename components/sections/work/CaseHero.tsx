@@ -17,7 +17,7 @@ export function CaseHero({ item }: Props) {
       <div
         className="glow-accent pointer-events-none absolute inset-x-0 top-0 h-[60vh]"
         style={{
-          background: `radial-gradient(60% 60% at 50% 0%, ${item.accent}26 0%, transparent 70%)`,
+          background: `radial-gradient(60% 60% at 50% 0%, rgba(10,10,10,0.04) 0%, transparent 70%)`,
         }}
       />
       <div className="container-x relative">
@@ -39,14 +39,16 @@ export function CaseHero({ item }: Props) {
           className="mt-7 block max-w-[16ch] font-display text-[length:var(--text-7xl)] font-light leading-[0.96] tracking-tight text-balance"
         />
 
-        <div className="mt-14 grid gap-x-12 gap-y-10 md:grid-cols-12 md:items-end">
-          <Reveal as="figure" index={1} className="md:col-span-8">
-            <CoverPanel
-              accent={item.accent}
-              className="aspect-[16/9] rounded-[10px] border border-line"
-            />
+        <div className="mt-14 grid-12 items-end gap-y-10">
+          <Reveal as="figure" index={1} className="col-span-12 md:col-span-8">
+            <div className="surface-card overflow-hidden rounded-[var(--radius)] shadow-[var(--shadow-card)]">
+              <CoverPanel
+                accent={item.accent}
+                className="aspect-[16/9]"
+              />
+            </div>
           </Reveal>
-          <Reveal index={2} className="md:col-span-4">
+          <Reveal index={2} className="col-span-12 md:col-span-4">
             <p className="text-[length:var(--text-xl)] text-fg-muted text-pretty">
               {item.summary}
             </p>
