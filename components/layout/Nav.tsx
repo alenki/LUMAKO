@@ -6,7 +6,7 @@ import { usePathname } from "next/navigation";
 import { AnimatePresence, motion } from "motion/react";
 import { site } from "@/lib/content/site";
 import { Logo } from "@/components/ui/Logo";
-import { MagneticButton } from "@/components/ui/MagneticButton";
+import { LanguageToggle, type Locale } from "@/components/ui/LanguageToggle";
 import { cn } from "@/lib/utils";
 import { easeOutExpo } from "@/lib/motion";
 import { useScrolled } from "@/lib/mediaHooks";
@@ -14,6 +14,7 @@ import { useScrolled } from "@/lib/mediaHooks";
 export function Nav() {
   const pathname = usePathname();
   const [open, setOpen] = useState(false);
+  const [locale, setLocale] = useState<Locale>("en");
   const scrolled = useScrolled(24);
 
   const isActive = (href: string) =>
@@ -61,13 +62,8 @@ export function Nav() {
 
           {/* Right - CTA, mobile toggle */}
           <div className="col-start-3 flex items-center justify-end gap-[var(--vw-3)]">
-            <div className="hidden items-center gap-[var(--vw-3)] md:flex">
-              <MagneticButton
-                href="/contact"
-                className="rounded-full px-6 py-3 text-[length:var(--text-base)]"
-              >
-                Start a project
-              </MagneticButton>
+            <div className="hidden items-center md:flex">
+              <LanguageToggle value={locale} onChange={setLocale} />
             </div>
 
             {/* Mobile toggle */}
@@ -124,7 +120,8 @@ export function Nav() {
                 </motion.div>
               ))}
             </nav>
-            <div className="mt-12 flex items-center justify-end border-t border-line pt-6">
+            <div className="mt-12 flex items-center justify-between border-t border-line pt-6">
+              <LanguageToggle value={locale} onChange={setLocale} />
               <a href={`mailto:${site.email}`} className="text-fg-muted">
                 {site.email}
               </a>
