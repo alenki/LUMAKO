@@ -19,7 +19,7 @@ export function WorkCard({ item, priority, className }: Props) {
       href={item.href}
       target="_blank"
       rel="noopener noreferrer"
-      data-cursor
+      data-cursor="quiet"
       aria-label={`${item.title} - ${item.client} (opens the live site in a new tab)`}
       className={cn("group block", className)}
     >

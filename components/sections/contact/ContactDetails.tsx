@@ -12,7 +12,7 @@ export function ContactDetails() {
           <Eyebrow>Direct line</Eyebrow>
           <a
             href={`mailto:${site.email}`}
-            data-cursor
+            data-cursor="quiet"
             className="group block w-fit font-display text-[length:var(--text-4xl)] font-light leading-tight tracking-tight text-fg transition-colors duration-300 hover:text-fg"
           >
             {site.email}

@@ -48,14 +48,12 @@ export function Nav() {
                 key={item.href}
                 href={item.href}
                 data-cursor
-                className="relative py-1 text-[length:var(--text-lg)] font-medium text-fg-muted transition-colors hover:text-fg"
-              >
-                <span className={cn(isActive(item.href) && "text-fg")}>
-                  {item.label}
-                </span>
-                {isActive(item.href) && (
-                  <span className="absolute inset-x-0 -bottom-0.5 h-px bg-lume" />
+                className={cn(
+                  "py-1 text-[length:var(--text-lg)] font-medium transition-colors hover:text-fg",
+                  isActive(item.href) ? "text-fg" : "text-fg-muted",
                 )}
+              >
+                {item.label}
               </Link>
             ))}
           </nav>

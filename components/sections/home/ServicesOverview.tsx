@@ -15,7 +15,7 @@ function ServiceRow({ service }: { service: Service }) {
       className="group border-t border-line"
       onMouseEnter={() => setOpen(true)}
       onMouseLeave={() => setOpen(false)}
-      data-cursor
+      data-cursor="quiet"
     >
       <div className="flex items-center gap-6 py-8">
         <span className="font-mono text-[length:var(--text-mono)] text-fg-dim">

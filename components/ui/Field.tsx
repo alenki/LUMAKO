@@ -35,7 +35,7 @@ export function Field({
   );
 
   return (
-    <label className={cn("block", className)}>
+    <label className={cn("block", className)} data-cursor="quiet">
       <span className="label-caps">
         {label}
         {required ? <span className="text-fg-muted"> *</span> : null}

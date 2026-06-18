@@ -1,6 +1,6 @@
 import { Eyebrow } from "@/components/ui/Eyebrow";
 import { TextReveal } from "@/components/ui/TextReveal";
-import { MagneticButton } from "@/components/ui/MagneticButton";
+import { Button } from "@/components/ui/Button";
 import { Reveal } from "@/components/ui/Reveal";
 import { LogoChips } from "@/components/ui/LogoChips";
 import { copy } from "@/lib/content/copy";
@@ -27,9 +27,9 @@ export function CtaBand() {
             </Reveal>
             <Reveal index={2}>
               <div className="mt-11">
-                <MagneticButton href={c.button.href} strength={0.5}>
+                <Button href={c.button.href} variant="primary">
                   {c.button.label}
-                </MagneticButton>
+                </Button>
               </div>
             </Reveal>
           </div>

@@ -37,6 +37,12 @@ describe("Cursor", () => {
     expect(container.querySelector("path")).toBeNull(); // no loop until hover
   });
 
+  it("inverts against the backdrop (mix-blend difference) so it stays visible on dark areas", () => {
+    const { container } = render(<Cursor />);
+    const reticle = container.querySelector("circle")?.closest("svg");
+    expect(reticle?.style.mixBlendMode).toBe("difference");
+  });
+
   it("draws a gold marker loop when the pointer reaches a clickable target", () => {
     const { container } = render(
       <>
@@ -50,6 +56,19 @@ describe("Cursor", () => {
     expect(loop).not.toBeNull();
     // The annotation is the brand's single lume signal.
     expect(loop?.getAttribute("stroke")).toContain("lume");
+  });
+
+  it("keeps the plain reticle - no gold loop - over a data-cursor='quiet' target", () => {
+    const { container } = render(
+      <>
+        <a href="#" data-cursor="quiet" data-testid="quiet">Work</a>
+        <Cursor />
+      </>,
+    );
+    fireEvent.mouseMove(container.querySelector("[data-testid='quiet']")!);
+
+    expect(container.querySelector("path")).toBeNull(); // opted out of the loop
+    expect(container.querySelector("circle")).not.toBeNull(); // reticle stays
   });
 
   it("returns nothing on a coarse pointer (no custom cursor)", () => {
