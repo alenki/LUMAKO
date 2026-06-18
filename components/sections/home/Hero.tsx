@@ -17,9 +17,9 @@ export function Hero() {
   // can overflow) and trigger the marker draw. Pre-revealed under reduced motion.
   const [revealed, setRevealed] = useState(reduce);
 
-  const lines = hero.lines;
+  const { lines, mark } = hero;
   const lastIdx = lines.length - 1;
-  const marked = splitOnWord(lines[lastIdx], hero.mark);
+  const marked = splitOnWord(lines[lastIdx], mark);
 
   return (
     <section className="relative flex min-h-dvh flex-col overflow-hidden pt-[var(--header-h)]">
@@ -33,7 +33,7 @@ export function Hero() {
           <h1 className="font-display font-extrabold uppercase leading-[0.85] tracking-[-0.05em] text-[length:clamp(46px,10.8vw,210px)]">
             {lines.map((line, i) => (
               <span
-                key={i}
+                key={line}
                 className={cn(
                   "block pb-[0.04em]",
                   revealed ? "overflow-visible" : "overflow-hidden",
@@ -93,7 +93,7 @@ export function Hero() {
           >
             <span className="label-caps flex items-center gap-3">
               Scroll
-              <span className="relative h-9 w-px overflow-hidden bg-line">
+              <span aria-hidden="true" className="relative h-9 w-px overflow-hidden bg-line">
                 <span className="absolute inset-x-0 top-0 h-3 animate-[scrollcue_1.8s_ease-in-out_infinite] bg-fg" />
               </span>
             </span>
