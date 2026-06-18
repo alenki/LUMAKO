@@ -1,5 +1,5 @@
 import { describe, it, expect, vi } from "vitest";
-import { render, fireEvent } from "@testing-library/react";
+import { render, fireEvent, within } from "@testing-library/react";
 import { LanguageToggle } from "@/components/ui/LanguageToggle";
 
 describe("LanguageToggle", () => {
@@ -38,6 +38,16 @@ describe("LanguageToggle", () => {
     expect(onChange).toHaveBeenCalledWith("ar");
   });
 
+  it("still fires onChange when the already-active language is clicked", () => {
+    const onChange = vi.fn();
+    const { getByRole } = render(
+      <LanguageToggle value="en" onChange={onChange} />,
+    );
+
+    fireEvent.click(getByRole("button", { name: "EN" }));
+    expect(onChange).toHaveBeenCalledWith("en");
+  });
+
   it("exposes lang='ar' on the Arabic label", () => {
     const { getByRole } = render(
       <LanguageToggle value="en" onChange={() => {}} />,
@@ -48,11 +58,12 @@ describe("LanguageToggle", () => {
     ).toBe("ar");
   });
 
-  it("is grouped and labeled for assistive tech", () => {
+  it("groups both languages under a labeled 'Language' group", () => {
     const { getByRole } = render(
       <LanguageToggle value="en" onChange={() => {}} />,
     );
 
-    expect(getByRole("group", { name: "Language" })).toBeTruthy();
+    const group = getByRole("group", { name: "Language" });
+    expect(within(group).getAllByRole("button")).toHaveLength(2);
   });
 });

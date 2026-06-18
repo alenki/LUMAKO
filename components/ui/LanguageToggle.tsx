@@ -1,13 +1,15 @@
 "use client";
 
+import { Fragment } from "react";
 import { cn } from "@/lib/utils";
 
+/** Supported locale keys for the language toggle. Exhaustive for now - extend if a third locale is added. */
 export type Locale = "en" | "ar";
 
 const OPTIONS: ReadonlyArray<{
   value: Locale;
   label: string;
-  lang?: string;
+  lang?: "ar";
   dir?: "rtl";
 }> = [
   { value: "en", label: "EN" },
@@ -33,7 +35,7 @@ export function LanguageToggle({
       )}
     >
       {OPTIONS.map((opt, i) => (
-        <span key={opt.value} className="flex items-center gap-2">
+        <Fragment key={opt.value}>
           {i > 0 && (
             <span aria-hidden="true" className="select-none text-fg-dim">
               /
@@ -53,7 +55,7 @@ export function LanguageToggle({
           >
             {opt.label}
           </button>
-        </span>
+        </Fragment>
       ))}
     </div>
   );
