@@ -2,7 +2,6 @@ import Image from "next/image";
 import { cn } from "@/lib/utils";
 
 type Props = {
-  index?: string;
   label?: string;
   className?: string;
   children?: React.ReactNode;
@@ -24,7 +23,6 @@ type Props = {
  * that have no photo yet. Looks designed either way, never broken.
  */
 export function CoverPanel({
-  index,
   label,
   className,
   children,
@@ -70,18 +68,15 @@ export function CoverPanel({
         />
       )}
       <div className="noise-veil" />
-      {index ? (
-        <span
-          className={cn(
-            "absolute left-5 top-4 label-caps",
-            overImage
-              ? "!text-white/80 [text-shadow:0_1px_3px_rgba(0,0,0,0.55)]"
-              : "!text-fg/55",
-          )}
-        >
-          {index}
-        </span>
-      ) : null}
+      {/* Hairline frame - a crisp inner edge so pale covers (e.g. Melty's cream
+          hero) read as a framed, intentional image instead of washing out into
+          the white card / near-white page. Invisible over dark/vivid covers,
+          essential over light ones. Monochrome, no chroma - stays on-brand. */}
+      <div
+        aria-hidden
+        className="pointer-events-none absolute inset-0 rounded-[var(--radius)]"
+        style={{ boxShadow: "inset 0 0 0 1px rgba(10,10,10,0.08)" }}
+      />
       {label ? (
         <span
           className={cn(

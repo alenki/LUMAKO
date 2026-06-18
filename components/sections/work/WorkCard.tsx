@@ -6,13 +6,11 @@ import { cn } from "@/lib/utils";
 
 type Props = {
   item: CaseStudy;
-  index?: string;
-  large?: boolean;
   priority?: boolean;
   className?: string;
 };
 
-export function WorkCard({ item, index, large, priority, className }: Props) {
+export function WorkCard({ item, priority, className }: Props) {
   return (
     <a
       href={item.href}
@@ -24,16 +22,12 @@ export function WorkCard({ item, index, large, priority, className }: Props) {
     >
       <div className="surface-card surface-card--hover relative overflow-hidden">
         <CoverPanel
-          index={index}
           src={item.cover}
           alt={`${item.title} - ${item.sector}`}
           tint={item.accent}
           position={item.coverPosition}
           priority={priority}
-          className={cn(
-            "transition-transform duration-700 ease-[cubic-bezier(.22,1,.36,1)] group-hover:scale-[1.04]",
-            large ? "aspect-[16/10]" : "aspect-[4/3]",
-          )}
+          className="aspect-[16/9] transition-transform duration-700 ease-[cubic-bezier(.22,1,.36,1)] group-hover:scale-[1.04]"
         />
         <span className="absolute right-5 top-5 flex size-9 items-center justify-center rounded-full border border-line-strong bg-bg/40 text-fg opacity-0 backdrop-blur-md transition-all duration-500 group-hover:opacity-100">
           ↗

@@ -13,7 +13,7 @@ export function SelectedWork() {
       <div className="container-x">
         <div className="grid-12 items-end">
           <div className="col-span-12 md:col-span-6">
-            <Eyebrow index="04">{w.eyebrow}</Eyebrow>
+            <Eyebrow>{w.eyebrow}</Eyebrow>
             <h2 className="mt-6 font-display text-[length:var(--text-5xl)] font-light leading-tight tracking-tight">
               {w.headline}
             </h2>
@@ -42,7 +42,7 @@ export function SelectedWork() {
                 i % 2 === 1 && "md:mt-24",
               )}
             >
-              <WorkCard item={item} index={`0${i + 1}`} large priority={i === 0} />
+              <WorkCard item={item} priority={i === 0} />
             </Reveal>
           ))}
         </div>
