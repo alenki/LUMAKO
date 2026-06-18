@@ -6,6 +6,9 @@ import { motion } from "motion/react";
 const RING_D =
   "M 30,98 C 26,44 120,20 205,24 C 296,28 350,58 340,96 C 330,134 244,154 158,151 C 74,148 18,120 30,78 C 38,46 96,32 168,30";
 
+/** Slow-in slow-out curve for the pen-drawing feel. */
+const DRAW_EASE = [0.5, 0, 0.3, 1] as const;
+
 type HeroMarkerProps = {
   /** The word to encircle (rendered as the visible text). */
   word: string;
@@ -47,7 +50,7 @@ export function HeroMarker({ word, draw, reduce }: HeroMarkerProps) {
           strokeLinejoin="round"
           initial={false}
           animate={{ pathLength: drawn ? 1 : 0 }}
-          transition={reduce ? { duration: 0 } : { duration: 1.45, ease: [0.5, 0, 0.3, 1] }}
+          transition={reduce ? { duration: 0 } : { duration: 1.45, ease: DRAW_EASE }}
         />
       </svg>
     </span>

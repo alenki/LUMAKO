@@ -23,4 +23,14 @@ describe("HeroMarker", () => {
     expect(svg?.style.pointerEvents).toBe("none");
     expect(svg?.querySelector("path")).not.toBeNull();
   });
+
+  it("renders pre-drawn when reduce is true (no crash)", () => {
+    const { container } = render(<HeroMarker word="built" draw={false} reduce={true} />);
+    expect(container.querySelector("svg")).not.toBeNull();
+  });
+
+  it("reflects the word prop in rendered text", () => {
+    const { container } = render(<HeroMarker word="shipped" draw={false} reduce={false} />);
+    expect(container.textContent).toContain("shipped");
+  });
 });
