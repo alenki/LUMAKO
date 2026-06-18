@@ -14,26 +14,6 @@ function mediaSubscribe(queries: string[]) {
   };
 }
 
-export type DeviceTier = "high" | "low";
-
-/**
- * Capability tier used to gate expensive WebGL. "low" → coarse pointer,
- * small viewport, or few CPU cores. SSR/first paint resolves to "low" so we
- * never flash a heavy canvas; upgrades on the client once known.
- */
-export function useDeviceTier(): DeviceTier {
-  return useSyncExternalStore(
-    mediaSubscribe(["(pointer: coarse)", "(max-width: 768px)"]),
-    () => {
-      const coarse = window.matchMedia("(pointer: coarse)").matches;
-      const small = window.matchMedia("(max-width: 768px)").matches;
-      const fewCores = (navigator.hardwareConcurrency ?? 8) <= 4;
-      return coarse || small || fewCores ? "low" : "high";
-    },
-    () => "low",
-  );
-}
-
 /** Whether the custom cursor should run (precise pointer + motion allowed). */
 export function useCursorEnabled(): boolean {
   return useSyncExternalStore(

@@ -13,7 +13,7 @@ accent, Inter Tight typography, a cinematic (light-graded) Three.js hero, and or
 - **Next.js 16** (App Router) · **React 19** · **TypeScript**
 - **Tailwind CSS v4** (CSS-first `@theme` tokens)
 - **Motion** (Framer Motion) for animation + page transitions
-- **three** + **@react-three/fiber** + **drei** + **postprocessing** — the WebGL hero
+- **Canvas 2D** — the "drafted, then built" blueprint hero (no WebGL deps)
 - **Lenis** smooth scroll
 - Fonts: **Inter Tight** (display + body) · **Geist Mono** (code only)
 - **Vitest** for unit tests
@@ -53,7 +53,7 @@ app/          # routes, layout, api/contact, sitemap, robots
 components/
   layout/     # Nav, Footer, Cursor, SmoothScroll, PageTransition, LocalTime
   ui/         # primitives: Button, MagneticButton, Reveal, TextReveal, Counter, Marquee, Field, CoverPanel…
-  three/      # HeroCanvas (R3F scene) + HeroFallback
+  hero/       # HeroBlueprint (Canvas 2D) + blueprint/ (geometry, phases, render)
   sections/   # page-specific composed sections (home, work, services, studio, contact)
 lib/
   content/    # typed content: services, work, studio, copy, site
