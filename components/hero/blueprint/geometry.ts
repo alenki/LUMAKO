@@ -37,14 +37,21 @@ export function project(p: Vec3, rotY: number, scale: number, origin: Vec2): Vec
   return { x: origin.x + isoX * scale, y: origin.y - isoY * scale };
 }
 
-/** Rotated depth key (larger = nearer the viewer) for painter's-order sorting. */
+/**
+ * Depth key (larger = nearer the viewer) for painter's-order sorting. The view
+ * axis perpendicular to the axonometric screen plane is the iso diagonal (1,1,1)
+ * in rotated (rx, rz, y) space, so all three coordinates contribute equally —
+ * dropping any term (e.g. using rz alone) mis-orders overlapping faces.
+ */
 export function faceDepth(face: Face, vertices: Vec3[], rotY: number): number {
   const cos = Math.cos(rotY);
   const sin = Math.sin(rotY);
   let sum = 0;
   for (const i of face.loop) {
     const [x, y, z] = vertices[i];
-    sum += x * sin + z * cos + y * 0.0001; // tie-break by height
+    const rx = x * cos - z * sin;
+    const rz = x * sin + z * cos;
+    sum += rx + rz + y;
   }
   return sum / face.loop.length;
 }
@@ -86,7 +93,7 @@ function addBox(
   );
 }
 
-/** The hero form: three offset, decreasing slabs — an abstract layered monument. */
+/** The hero form: three offset, decreasing slabs - an abstract layered monument. */
 export function buildForm(): Form {
   const acc: Form = { vertices: [], edges: [], faces: [] };
   addBox(acc, 0,     -0.9,  0,    2.4, 0.5, 2.4, 0.96, 0.80);
@@ -95,5 +102,5 @@ export function buildForm(): Form {
   return acc;
 }
 
-/** Vertex for the lume "shipped" dot: top slab (verts 16–23), top-front-right (local 6). */
+/** Vertex for the lume "shipped" dot: top slab (verts 16-23), top-front-right (local 6). */
 export const SHIPPED_VERTEX_INDEX = 8 * 2 + 6; // = 22

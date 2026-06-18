@@ -22,7 +22,7 @@ export const BUILD_END = 5.0;
 export const LIVE_END = 9.0;
 export const CYCLE = 11.0;
 
-/** easeOutExpo — heavy settle; canvas equivalent of the site's motion bezier. */
+/** easeOutExpo - heavy settle; canvas equivalent of the site's motion bezier. */
 export function easeOutExpo(t: number): number {
   return t >= 1 ? 1 : 1 - Math.pow(2, -10 * t);
 }
@@ -62,7 +62,10 @@ export function getPhaseState(elapsed: number): PhaseState {
   const baseTurns = cycleIndex * 0.25;
 
   if (t < FIELD_END) {
-    return state("field", { gridOpacity: seg(t, 0, FIELD_END), rotationTurns: baseTurns });
+    // Fade the grid in on the first load only; on later cycles the loop phase
+    // already leaves it at 1, so hold it there to keep the seam continuous.
+    const grid = cycleIndex === 0 ? seg(t, 0, FIELD_END) : 1;
+    return state("field", { gridOpacity: grid, rotationTurns: baseTurns });
   }
   if (t < DRAFT_END) {
     const p = easeOutExpo(seg(t, FIELD_END, DRAFT_END));

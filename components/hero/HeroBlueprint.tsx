@@ -26,7 +26,7 @@ function readColors(): BlueprintColors {
 }
 
 /**
- * "Drafted, then built" — a Canvas-2D blueprint that self-draws then resolves
+ * "Drafted, then built" - a Canvas-2D blueprint that self-draws then resolves
  * into a built solid, on loop. Decorative; pauses off-screen / when hidden.
  */
 export function HeroBlueprint() {
@@ -71,10 +71,13 @@ export function HeroBlueprint() {
     let raf = 0;
     let elapsed = 0;
     let last = 0;
-    let running = true;
+    let rafActive = false;
+    // Two independent reasons to pause; the loop runs only when BOTH allow it.
+    let onScreen = false; // set by the IntersectionObserver's initial callback
+    let docVisible = !document.hidden;
 
     const frame = (now: number) => {
-      if (!running) return;
+      if (!rafActive) return;
       if (last === 0) last = now;
       elapsed += (now - last) / 1000;
       last = now;
@@ -84,30 +87,39 @@ export function HeroBlueprint() {
       raf = requestAnimationFrame(frame);
     };
 
-    const stop = () => {
-      running = false;
-      cancelAnimationFrame(raf);
-    };
-    const start = () => {
-      if (running) return;
-      running = true;
-      last = 0; // resume without a time jump
-      raf = requestAnimationFrame(frame);
+    // Start/stop the loop from the composed (onScreen && docVisible) state.
+    const sync = () => {
+      const shouldRun = onScreen && docVisible;
+      if (shouldRun && !rafActive) {
+        rafActive = true;
+        last = 0; // (re)start without a time jump
+        raf = requestAnimationFrame(frame);
+      } else if (!shouldRun && rafActive) {
+        rafActive = false;
+        cancelAnimationFrame(raf);
+      }
     };
 
+    // The IO's first callback reports the current intersection and kicks the
+    // initial frame — so an off-screen mount never renders wasted frames.
     const io = new IntersectionObserver(
-      ([entry]) => (entry.isIntersecting ? start() : stop()),
+      ([entry]) => {
+        onScreen = entry.isIntersecting;
+        sync();
+      },
       { threshold: 0 },
     );
     io.observe(canvas);
 
-    const onVisibility = () => (document.hidden ? stop() : start());
+    const onVisibility = () => {
+      docVisible = !document.hidden;
+      sync();
+    };
     document.addEventListener("visibilitychange", onVisibility);
 
-    raf = requestAnimationFrame(frame);
-
     return () => {
-      stop();
+      rafActive = false;
+      cancelAnimationFrame(raf);
       ro.disconnect();
       io.disconnect();
       window.removeEventListener("pointermove", onMove);

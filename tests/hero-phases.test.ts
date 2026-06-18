@@ -55,6 +55,12 @@ describe("getPhaseState", () => {
     expect(s.rotationTurns).toBeCloseTo(0.25, 5);
   });
 
+  it("keeps gridOpacity continuous across the loop seam (no pop)", () => {
+    const before = getPhaseState(CYCLE - 0.001).gridOpacity; // end of loop → ~1
+    const after = getPhaseState(CYCLE).gridOpacity; // start of next field
+    expect(Math.abs(after - before)).toBeLessThan(0.02);
+  });
+
   it("keeps every opacity within [0,1] across a full sweep", () => {
     for (let t = 0; t <= CYCLE * 2; t += 0.05) {
       const s = getPhaseState(t);

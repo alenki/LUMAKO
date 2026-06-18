@@ -2,6 +2,7 @@ import { describe, it, expect } from "vitest";
 import {
   project,
   buildForm,
+  faceDepth,
   sortedFaces,
   SHIPPED_VERTEX_INDEX,
 } from "@/components/hero/blueprint/geometry";
@@ -45,5 +46,27 @@ describe("sortedFaces", () => {
     const form = buildForm();
     const faces = sortedFaces(form, 0.7);
     expect(faces).toHaveLength(form.faces.length);
+  });
+});
+
+describe("faceDepth", () => {
+  // The depth axis is the iso diagonal (1,1,1): all of rx, rz, y contribute.
+  it("orders the upper slab's top nearer than the base slab's top", () => {
+    const form = buildForm();
+    const baseTop = form.faces[0]; // box1 (base) top face
+    const upperTop = form.faces[10]; // box3 (top slab) top face
+    expect(faceDepth(upperTop, form.vertices, 0)).toBeGreaterThan(
+      faceDepth(baseTop, form.vertices, 0),
+    );
+  });
+
+  it("depends on the rotated-X term (not rz alone)", () => {
+    const form = buildForm();
+    // A face offset purely in +X must change depth as the form rotates.
+    const f = form.faces[1]; // box1 front face
+    expect(faceDepth(f, form.vertices, 0)).not.toBeCloseTo(
+      faceDepth(f, form.vertices, Math.PI / 2),
+      3,
+    );
   });
 });
