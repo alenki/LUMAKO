@@ -1,9 +1,7 @@
 "use client";
 
-import dynamic from "next/dynamic";
-import { motion, useReducedMotion } from "motion/react";
-import { useDeviceTier } from "@/lib/mediaHooks";
-import { HeroFallback } from "@/components/three/HeroFallback";
+import { motion } from "motion/react";
+import { HeroBlueprint } from "@/components/hero/HeroBlueprint";
 import { TextReveal } from "@/components/ui/TextReveal";
 import { Eyebrow } from "@/components/ui/Eyebrow";
 import { MagneticButton } from "@/components/ui/MagneticButton";
@@ -11,23 +9,15 @@ import { Button } from "@/components/ui/Button";
 import { copy } from "@/lib/content/copy";
 import { easeOutExpo } from "@/lib/motion";
 
-const HeroCanvas = dynamic(() => import("@/components/three/HeroCanvas"), {
-  ssr: false,
-  loading: () => <HeroFallback />,
-});
-
 export function Hero() {
-  const tier = useDeviceTier();
-  const reduce = useReducedMotion();
-  const showCanvas = tier === "high" && !reduce;
   const { hero } = copy.home;
 
   return (
     <section className="relative flex min-h-dvh items-center overflow-hidden">
-      {/* single lume glow behind the scene */}
+      {/* white legibility wash behind the scene — the lume glow lives only in the footer */}
       <div className="glow-accent pointer-events-none absolute inset-0" />
       <div className="absolute inset-0">
-        {showCanvas ? <HeroCanvas /> : <HeroFallback />}
+        <HeroBlueprint />
       </div>
       {/* legibility wash + grain over the scene */}
       <div
