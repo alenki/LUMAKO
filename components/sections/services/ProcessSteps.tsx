@@ -10,7 +10,7 @@ export function ProcessSteps() {
       <div className="container-x">
         <div className="grid-12 items-end">
           <div className="col-span-12 md:col-span-6">
-            <Eyebrow index="02">{s.processEyebrow}</Eyebrow>
+            <Eyebrow>{s.processEyebrow}</Eyebrow>
             <h2 className="mt-6 font-display text-[length:var(--text-5xl)] font-light leading-tight tracking-tight text-balance">
               {s.processHeadline}
             </h2>

@@ -9,7 +9,6 @@ import { cn } from "@/lib/utils";
 export function Footer() {
   const [email, setEmail] = useState("");
   const [done, setDone] = useState(false);
-  const year = new Date().getFullYear();
 
   return (
     <footer className="footer-glow relative overflow-hidden text-[#fafafa]">
@@ -19,7 +18,7 @@ export function Footer() {
           <div className="col-span-12 md:col-span-4">
             <Eyebrow className="!text-white/60">Stay in the light</Eyebrow>
             <p className="mt-6 font-display text-[length:var(--text-3xl)] font-light leading-tight text-balance text-[#fafafa]">
-              Occasional notes on craft, product, and the web — no noise.
+              Occasional notes on craft, product, and the web - no noise.
             </p>
             <form
               className="mt-8 flex max-w-md items-center gap-3 border-b border-white/20 pb-3 focus-within:border-white/50"
@@ -98,13 +97,6 @@ export function Footer() {
           <span className="block bg-gradient-to-b from-white/85 to-white/5 bg-clip-text font-display leading-[0.8] tracking-tight text-transparent [font-size:clamp(5rem,22vw,20rem)]">
             Lumako<span className="text-white/20">.</span>
           </span>
-        </div>
-
-        <div className="mt-8 flex flex-col gap-3 border-t border-white/10 pt-6 label-caps !text-white/40 md:flex-row md:items-center md:justify-between">
-          <span>
-            © {year} {site.name} — Built in the light.
-          </span>
-          <span>{site.tagline}</span>
         </div>
       </div>
     </footer>

@@ -18,7 +18,7 @@ export default function ContactPage() {
       <div className="container-x">
         <header className="grid-12 items-end">
           <div className="col-span-12 md:col-span-7">
-            <Eyebrow index="01">{c.eyebrow}</Eyebrow>
+            <Eyebrow>{c.eyebrow}</Eyebrow>
             <TextReveal
               as="h1"
               text={c.headline}

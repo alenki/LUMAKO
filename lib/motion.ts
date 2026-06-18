@@ -1,6 +1,6 @@
 import type { Variants } from "motion/react";
 
-/** Signature easing — heavy, expensive expo-out. */
+/** Signature easing - heavy, expensive expo-out. */
 export const easeOutExpo = [0.22, 1, 0.36, 1] as const;
 export const easeInOutExpo = [0.87, 0, 0.13, 1] as const;
 
@@ -20,7 +20,7 @@ export const stagger: Variants = {
   show: { transition: { staggerChildren: 0.08, delayChildren: 0.05 } },
 };
 
-/** Editorial line/word reveal — wipes up from a clipped mask. */
+/** Editorial line/word reveal - wipes up from a clipped mask. */
 export const maskReveal: Variants = {
   hidden: { clipPath: "inset(0 0 100% 0)", y: 18 },
   show: {

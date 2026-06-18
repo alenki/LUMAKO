@@ -18,11 +18,11 @@ const interTight = Inter_Tight({
 export const metadata: Metadata = {
   metadataBase: new URL("https://lumako.com"),
   title: {
-    default: "Lumako — Web · AI · Apps",
-    template: "%s — Lumako",
+    default: "Lumako | Web · AI · Apps",
+    template: "%s | Lumako",
   },
   description:
-    "Lumako is a solo full-stack studio that ships web, AI, and app products — and shows the working build before the pitch.",
+    "Lumako is a full-stack studio that ships web, AI, and app products - and shows the working build before the pitch.",
   keywords: [
     "web development",
     "AI products",
@@ -33,9 +33,9 @@ export const metadata: Metadata = {
   openGraph: {
     type: "website",
     siteName: "Lumako",
-    title: "Lumako — Web · AI · Apps",
+    title: "Lumako - Web · AI · Apps",
     description:
-      "Lumako is a solo full-stack studio that ships web, AI, and app products — and shows the working build before the pitch.",
+      "Lumako is a full-stack studio that ships web, AI, and app products - and shows the working build before the pitch.",
   },
   twitter: { card: "summary_large_image" },
 };

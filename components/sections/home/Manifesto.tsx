@@ -9,7 +9,7 @@ export function Manifesto() {
       <div className="container-x">
         <div className="grid-12">
           <div className="col-span-12 md:col-span-9">
-            <Eyebrow index="02">{m.eyebrow}</Eyebrow>
+            <Eyebrow>{m.eyebrow}</Eyebrow>
             <TextReveal
               as="p"
               text={m.headline}

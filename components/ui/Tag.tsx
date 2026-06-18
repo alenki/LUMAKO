@@ -14,7 +14,7 @@ export function Tag({ children, active, onClick, className }: Props) {
   const cls = cn(
     "rounded-full border px-4 py-1.5 label-caps transition-colors duration-300",
     active
-      ? "border-ink bg-ink text-[#fafafa]"
+      ? "border-ink bg-ink !text-[#fafafa]"
       : "border-line hover:border-line-strong hover:!text-fg",
     className,
   );

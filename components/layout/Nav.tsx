@@ -7,7 +7,6 @@ import { AnimatePresence, motion } from "motion/react";
 import { site } from "@/lib/content/site";
 import { Logo } from "@/components/ui/Logo";
 import { MagneticButton } from "@/components/ui/MagneticButton";
-import { LocalTime } from "./LocalTime";
 import { cn } from "@/lib/utils";
 import { easeOutExpo } from "@/lib/motion";
 import { useScrolled } from "@/lib/mediaHooks";
@@ -26,68 +25,74 @@ export function Nav() {
         className={cn(
           "fixed inset-x-0 top-0 z-[200] transition-colors duration-500",
           scrolled || open
-            ? "border-b border-line bg-bg/70 backdrop-blur-xl"
-            : "border-b border-transparent bg-gradient-to-b from-bg/80 to-transparent backdrop-blur-sm",
+            ? "bg-bg/70 backdrop-blur-xl"
+            : "bg-gradient-to-b from-bg/80 to-transparent backdrop-blur-sm",
         )}
         style={{ height: "var(--header-h)" }}
       >
-        <div className="container-x flex h-full items-center justify-between">
-          <Link href="/" data-cursor aria-label="Lumako home">
-            <Logo />
-          </Link>
+        <div className="container-x grid h-full grid-cols-[minmax(0,1fr)_auto_minmax(0,1fr)] items-center">
+          {/* Left - wordmark */}
+          <div className="col-start-1 flex items-center">
+            <Link href="/" data-cursor aria-label="Lumako home">
+              <Logo />
+            </Link>
+          </div>
 
-          <nav className="hidden items-center gap-[var(--vw-4)] md:flex">
+          {/* Center - primary nav, truly centered in the viewport.
+             Explicit col-start keeps it in column 2 even when `hidden` on mobile
+             removes it from grid auto-placement. */}
+          <nav className="col-start-2 hidden items-center gap-[var(--vw-5)] md:flex">
             {site.nav.map((item) => (
               <Link
                 key={item.href}
                 href={item.href}
                 data-cursor
-                className="group relative py-1 text-[length:var(--text-lg)] text-fg-muted transition-colors hover:text-fg"
+                className="relative py-1 text-[length:var(--text-lg)] font-medium text-fg-muted transition-colors hover:text-fg"
               >
                 <span className={cn(isActive(item.href) && "text-fg")}>
                   {item.label}
                 </span>
-                <span
-                  className={cn(
-                    "absolute inset-x-0 -bottom-0.5 h-px origin-left bg-fg transition-transform duration-300",
-                    isActive(item.href)
-                      ? "scale-x-100"
-                      : "scale-x-0 group-hover:scale-x-100",
-                  )}
-                />
+                {isActive(item.href) && (
+                  <span className="absolute inset-x-0 -bottom-0.5 h-px bg-lume" />
+                )}
               </Link>
             ))}
           </nav>
 
-          <div className="hidden items-center gap-[var(--vw-3)] md:flex">
-            <LocalTime />
-            <MagneticButton href="/contact" className="rounded-full px-5 py-2.5 text-[length:var(--text-base)]">
-              Start a project
-            </MagneticButton>
-          </div>
+          {/* Right - CTA, mobile toggle */}
+          <div className="col-start-3 flex items-center justify-end gap-[var(--vw-3)]">
+            <div className="hidden items-center gap-[var(--vw-3)] md:flex">
+              <MagneticButton
+                href="/contact"
+                className="rounded-full px-6 py-3 text-[length:var(--text-base)]"
+              >
+                Start a project
+              </MagneticButton>
+            </div>
 
-          {/* Mobile toggle */}
-          <button
-            type="button"
-            aria-label="Toggle menu"
-            aria-expanded={open}
-            onClick={() => setOpen((v) => !v)}
-            className="relative z-[210] flex size-10 flex-col items-center justify-center gap-1.5 md:hidden"
-            data-cursor
-          >
-            <span
-              className={cn(
-                "block h-px w-6 bg-fg transition-transform duration-300",
-                open && "translate-y-[3.5px] rotate-45",
-              )}
-            />
-            <span
-              className={cn(
-                "block h-px w-6 bg-fg transition-transform duration-300",
-                open && "-translate-y-[3.5px] -rotate-45",
-              )}
-            />
-          </button>
+            {/* Mobile toggle */}
+            <button
+              type="button"
+              aria-label="Toggle menu"
+              aria-expanded={open}
+              onClick={() => setOpen((v) => !v)}
+              className="relative z-[210] flex size-10 flex-col items-center justify-center gap-1.5 md:hidden"
+              data-cursor
+            >
+              <span
+                className={cn(
+                  "block h-px w-6 bg-fg transition-transform duration-300",
+                  open && "translate-y-[3.5px] rotate-45",
+                )}
+              />
+              <span
+                className={cn(
+                  "block h-px w-6 bg-fg transition-transform duration-300",
+                  open && "-translate-y-[3.5px] -rotate-45",
+                )}
+              />
+            </button>
+          </div>
         </div>
       </header>
 
@@ -119,8 +124,7 @@ export function Nav() {
                 </motion.div>
               ))}
             </nav>
-            <div className="mt-12 flex items-center justify-between border-t border-line pt-6">
-              <LocalTime />
+            <div className="mt-12 flex items-center justify-end border-t border-line pt-6">
               <a href={`mailto:${site.email}`} className="text-fg-muted">
                 {site.email}
               </a>

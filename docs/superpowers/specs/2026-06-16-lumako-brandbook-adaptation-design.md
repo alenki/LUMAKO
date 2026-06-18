@@ -1,4 +1,4 @@
-# Lumako — Brandbook Adaptation Design
+# Lumako - Brandbook Adaptation Design
 
 **Date:** 2026-06-16
 **Status:** Approved (scope + key calls confirmed with user)
@@ -7,7 +7,7 @@
 ## Goal
 
 Adapt the existing Lumako website to the Lumako Brand System v1.0. This is a full
-visual reskin **plus** a content rewrite — not a token-only swap. The current site
+visual reskin **plus** a content rewrite - not a token-only swap. The current site
 is a polished but generic **dark** studio (electric-blue accent, Fraunces serif,
 "products people don't forget", fabricated stats + an "Elena Cho" testimonial,
 "San Francisco / Remote"). The brandbook defines a **light**, proof-led identity
@@ -28,10 +28,10 @@ web · AI · apps).
 
 ## Key decisions (confirmed)
 
-1. **Token strategy — remap values, keep semantic names.** Components already use
+1. **Token strategy - remap values, keep semantic names.** Components already use
    semantic Tailwind v4 classes (`bg-bg`, `text-fg`, `text-accent`, `border-line`),
    so swapping the `@theme` *values* flips ~90% of the site. We do **not** rename
-   tokens to brandbook names — no visual benefit, high churn/risk. We add lume
+   tokens to brandbook names - no visual benefit, high churn/risk. We add lume
    aliases and then make targeted fixes for the handful of dark-assuming styles.
 2. **Fabricated testimonial → receipts strip.** Replace the "Elena Cho / Aether"
    quote with the brandbook's real proof, framed as receipts (gov & university
@@ -48,7 +48,7 @@ web · AI · apps).
 
 ## Design by system
 
-### 1. Color tokens — `styles/globals.css` `@theme`
+### 1. Color tokens - `styles/globals.css` `@theme`
 
 | token | current | new |
 |---|---|---|
@@ -65,9 +65,9 @@ web · AI · apps).
 | `--color-accent-deep` | `#1447e6` | `#9C6E1B` (lume-deep) |
 | `--color-accent-soft` | `rgba(48,128,255,.14)` | `rgba(212,154,46,.14)` |
 | `--color-spark` | `#ff6568` | **removed** (no second accent) |
-| *(new)* `--color-lume-soft` | — | `#F4E6C6` |
-| *(new)* `--color-ink` | — | `#171717` (button/CTA fill) |
-| *(new)* `--color-glow` | — | `rgba(212,154,46,.40)` (footer radial) |
+| *(new)* `--color-lume-soft` | - | `#F4E6C6` |
+| *(new)* `--color-ink` | - | `#171717` (button/CTA fill) |
+| *(new)* `--color-glow` | - | `rgba(212,154,46,.40)` (footer radial) |
 
 Other token notes:
 - **Radius:** base `--radius` is already `0.625rem` (10px ✓). Reduce oversized
@@ -80,7 +80,7 @@ Other token notes:
 - `.noise-veil` uses `mix-blend-mode: screen` (invisible/odd on white) → switch to
   `multiply` at low opacity, or drop where it sat over the dark hero.
 
-### 2. Typography — `app/layout.tsx` + `globals.css`
+### 2. Typography - `app/layout.tsx` + `globals.css`
 
 - Replace `Fraunces` + `Hanken_Grotesk` imports with a single **`Inter_Tight`**
   (`next/font/google`, variable, subsets `["latin"]`, weights via variable axis;
@@ -95,16 +95,16 @@ Other token notes:
 - Body weight 400; display/UI weight 500. Tracking: tight on display
   (-.02 to -.035em), wide on caps labels.
 
-### 3. Logo — `components/ui/Logo.tsx` + footer wordmark
+### 3. Logo - `components/ui/Logo.tsx` + footer wordmark
 
-- `lumako.` (lowercase Fraunces) → **`Lumako.`** — capital L, Inter Tight Medium,
+- `lumako.` (lowercase Fraunces) → **`Lumako.`** - capital L, Inter Tight Medium,
   `tracking-tight`, ink wordmark, **lume period**.
 - Footer monumental wordmark: same change, set **inverse** (white wordmark, lume
   period as a glow) on the dark footer band.
 - Clearspace/usage per brandbook (no recolor of the wordmark, lume dot is the only
-  variation) — applied as guidance, no enforcement code.
+  variation) - applied as guidance, no enforcement code.
 
-### 4. Buttons — `components/ui/Button.tsx` (+ `MagneticButton`)
+### 4. Buttons - `components/ui/Button.tsx` (+ `MagneticButton`)
 
 Brandbook's default CTA is **ink**, not the accent.
 - `primary` → ink fill `#171717`, off-white text `#FAFAFA`, 10px radius, 14px/500,
@@ -112,17 +112,17 @@ Brandbook's default CTA is **ink**, not the accent.
 - **Add `lume` variant** → lume fill, ink text (`#1A1206`); reserved for the single
   most-important action per view.
 - `ghost` → transparent fill, 1px `#E5E5E5` border, `#0A0A0A` text (the brandbook
-  "outline — light"). Add a dark-surface outline treatment for the footer band
+  "outline - light"). Add a dark-surface outline treatment for the footer band
   (transparent, 1px white@20%, white text).
 - `link` variant unchanged in structure; underline accent becomes lume.
 - `MagneticButton` continues to wrap the ink primary; nav "Start a project" = ink.
 
-### 5. Eyebrow + small chrome — `components/ui/Eyebrow.tsx`
+### 5. Eyebrow + small chrome - `components/ui/Eyebrow.tsx`
 
 - Convert to Inter Tight Medium, 11px, `.18em`, uppercase, `--color-fg-muted`.
 - Optional leading lume dot to match brandbook eyebrow (`• Brand System`).
 
-### 6. Hero re-grade — `Hero.tsx`, `HeroCanvas.tsx`, `HeroFallback.tsx`
+### 6. Hero re-grade - `Hero.tsx`, `HeroCanvas.tsx`, `HeroFallback.tsx`
 
 The current scene = white starfield + blue/white wireframe icosahedra + additive
 **Bloom** on black. Bloom and white stars only read on a dark field. Re-grade:
@@ -132,7 +132,7 @@ The current scene = white starfield + blue/white wireframe icosahedra + additive
   - Page/canvas background is the light surface; **drop `EffectComposer`/`Bloom`**
     (washes to white on light).
   - `WireframeForm` icosahedra → **ink lines** (`#0A0A0A`/zinc) with the innermost
-    shell in **lume** (`#D49A2E`) — a dark form built on light, with one lume core.
+    shell in **lume** (`#D49A2E`) - a dark form built on light, with one lume core.
   - `Starfield` → faint **dark** points (low opacity) or removed; white points
     vanish on white.
   - Behind the form, one **lume radial glow** (the brand's "light captured").
@@ -144,7 +144,7 @@ The current scene = white starfield + blue/white wireframe icosahedra + additive
 - `HeroFallback`: blue-on-dark glow → **lume-soft glow on light**; hairline grid
   lines from white@ to ink@ low opacity; drop/adjust the screen-blend noise.
 
-### 7. Footer = the dark glow band — `components/layout/Footer.tsx`
+### 7. Footer = the dark glow band - `components/layout/Footer.tsx`
 
 - Background → `linear-gradient(180deg,#18181B 0%,#0A0A0A 100%)` with a warm
   `rgba(212,154,46,.40)` radial bleeding from one edge (the single sanctioned glow).
@@ -155,28 +155,28 @@ The current scene = white starfield + blue/white wireframe icosahedra + additive
 - Tagline "Built in the light" stays (now literally true) or → a brandbook line;
   keep the meta row (© year, tagline). Update tagline text in §9.
 
-### 8. CTA band stays light — `components/sections/home/CtaBand.tsx`
+### 8. CTA band stays light - `components/sections/home/CtaBand.tsx`
 
-- Light section, ink primary CTA (no glow — the footer owns the one glow).
+- Light section, ink primary CTA (no glow - the footer owns the one glow).
 - Copy rewrite per §9.
 
-### 9. Content rewrite (English) — `lib/content/*`
+### 9. Content rewrite (English) - `lib/content/*`
 
 **`site.ts`**
-- `tagline`: "Web & Product Studio" → **"Web · AI · Apps — shipped, not proposed"**.
+- `tagline`: "Web & Product Studio" → **"Web · AI · Apps - shipped, not proposed"**.
 - `email`: `hello@lumako.studio` → `hello@lumako.com`.
 - `locale`: "San Francisco / Remote" → **"Nalchik, KBR → Global"**.
 - `timezone`: `America/Los_Angeles` → **`Europe/Moscow`**.
 - `socials`: Instagram · X · WhatsApp · Telegram (drop Dribbble/LinkedIn).
 - `nav`: keep Work / Services / Studio / Contact (already sentence case).
 
-**`copy.ts`** — rewrite to brandbook voice ("show, don't sell", plain verbs,
+**`copy.ts`** - rewrite to brandbook voice ("show, don't sell", plain verbs,
 receipts):
 - Hero: eyebrow "Web · AI · Apps"; headline **"Built first. Pitched second."**
   (italic-accent the periods); sub = one full-stack practice that ships web, AI,
   and apps and hands them over working; primary "Start a project" (ink),
   secondary **"See the build"** (lume).
-- Manifesto: **"The demo is the pitch."** — proof carries the sale.
+- Manifesto: **"The demo is the pitch."** - proof carries the sale.
 - Services overview → web · AI · apps from one operator on one engine.
 - Stats → **real proof**, reframed (replaces 9+/60+/12/98%): e.g.
   `Gov & university builds` · `1 university AI competition, won` ·
@@ -189,7 +189,7 @@ receipts):
 - contact `serviceOptions` → **Web, AI, Apps** (+ supporting as needed);
   `budgets` kept but currency-neutral or removed; success copy in brand voice.
 
-**`services.ts`, `studio.ts`, `work.ts`** — reframe positioning and remove generic
+**`services.ts`, `studio.ts`, `work.ts`** - reframe positioning and remove generic
 agency language:
 - Disciplines → **Web · AI · Apps** as primary, supporting capabilities under them.
 - Studio → solo full-stack operator; values = proof / range / outcome; recognition
@@ -205,7 +205,7 @@ agency language:
 - `Stats.tsx` → support non-numeric proof labels alongside the numeric counter.
 - `Footer.tsx` → dark glow band (§7).
 - `Hero*` → light re-grade (§6).
-- `Eyebrow.tsx`, `Button.tsx`, `Logo.tsx` → §3–5.
+- `Eyebrow.tsx`, `Button.tsx`, `Logo.tsx` → §3-5.
 
 ### 11. Dark-assumption sweep (audit all 23 accent/spark files)
 
@@ -219,7 +219,7 @@ mobile menu / nav blur backgrounds. Anything using `bg-bg/70`-style blur over a 
 
 ## Implementation order (for the plan)
 
-1. Tokens + base CSS (`globals.css`) — the big flip.
+1. Tokens + base CSS (`globals.css`) - the big flip.
 2. Fonts + layout (`layout.tsx`).
 3. Primitives: `Button`, `Logo`, `Eyebrow`, `Tag`, `Field`.
 4. Hero re-grade (`Hero`, `HeroCanvas`, `HeroFallback`).
@@ -241,8 +241,8 @@ mobile menu / nav blur backgrounds. Anything using `bg-bg/70`-style blur over a 
 - **Hero on light** is the one place needing real design judgment; bloom-based glow
   doesn't translate, so the scene is recomposed (not just recolored). Validate it
   reads well and stays legible.
-- **Contrast:** lume (`#D49A2E`) fails small-text contrast on white — use lume-deep
+- **Contrast:** lume (`#D49A2E`) fails small-text contrast on white - use lume-deep
   (`#9C6E1B`) for any lume *text*; lume itself only as fills/rules/dots.
 - **AGENTS.md:** read the relevant `node_modules/next/dist/docs/` guide before each
   code area (fonts/CSS already read for this spec).
-- Keep tests green; `tests/utils.test.ts` references tokens — check after the swap.
+- Keep tests green; `tests/utils.test.ts` references tokens - check after the swap.

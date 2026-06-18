@@ -4,7 +4,7 @@ export const copy = {
     hero: {
       lines: ["Most work gets", "scrolled past.", "Yours won't."],
       mark: "won't",
-      sub: "Lumako is a solo full-stack studio - web, AI, and apps that ship and stay live. Built to be remembered, not scrolled past.",
+      sub: "Lumako is a full-stack studio - web, AI, and apps that ship and stay live. Built to be remembered, not scrolled past.",
       ctaPrimary: { label: "Start a project", href: "/contact" },
       ctaSecondary: { label: "See the work", href: "/work" },
     },
@@ -15,8 +15,8 @@ export const copy = {
       highlight: "The demo is the pitch.",
     },
     services: {
-      eyebrow: "What I build",
-      headline: "Web, AI, and apps - from one operator on one engine.",
+      eyebrow: "What we build",
+      headline: "Web, AI, and apps - from one team on one engine.",
       highlight: "one engine.",
       link: { label: "All services", href: "/services" },
     },
@@ -27,8 +27,8 @@ export const copy = {
     },
     process: {
       eyebrow: "How it works",
-      headline: "The builder is in the room.",
-      sub: "No agency handoff between you and the person writing the code. You talk to the operator who ships it - start to finish.",
+      headline: "The builders are in the room.",
+      sub: "No handoff between you and the people writing the code. You talk to the team that ships it - start to finish.",
       link: { label: "The process", href: "/services" },
     },
     proof: [
@@ -50,7 +50,7 @@ export const copy = {
     },
     cta: {
       eyebrow: "Start here",
-      headline: "Tell me what you're building.",
+      headline: "Tell us what you're building.",
       highlight: "building.",
       sub: "Send the problem and what done looks like. You'll get a working direction back - proof before pitch, the outcome before the invoice.",
       button: { label: "Start a project", href: "/contact" },
@@ -66,9 +66,9 @@ export const copy = {
 
   services: {
     eyebrow: "Services",
-    headline: "Web, AI, and apps - one operator, end to end.",
+    headline: "Web, AI, and apps - one team, end to end.",
     highlight: "end to end.",
-    sub: "Engage Lumako for the part you need, or the whole build. One person across the stack - no handoff, no telephone game.",
+    sub: "Engage Lumako for the part you need, or the whole build. One team across the stack - no handoff, no telephone game.",
     processEyebrow: "How it works",
     processHeadline: "Demo-first, then pitch.",
     engagementsEyebrow: "Engagements",
@@ -77,7 +77,7 @@ export const copy = {
 
   contact: {
     eyebrow: "Start a project",
-    headline: "Tell me what you're building.",
+    headline: "Tell us what you're building.",
     highlight: "building.",
     sub: "The more you share, the sharper the first response. Every serious inquiry gets a reply - proof before pitch.",
     budgets: ["< $5k", "$5k-$15k", "$15k-$40k", "$40k+", "Not sure yet"],
@@ -92,7 +92,7 @@ export const copy = {
     home: {
       title: "Lumako - Web · AI · Apps",
       description:
-        "Lumako is a solo full-stack studio that ships web, AI, and app products - and shows the working build before the pitch.",
+        "Lumako is a full-stack studio that ships web, AI, and app products - and shows the working build before the pitch.",
     },
     work: {
       title: "Work",
@@ -102,12 +102,12 @@ export const copy = {
     services: {
       title: "Services",
       description:
-        "Web, AI, and apps from one operator, end to end. Demo-first, then pitch.",
+        "Web, AI, and apps from one team, end to end. Demo-first, then pitch.",
     },
     contact: {
       title: "Contact",
       description:
-        "Start a project with Lumako. Tell me what you're building and you'll get a working direction back.",
+        "Start a project with Lumako. Tell us what you're building and you'll get a working direction back.",
     },
   },
 } as const;

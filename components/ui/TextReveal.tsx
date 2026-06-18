@@ -1,5 +1,6 @@
 "use client";
 
+import { Fragment } from "react";
 import { motion } from "motion/react";
 import { easeOutExpo } from "@/lib/motion";
 import { cn } from "@/lib/utils";
@@ -14,8 +15,8 @@ const tags = {
 
 type Props = {
   text: string;
-  /** Substring of `text` to emphasize in italic accent (e.g. the hero highlight). */
-  highlight?: string;
+  /** Substring(s) of `text` to emphasize in italic accent - pass an array to accent more than one phrase. */
+  highlight?: string | readonly string[];
   as?: keyof typeof tags;
   className?: string;
   highlightClassName?: string;
@@ -25,22 +26,34 @@ type Props = {
 
 type Segment = { str: string; hi: boolean };
 
-function segment(text: string, highlight?: string): Segment[] {
-  if (!highlight || !text.includes(highlight)) return [{ str: text, hi: false }];
-  const i = text.indexOf(highlight);
-  return [
-    { str: text.slice(0, i), hi: false },
-    { str: highlight, hi: true },
-    { str: text.slice(i + highlight.length), hi: false },
-  ].filter((s) => s.str.length > 0);
+function segment(text: string, highlight?: string | readonly string[]): Segment[] {
+  const phrases = (Array.isArray(highlight) ? highlight : highlight ? [highlight] : [])
+    .filter((h) => h && text.includes(h));
+  if (phrases.length === 0) return [{ str: text, hi: false }];
+
+  const ranges = phrases
+    .map((h) => ({ start: text.indexOf(h), end: text.indexOf(h) + h.length }))
+    .sort((a, b) => a.start - b.start);
+
+  const out: Segment[] = [];
+  let cursor = 0;
+  for (const r of ranges) {
+    if (r.start < cursor) continue; // skip overlapping accents
+    if (r.start > cursor) out.push({ str: text.slice(cursor, r.start), hi: false });
+    out.push({ str: text.slice(r.start, r.end), hi: true });
+    cursor = r.end;
+  }
+  if (cursor < text.length) out.push({ str: text.slice(cursor), hi: false });
+  return out.filter((s) => s.str.length > 0);
 }
 
 const word = {
-  hidden: { y: "115%" },
+  hidden: { y: "130%" },
   show: { y: 0, transition: { duration: 0.95, ease: easeOutExpo } },
 };
 
-/** Editorial word-by-word mask reveal. Each word wipes up from a clipped line. */
+/** Editorial word-by-word mask reveal. Each word wipes up from a clipped line.
+ *  A literal `\n` in `text` forces a hard line break between word groups. */
 export function TextReveal({
   text,
   highlight,
@@ -51,14 +64,7 @@ export function TextReveal({
   stagger = 0.06,
 }: Props) {
   const Tag = tags[as];
-  const segments = segment(text, highlight);
-  const words: { w: string; hi: boolean }[] = [];
-  segments.forEach((seg) => {
-    seg.str
-      .split(" ")
-      .filter(Boolean)
-      .forEach((w) => words.push({ w, hi: seg.hi }));
-  });
+  const lines = text.split("\n");
 
   return (
     <Tag
@@ -71,20 +77,34 @@ export function TextReveal({
         show: { transition: { staggerChildren: stagger, delayChildren: delay } },
       }}
     >
-      {words.map((item, i) => (
-        <span
-          key={i}
-          className="inline-flex overflow-hidden align-bottom leading-[1.05]"
-        >
-          <motion.span
-            variants={word}
-            className={cn("inline-block", item.hi && highlightClassName)}
-          >
-            {item.w}
+      {lines.map((line, li) => {
+        const words: { w: string; hi: boolean }[] = [];
+        segment(line, highlight).forEach((seg) => {
+          seg.str
+            .split(" ")
+            .filter(Boolean)
+            .forEach((w) => words.push({ w, hi: seg.hi }));
+        });
+        return (
+          <Fragment key={li}>
+            {li > 0 && <br />}
+            {words.map((item, i) => (
+              <span
+                key={i}
+                className="inline-flex overflow-hidden align-bottom leading-[1.05] pb-[0.18em] -mb-[0.18em]"
+              >
+                <motion.span
+                  variants={word}
+                  className={cn("inline-block", item.hi && highlightClassName)}
+                >
+                  {item.w}
             {i < words.length - 1 ? " " : ""}
-          </motion.span>
-        </span>
-      ))}
+                </motion.span>
+              </span>
+            ))}
+          </Fragment>
+        );
+      })}
     </Tag>
   );
 }

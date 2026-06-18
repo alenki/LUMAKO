@@ -2,7 +2,7 @@
 
 > **For agentic workers:** REQUIRED SUB-SKILL: Use superpowers:subagent-driven-development (recommended) or superpowers:executing-plans to implement this plan task-by-task. Steps use checkbox (`- [ ]`) syntax for tracking.
 
-**Goal:** Replace the Three.js WebGL hero (rotating wireframe icosahedra) with a Canvas-2D "blueprint → built" loop — schematic lines self-draw (the promise), resolve into a built solid (the proof), one lume "shipped" dot — and delete the now-unused 3D stack.
+**Goal:** Replace the Three.js WebGL hero (rotating wireframe icosahedra) with a Canvas-2D "blueprint → built" loop - schematic lines self-draw (the promise), resolve into a built solid (the proof), one lume "shipped" dot - and delete the now-unused 3D stack.
 
 **Architecture:** A `"use client"` React shell (`HeroBlueprint.tsx`) owns a single `<canvas>`, a `requestAnimationFrame` loop, pointer parallax, and pause-when-offscreen/hidden. All the *logic* lives in three pure, unit-tested modules it drives: `geometry.ts` (form vertices + isometric projection), `phases.ts` (timeline → eased visual state), and `render.ts` (the imperative draw routine). Reduced-motion renders one static "built" frame. No WebGL, no new dependencies.
 
@@ -16,18 +16,18 @@
 ## File structure
 
 **Create**
-- `components/hero/blueprint/geometry.ts` — pure: `Vec3`/`Vec2`/`Face`/`Form`, `project()`, `faceDepth()`, `sortedFaces()`, `buildForm()`, `SHIPPED_VERTEX_INDEX`. No DOM.
-- `components/hero/blueprint/phases.ts` — pure: `Phase`/`PhaseState`, phase-boundary constants, `easeOutExpo()`/`easeInOut()`, `getPhaseState()`, `STATIC_STATE`. No DOM.
-- `components/hero/blueprint/render.ts` — imperative: `BlueprintColors`/`DEFAULT_COLORS`/`Dims`, `renderBlueprint()`, plus `blend()`/`toneColor()`/`drawField()`/`drawAnnotations()`. Draws into a `CanvasRenderingContext2D`.
-- `components/hero/HeroBlueprint.tsx` — `"use client"` React shell: canvas + rAF loop + parallax + observers + reduced-motion static frame + `readColors()`.
+- `components/hero/blueprint/geometry.ts` - pure: `Vec3`/`Vec2`/`Face`/`Form`, `project()`, `faceDepth()`, `sortedFaces()`, `buildForm()`, `SHIPPED_VERTEX_INDEX`. No DOM.
+- `components/hero/blueprint/phases.ts` - pure: `Phase`/`PhaseState`, phase-boundary constants, `easeOutExpo()`/`easeInOut()`, `getPhaseState()`, `STATIC_STATE`. No DOM.
+- `components/hero/blueprint/render.ts` - imperative: `BlueprintColors`/`DEFAULT_COLORS`/`Dims`, `renderBlueprint()`, plus `blend()`/`toneColor()`/`drawField()`/`drawAnnotations()`. Draws into a `CanvasRenderingContext2D`.
+- `components/hero/HeroBlueprint.tsx` - `"use client"` React shell: canvas + rAF loop + parallax + observers + reduced-motion static frame + `readColors()`.
 - `tests/hero-geometry.test.ts`, `tests/hero-phases.test.ts`, `tests/hero-render.test.ts`, `tests/hero-blueprint.test.tsx`.
 
 **Modify**
-- `components/sections/home/Hero.tsx` — swap canvas/fallback for `<HeroBlueprint />`; drop the `useDeviceTier`/reduced-motion gate.
-- `lib/mediaHooks.ts` — remove `useDeviceTier` + `DeviceTier` (only `Hero` used them — verified).
-- `package.json` + lockfile — remove `three`, `@react-three/fiber`, `@react-three/drei`, `@react-three/postprocessing`, `postprocessing`, `@types/three`.
-- `next.config.ts` — remove `transpilePackages: ["three"]`.
-- `README.md` — update the `components/three/` line to `components/hero/`.
+- `components/sections/home/Hero.tsx` - swap canvas/fallback for `<HeroBlueprint />`; drop the `useDeviceTier`/reduced-motion gate.
+- `lib/mediaHooks.ts` - remove `useDeviceTier` + `DeviceTier` (only `Hero` used them - verified).
+- `package.json` + lockfile - remove `three`, `@react-three/fiber`, `@react-three/drei`, `@react-three/postprocessing`, `postprocessing`, `@types/three`.
+- `next.config.ts` - remove `transpilePackages: ["three"]`.
+- `README.md` - update the `components/three/` line to `components/hero/`.
 
 **Delete**
 - `components/three/HeroCanvas.tsx`, `components/three/HeroFallback.tsx` (and the now-empty `components/three/`).
@@ -103,7 +103,7 @@ describe("sortedFaces", () => {
 - [ ] **Step 2: Run the test to verify it fails**
 
 Run: `npx vitest run tests/hero-geometry.test.ts`
-Expected: FAIL — cannot resolve `@/components/hero/blueprint/geometry`.
+Expected: FAIL - cannot resolve `@/components/hero/blueprint/geometry`.
 
 - [ ] **Step 3: Write the implementation**
 
@@ -198,7 +198,7 @@ function addBox(
   );
 }
 
-/** The hero form: three offset, decreasing slabs — an abstract layered monument. */
+/** The hero form: three offset, decreasing slabs - an abstract layered monument. */
 export function buildForm(): Form {
   const acc: Form = { vertices: [], edges: [], faces: [] };
   addBox(acc, 0,     -0.9,  0,    2.4, 0.5, 2.4, 0.96, 0.80);
@@ -207,7 +207,7 @@ export function buildForm(): Form {
   return acc;
 }
 
-/** Vertex for the lume "shipped" dot: top slab (verts 16–23), top-front-right (local 6). */
+/** Vertex for the lume "shipped" dot: top slab (verts 16-23), top-front-right (local 6). */
 export const SHIPPED_VERTEX_INDEX = 8 * 2 + 6; // = 22
 ```
 
@@ -321,7 +321,7 @@ describe("STATIC_STATE", () => {
 - [ ] **Step 2: Run the test to verify it fails**
 
 Run: `npx vitest run tests/hero-phases.test.ts`
-Expected: FAIL — cannot resolve `@/components/hero/blueprint/phases`.
+Expected: FAIL - cannot resolve `@/components/hero/blueprint/phases`.
 
 - [ ] **Step 3: Write the implementation**
 
@@ -352,7 +352,7 @@ export const BUILD_END = 5.0;
 export const LIVE_END = 9.0;
 export const CYCLE = 11.0;
 
-/** easeOutExpo — heavy settle; canvas equivalent of the site's motion bezier. */
+/** easeOutExpo - heavy settle; canvas equivalent of the site's motion bezier. */
 export function easeOutExpo(t: number): number {
   return t >= 1 ? 1 : 1 - Math.pow(2, -10 * t);
 }
@@ -515,7 +515,7 @@ describe("renderBlueprint", () => {
 - [ ] **Step 2: Run the test to verify it fails**
 
 Run: `npx vitest run tests/hero-render.test.ts`
-Expected: FAIL — cannot resolve `@/components/hero/blueprint/render`.
+Expected: FAIL - cannot resolve `@/components/hero/blueprint/render`.
 
 - [ ] **Step 3: Write the implementation**
 
@@ -744,9 +744,9 @@ describe("HeroBlueprint", () => {
 - [ ] **Step 2: Run the test to verify it fails**
 
 Run: `npx vitest run tests/hero-blueprint.test.tsx`
-Expected: FAIL — cannot resolve `@/components/hero/HeroBlueprint`.
+Expected: FAIL - cannot resolve `@/components/hero/HeroBlueprint`.
 
-(Note: jsdom logs a "Not implemented: HTMLCanvasElement.prototype.getContext" warning — harmless; `getContext` returns `null`, so the effect bails before touching `ResizeObserver`/`IntersectionObserver`.)
+(Note: jsdom logs a "Not implemented: HTMLCanvasElement.prototype.getContext" warning - harmless; `getContext` returns `null`, so the effect bails before touching `ResizeObserver`/`IntersectionObserver`.)
 
 - [ ] **Step 3: Write the implementation**
 
@@ -781,7 +781,7 @@ function readColors(): BlueprintColors {
 }
 
 /**
- * "Drafted, then built" — a Canvas-2D blueprint that self-draws then resolves
+ * "Drafted, then built" - a Canvas-2D blueprint that self-draws then resolves
  * into a built solid, on loop. Decorative; pauses off-screen / when hidden.
  */
 export function HeroBlueprint() {
@@ -915,7 +915,7 @@ Co-Authored-By: Claude Opus 4.8 (1M context) <noreply@anthropic.com>"
 
 - [ ] **Step 1: Replace `Hero.tsx` with the blueprint wiring**
 
-This drops the `dynamic()` import, the `HeroCanvas`/`HeroFallback`/`useDeviceTier` usage, and the `showCanvas` gate (reduced-motion is now handled inside `HeroBlueprint`). Everything else — wash, grain, text columns, CTAs, scroll cue — is unchanged. Overwrite `components/sections/home/Hero.tsx` with:
+This drops the `dynamic()` import, the `HeroCanvas`/`HeroFallback`/`useDeviceTier` usage, and the `showCanvas` gate (reduced-motion is now handled inside `HeroBlueprint`). Everything else - wash, grain, text columns, CTAs, scroll cue - is unchanged. Overwrite `components/sections/home/Hero.tsx` with:
 
 ```tsx
 "use client";
@@ -934,7 +934,7 @@ export function Hero() {
 
   return (
     <section className="relative flex min-h-dvh items-center overflow-hidden">
-      {/* white legibility wash behind the scene — the lume glow lives only in the footer */}
+      {/* white legibility wash behind the scene - the lume glow lives only in the footer */}
       <div className="glow-accent pointer-events-none absolute inset-0" />
       <div className="absolute inset-0">
         <HeroBlueprint />
@@ -951,7 +951,7 @@ export function Hero() {
 
       <div className="container-x relative z-10 pt-[var(--header-h)]">
         <div className="grid-12 items-end gap-y-10">
-          {/* LEFT column — headline + CTAs */}
+          {/* LEFT column - headline + CTAs */}
           <div className="col-span-12 md:col-span-7">
             <TextReveal
               as="h1"
@@ -976,7 +976,7 @@ export function Hero() {
             </motion.div>
           </div>
 
-          {/* RIGHT column — eyebrow + supporting paragraph */}
+          {/* RIGHT column - eyebrow + supporting paragraph */}
           <div className="col-span-12 md:col-start-9 md:col-span-4 order-first md:order-none">
             <motion.div
               initial={{ opacity: 0, y: 12 }}
@@ -1017,12 +1017,12 @@ export function Hero() {
 }
 ```
 
-> Note: this overwrites a pre-existing uncommitted comment-only edit on line 27 of `Hero.tsx` — intended; the comment is updated above.
+> Note: this overwrites a pre-existing uncommitted comment-only edit on line 27 of `Hero.tsx` - intended; the comment is updated above.
 
 - [ ] **Step 2: Typecheck**
 
 Run: `npm run typecheck`
-Expected: PASS, no errors. (`HeroCanvas`/`HeroFallback`/`useDeviceTier` are still present on disk but no longer imported — that's fine; they're removed in Task 6.)
+Expected: PASS, no errors. (`HeroCanvas`/`HeroFallback`/`useDeviceTier` are still present on disk but no longer imported - that's fine; they're removed in Task 6.)
 
 - [ ] **Step 3: Lint**
 
@@ -1102,7 +1102,7 @@ export function useScrolled(threshold = 24): boolean {
 
 - [ ] **Step 3: Remove the Three.js transpile config**
 
-Edit `next.config.ts` — delete the `transpilePackages` line and its comment so it reads:
+Edit `next.config.ts` - delete the `transpilePackages` line and its comment so it reads:
 
 ```ts
 import type { NextConfig } from "next";
@@ -1145,7 +1145,7 @@ Expected: `package.json` dependencies/devDependencies no longer list those six p
 - [ ] **Step 6: Verify nothing references the removed code**
 
 Run: `npm run typecheck`
-Expected: PASS — no references to `@/components/three/*`, `useDeviceTier`, `three`, or `@react-three/*` remain.
+Expected: PASS - no references to `@/components/three/*`, `useDeviceTier`, `three`, or `@react-three/*` remain.
 
 - [ ] **Step 7: Full verification suite**
 
@@ -1208,7 +1208,7 @@ Co-Authored-By: Claude Opus 4.8 (1M context) <noreply@anthropic.com>"
 **Spec coverage:**
 - Blueprint→built loop (Field→Draft→Build→Live→Loop) → Task 2 (`phases.ts`) + Task 3 (`render.ts`) ✓
 - Abstract isometric layered form → Task 1 (`buildForm`, 3 slabs) ✓
-- Canvas 2D, no WebGL → Tasks 3–4 ✓
+- Canvas 2D, no WebGL → Tasks 3-4 ✓
 - Pure `geometry.ts`/`phases.ts` + React shell split → Tasks 1, 2, 4 ✓
 - Token-driven colors via `getComputedStyle` → Task 4 (`readColors`) ✓
 - One lume "shipped" dot → Task 1 (`SHIPPED_VERTEX_INDEX`) + Task 3 (dot draw) ✓
@@ -1217,8 +1217,8 @@ Co-Authored-By: Claude Opus 4.8 (1M context) <noreply@anthropic.com>"
 - `aria-hidden` + `pointer-events:none` → Task 4 ✓
 - `Hero.tsx` rewire, drop device-tier gate → Task 5 ✓
 - Delete `three/` files + 6 deps + `transpilePackages` + dead `useDeviceTier` + README → Task 6 ✓
-- Verification (typecheck/lint/test/build) + visual/reduced-motion/perf/a11y QA → Tasks 6–7 ✓
+- Verification (typecheck/lint/test/build) + visual/reduced-motion/perf/a11y QA → Tasks 6-7 ✓
 
-**Placeholder scan:** No TBD/TODO; every code step has complete code; tuning constants in Task 7 are concrete values in Tasks 2–3, not placeholders. ✓
+**Placeholder scan:** No TBD/TODO; every code step has complete code; tuning constants in Task 7 are concrete values in Tasks 2-3, not placeholders. ✓
 
 **Type consistency:** `Form`/`Vec2`/`Vec3`/`Face`/`project`/`sortedFaces`/`SHIPPED_VERTEX_INDEX` (geometry) consumed unchanged by render + component; `PhaseState`/`getPhaseState`/`STATIC_STATE`/`easeOutExpo`/`CYCLE` (phases) consumed unchanged by render + component + tests; `BlueprintColors`/`DEFAULT_COLORS`/`renderBlueprint`/`blend` (render) consumed unchanged by component + tests. `renderBlueprint` signature `(ctx, dims, state, form, pointer, colors)` is identical in render.ts, both render tests, and the component call site. ✓

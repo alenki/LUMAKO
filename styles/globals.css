@@ -1,40 +1,48 @@
 @import "tailwindcss";
 
 /* ----------------------------------------------------------------------------
-   Lumako design tokens — airy neutral: warm-gray page, white soft-shadow cards,
-   ink-only accent (no chroma), full-width layout
+   Lumako design tokens - airy neutral: warm-gray page, white soft-shadow cards,
+   ink neutrals + one lume signal (used sparingly), full-width layout
 ---------------------------------------------------------------------------- */
 @theme {
-  /* Surfaces — airy: gray page, white cards */
+  /* Surfaces - airy: gray page, white cards */
   --color-bg: #f3f3f2;
   --color-bg-elev: #ffffff;
   --color-card: #ffffff;
   --color-card-2: #f6f6f5;
   --color-surface: #ffffff;
 
-  /* Text — ink on light */
+  /* Text - ink on light */
   --color-fg: #0a0a0a;
   --color-fg-muted: #737373;
   --color-fg-dim: #a1a1a1;
 
-  /* Lines — hairline #E5E5E5 */
+  /* Lines - hairline #E5E5E5 */
   --color-line: #e5e5e5;
   --color-line-strong: #d4d4d4;
 
-  /* Error — validation red */
+  /* Error - validation red */
   --color-error: #c0392b;
 
-  /* Accent — neutralized to ink (no chroma) */
+  /* Accent - ink neutral (no chroma); lume is the only signal color */
   --color-accent: #171717;
   --color-accent-deep: #000000;
   --color-accent-soft: rgba(0, 0, 0, 0.05);
 
-  /* Brand ink fill (buttons/CTA) + footer glow */
+  /* Brand ink fill (buttons/CTA) */
   --color-ink: #171717;
   --color-ink-fg: #fafafa;
-  --color-glow: rgba(0, 0, 0, 0.06);
 
-  /* Radii — rounder */
+  /* Lume - the one signal color (Lumako brandbook). Monochrome, plus one light.
+     Sparing only: logo dot, focus rings, active nav, the single lume CTA, footer glow. */
+  --color-lume: #d49a2e;
+  --color-lume-soft: #f4e6c6;
+  --color-lume-deep: #9c6e1b;
+
+  /* Footer signature - the one warm lume glow on the dark closing band */
+  --color-glow: rgba(212, 154, 46, 0.4);
+
+  /* Radii - rounder */
   --radius: 1rem;        /* 16px cards */
   --radius-lg: 1rem;
   --radius-xl: 1.25rem;
@@ -56,7 +64,7 @@
   --text-mono: clamp(0.7rem, 0.78vw, 0.82rem);
 }
 
-/* Fonts reference runtime variables from next/font — must be inline */
+/* Fonts reference runtime variables from next/font - must be inline */
 @theme inline {
   --font-display: var(--font-inter-tight);
   --font-sans: var(--font-inter-tight);
@@ -81,7 +89,7 @@
   --py-section: calc(var(--vw) * 7);
   --py-section-lg: calc(var(--vw) * 10);
 
-  --header-h: 3rem;
+  --header-h: 4.5rem;
   --gutter: clamp(1.25rem, 3.5vw, 4rem);
   --col-gap: clamp(1rem, 2vw, 2rem);
   --radius-panel: 1.5rem; /* used by the CtaBand feature panel (Task 9) */
@@ -115,7 +123,7 @@ body {
   overflow-x: clip;
 }
 
-::selection { background: #e5e5e5; color: #0a0a0a; }
+::selection { background: var(--color-lume-soft); color: #0a0a0a; }
 
 /* Custom cursor takes over on precise pointers */
 @media (pointer: fine) {
@@ -125,10 +133,13 @@ body {
   }
 }
 
-:focus-visible { outline: 2px solid var(--color-fg); outline-offset: 2px; border-radius: 2px; }
+/* Lume focus ring - the one place color signals interaction (brandbook §07).
+   Uses lume-deep (#9C6E1B) - the brandbook's "lume legible on light" token - so the
+   ring clears WCAG 1.4.11 (>=3:1) on white and the gray page while still reading gold. */
+:focus-visible { outline: 2px solid var(--color-lume-deep); outline-offset: 2px; border-radius: 2px; }
 
 /* ----------------------------------------------------------------------------
-   Helper utilities (plain classes — robust, framework-agnostic)
+   Helper utilities (plain classes - robust, framework-agnostic)
 ---------------------------------------------------------------------------- */
 .font-display {
   font-family: var(--font-display);
@@ -137,7 +148,7 @@ body {
   font-family: var(--font-mono);
 }
 
-/* Eyebrow / label chrome — Inter Tight caps (replaces monospace labels) */
+/* Eyebrow / label chrome - Inter Tight caps (replaces monospace labels) */
 .label-caps {
   font-family: var(--font-sans);
   font-size: var(--text-mono);
@@ -215,14 +226,36 @@ body {
 /* ----------------------------------------------------------------------------
    Footer = the single dark closing band
 ---------------------------------------------------------------------------- */
-.footer-glow { position: relative; background: #0a0a0a; }
+.footer-glow {
+  position: relative;
+  background: linear-gradient(180deg, #18181b 0%, #0a0a0a 100%);
+}
+/* The one lume glow - warm light emerging from the dark closing band.
+   This is the only place the glow appears (brandbook §04). */
+.footer-glow::before {
+  content: "";
+  position: absolute;
+  top: -40%;
+  left: -10%;
+  width: 60%;
+  height: 160%;
+  background: radial-gradient(
+    closest-side,
+    var(--color-glow),
+    rgba(212, 154, 46, 0.1) 55%,
+    rgba(212, 154, 46, 0) 75%
+  );
+  pointer-events: none;
+  z-index: 0;
+}
+.footer-glow > * { position: relative; z-index: 1; }
 
 /* Keyboard focus rings must stay visible against the dark footer band */
 .footer-glow :focus-visible {
   outline-color: #fafafa;
 }
 
-/* Hero scroll cue — a light pulse falling down a hairline */
+/* Hero scroll cue - a light pulse falling down a hairline */
 @keyframes scrollcue {
   0% {
     transform: translateY(-100%);
@@ -257,7 +290,7 @@ body {
 }
 
 /* ----------------------------------------------------------------------------
-   Reduced motion — disable all animation/transition + smooth scroll
+   Reduced motion - disable all animation/transition + smooth scroll
 ---------------------------------------------------------------------------- */
 @media (prefers-reduced-motion: reduce) {
   html {

@@ -1,4 +1,4 @@
-# Lumako — Web & Product Studio Website · Design Spec
+# Lumako - Web & Product Studio Website · Design Spec
 
 **Date:** 2026-06-16
 **Status:** Approved direction (pending spec review)
@@ -8,14 +8,14 @@
 
 ## 1. Overview
 
-Build an award-winning marketing website for **Lumako**, a craft-forward **web & product design/build studio**. The site must read as **professional** (rigorous grid, typography, and performance discipline) while feeling **boldly creative** (cinematic, surprising, memorable) — the way a top-tier digital agency site should.
+Build an award-winning marketing website for **Lumako**, a craft-forward **web & product design/build studio**. The site must read as **professional** (rigorous grid, typography, and performance discipline) while feeling **boldly creative** (cinematic, surprising, memorable) - the way a top-tier digital agency site should.
 
 **North-star references**
-- Aesthetic & palette: `https://leftcoast.refractweb.com/` — dark monochrome luxury + electric-blue accent, fluid `clamp()` type/space system, cinematic 3D hero.
+- Aesthetic & palette: `https://leftcoast.refractweb.com/` - dark monochrome luxury + electric-blue accent, fluid `clamp()` type/space system, cinematic 3D hero.
 - README aesthetic mandate: avoid AI-slop. No Inter/Roboto/Arial/system fonts, no Space Grotesk, no purple-on-white clichés, no cookie-cutter layouts. Distinctive type, cohesive dark theme, high-impact orchestrated motion, atmospheric backgrounds.
 
 **Success criteria**
-- Feels like a real, expensive studio site — not a template.
+- Feels like a real, expensive studio site - not a template.
 - One unforgettable signature moment (the 3D hero) + consistent craft everywhere else.
 - Smooth 60fps motion, no layout shift, accessible, reduced-motion safe.
 - Fully responsive via a fluid scaling system.
@@ -24,11 +24,11 @@ Build an award-winning marketing website for **Lumako**, a craft-forward **web &
 
 ## 2. The Big Idea
 
-**Concept:** *"Products built in the light."* Lumako (from *lumen*, light) brings clarity and luminosity to digital products. The canvas is a dark void; the brand motif is **light** — glowing hairline wireframes, a luminous blue accent, beams cutting through black. Every section is an object lit in a dark gallery.
+**Concept:** *"Products built in the light."* Lumako (from *lumen*, light) brings clarity and luminosity to digital products. The canvas is a dark void; the brand motif is **light** - glowing hairline wireframes, a luminous blue accent, beams cutting through black. Every section is an object lit in a dark gallery.
 
-**Positioning:** craft-forward web & product studio spanning strategy → brand → interface → engineering. Tone: confident, precise, quietly luxurious, editorial — never salesy.
+**Positioning:** craft-forward web & product studio spanning strategy → brand → interface → engineering. Tone: confident, precise, quietly luxurious, editorial - never salesy.
 
-**Hero headline (direction):** *"We design & build the products people don't forget."* — "don't forget" set in italic Fraunces. (Final copy refined in build.)
+**Hero headline (direction):** *"We design & build the products people don't forget."* - "don't forget" set in italic Fraunces. (Final copy refined in build.)
 
 ---
 
@@ -48,7 +48,7 @@ Build an award-winning marketing website for **Lumako**, a craft-forward **web &
 --accent:        #3080ff   /* electric blue, bright */
 --accent-deep:   #1447e6
 --accent-soft:   rgba(48,128,255,0.14)   /* glow / wash */
---spark:         #ff6568   /* coral — used 1-2x max for tension */
+--spark:         #ff6568   /* coral - used 1-2x max for tension */
 --radius:        0.625rem
 --radius-lg:     1.5rem
 --radius-xl:     2rem
@@ -56,9 +56,9 @@ Build an award-winning marketing website for **Lumako**, a craft-forward **web &
 Blue is the *only* chromatic accent on a monochrome field. Coral is reserved for a single tension point (e.g., live "available" status dot, one key hover state).
 
 ### 3.2 Typography
-- **Display — Fraunces** (variable; use optical sizing + soft/wonk axes; italic for accent words). High-contrast editorial serif → the "luxury magazine" voice.
-- **Body / UI — Hanken Grotesk** (clean, warm, highly readable grotesque).
-- **Labels / indices — Geist Mono** (eyebrows, section numbers `(01)`, coordinates, captions, metadata).
+- **Display - Fraunces** (variable; use optical sizing + soft/wonk axes; italic for accent words). High-contrast editorial serif → the "luxury magazine" voice.
+- **Body / UI - Hanken Grotesk** (clean, warm, highly readable grotesque).
+- **Labels / indices - Geist Mono** (eyebrows, section numbers `(01)`, coordinates, captions, metadata).
 
 Loaded via `next/font` (Fraunces, Hanken Grotesk from Google) + self-hosted **Geist Mono** (`geist` package). No FOUT/CLS.
 
@@ -89,7 +89,7 @@ Loaded via `next/font` (Fraunces, Hanken Grotesk from Google) + self-hosted **Ge
 - Sticky blurred top nav; monumental footer wordmark.
 
 ### 3.5 Motion language
-- Signature easing: expo-out `cubic-bezier(.22,1,.36,1)`; durations 0.6–1.2s for reveals.
+- Signature easing: expo-out `cubic-bezier(.22,1,.36,1)`; durations 0.6-1.2s for reveals.
 - **Orchestrated page-load**: staggered masked-text reveals (clip-path + translateY).
 - **Lenis** smooth scroll (momentum), scroll-linked parallax on imagery and headings.
 - **Custom cursor**: dot + magnetic ring that scales/labels on interactive elements.
@@ -113,41 +113,41 @@ A slowly rotating **luminous wireframe form** (abstract lattice / morphing geome
 
 Shared shell on every route: blurred sticky **nav** (wordmark, links, live local time + "SF / remote" locale detail, "Start a project" CTA), monumental **footer** (giant LUMAKO wordmark, nav, newsletter, socials, colophon/credits), custom cursor, Lenis smooth scroll, page transitions, full SEO + OpenGraph metadata per route.
 
-### / — Home
+### / - Home
 1. **3D hero** (section 4) + editorial headline.
-2. **Manifesto** — short, bold statement of philosophy; mono eyebrow `(what we believe)`.
-3. **Services overview** — 6 disciplines as an interactive list/grid with hover reveals.
-4. **Selected work** — 3–4 featured case studies, large hover-reveal cards, parallax media.
-5. **Process teaser** — numbered phases preview → links to /services.
-6. **Stats / proof** — animated counters (projects, years, awards, etc.).
-7. **Testimonial** — single large pull-quote, editorial.
-8. **CTA band** — "Start a project" with magnetic button → /contact.
+2. **Manifesto** - short, bold statement of philosophy; mono eyebrow `(what we believe)`.
+3. **Services overview** - 6 disciplines as an interactive list/grid with hover reveals.
+4. **Selected work** - 3-4 featured case studies, large hover-reveal cards, parallax media.
+5. **Process teaser** - numbered phases preview → links to /services.
+6. **Stats / proof** - animated counters (projects, years, awards, etc.).
+7. **Testimonial** - single large pull-quote, editorial.
+8. **CTA band** - "Start a project" with magnetic button → /contact.
 
-### /work — Work index
+### /work - Work index
 - Intro + filter (by discipline: Web, Product, Brand, Motion).
 - Responsive case grid; each card: cover media (hover reveal/parallax), client, title, disciplines, year.
 
-### /work/[slug] — Case study
+### /work/[slug] - Case study
 - Cinematic title hero (client, role, year, services).
 - Overview / challenge / approach (editorial two-column + pull quotes).
 - Media gallery (full-bleed + parallax).
 - Results (animated metrics).
 - Next-project link (large hover transition).
 
-### /services — Services
+### /services - Services
 - Hero statement.
-- Six disciplines (Strategy, Brand & Identity, Web Design, Product / UX, Engineering & Build, Motion & 3D) — each expandable with deliverables.
+- Six disciplines (Strategy, Brand & Identity, Web Design, Product / UX, Engineering & Build, Motion & 3D) - each expandable with deliverables.
 - Numbered **process** (Discover → Define → Design → Build → Launch → Evolve).
 - Engagement models (Project / Retainer / Embedded).
 
-### /studio — About
+### /studio - About
 - Manifesto / origin.
-- Values (3–4, editorial).
+- Values (3-4, editorial).
 - Founders / team grid (portraits + roles; hover reveal).
 - Recognition (awards/press marquee).
 - Clients marquee.
 
-### /contact — Contact
+### /contact - Contact
 - "Start a project" headline.
 - Form: name, email, company, budget range, services (multi-select chips), message. Client-side validation + success state. (Wire to a simple API route / mailto fallback; no backend dependency required for v1.)
 - Direct details (email), scheduling CTA, socials, live local time.
@@ -210,7 +210,7 @@ Ultracode workflow orchestration:
 1. Scaffold Next.js + Tailwind v4 + deps + tokens/fonts.
 2. Build design-system foundation (tokens, typography, UI primitives, motion lib).
 3. Build shared shell (Nav, Footer, Cursor, SmoothScroll, PageTransition).
-4. Build pages — parallelize independent routes/sections.
+4. Build pages - parallelize independent routes/sections.
 5. Build the Three.js hero (+ degradation path).
 6. Polish + **Playwright visual verification** pass across breakpoints; fix; re-verify.
 

@@ -11,7 +11,7 @@ export function ProcessTeaser() {
       <div className="container-x">
         <div className="grid-12 items-end gap-8">
           <div className="col-span-12 md:col-span-6">
-            <Eyebrow index="05">{p.eyebrow}</Eyebrow>
+            <Eyebrow>{p.eyebrow}</Eyebrow>
             <h2 className="mt-6 font-display text-[length:var(--text-5xl)] font-light leading-tight tracking-tight">
               {p.headline}
             </h2>

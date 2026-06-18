@@ -159,7 +159,7 @@ export function ContactForm() {
       <fieldset className="flex flex-col gap-4">
         <legend className="label-caps">
           What you need{" "}
-          <span className="text-fg-dim">— pick any</span>
+          <span className="text-fg-dim">- pick any</span>
         </legend>
         <div className="flex flex-wrap gap-3">
           {serviceOptions.map((option) => (

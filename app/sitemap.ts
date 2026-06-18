@@ -4,7 +4,7 @@ import { work } from "@/lib/content/work";
 const base = "https://lumako.com";
 
 export default function sitemap(): MetadataRoute.Sitemap {
-  const routes = ["", "/work", "/services", "/studio", "/contact"].map((p) => ({
+  const routes = ["", "/work", "/services", "/contact"].map((p) => ({
     url: `${base}${p}`,
     changeFrequency: "monthly" as const,
     priority: p === "" ? 1 : 0.8,

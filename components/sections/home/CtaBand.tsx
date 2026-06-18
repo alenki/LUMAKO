@@ -13,7 +13,7 @@ export function CtaBand() {
         <div className="relative overflow-hidden rounded-[var(--radius-panel)] bg-[var(--color-card)] px-6 py-28 text-center md:py-36">
           <LogoChips />
           <div className="relative z-10 mx-auto max-w-[34ch]">
-            <Eyebrow index="06">{c.eyebrow}</Eyebrow>
+            <Eyebrow>{c.eyebrow}</Eyebrow>
             <TextReveal
               as="h2"
               text={c.headline}

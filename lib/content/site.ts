@@ -1,13 +1,13 @@
 export const site = {
   name: "Lumako",
-  tagline: "Web · AI · Apps — shipped, not proposed",
+  tagline: "Web · AI · Apps - shipped, not proposed",
   email: "hello@lumako.com",
-  locale: "Nalchik, KBR → Global",
+  locale: "Global",
   timezone: "Europe/Moscow",
   nav: [
+    { label: "Home", href: "/" },
     { label: "Work", href: "/work" },
     { label: "Services", href: "/services" },
-    { label: "Studio", href: "/studio" },
     { label: "Contact", href: "/contact" },
   ],
   socials: [

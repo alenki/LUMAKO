@@ -1,8 +1,8 @@
 "use client";
 import { motion, useReducedMotion } from "motion/react";
-import { clients } from "@/lib/content/studio";
+import { clients } from "@/lib/content/clients";
 
-// fixed positions (top%, left%, rotateDeg) around the panel edges — 6 chips
+// fixed positions (top%, left%, rotateDeg) around the panel edges - 6 chips
 const SPOTS = [
   { top: "8%", left: "6%", r: -8 },
   { top: "14%", left: "84%", r: 7 },

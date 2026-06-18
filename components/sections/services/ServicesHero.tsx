@@ -11,7 +11,7 @@ export function ServicesHero() {
       <div className="container-x relative">
         <div className="grid-12 items-end">
           <div className="col-span-12 md:col-span-7">
-            <Eyebrow index="01">{s.eyebrow}</Eyebrow>
+            <Eyebrow>{s.eyebrow}</Eyebrow>
             <TextReveal
               as="h1"
               text={s.headline}

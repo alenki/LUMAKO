@@ -19,7 +19,7 @@ export default function WorkPage() {
           <div className="grid-12 items-end">
             {/* Left: eyebrow + headline */}
             <div className="col-span-12 md:col-span-7">
-              <Eyebrow index="01">{w.eyebrow}</Eyebrow>
+              <Eyebrow>{w.eyebrow}</Eyebrow>
               <TextReveal
                 as="h1"
                 text={w.headline}

@@ -3,13 +3,13 @@ import { Eyebrow } from "@/components/ui/Eyebrow";
 import { LocalTime } from "@/components/layout/LocalTime";
 import { site } from "@/lib/content/site";
 
-/** Studio coordinates: email, location, live time, socials — a calm right rail. */
+/** Studio coordinates: email, location, live time, socials - a calm right rail. */
 export function ContactDetails() {
   return (
     <div className="flex flex-col gap-12">
       <Reveal>
         <div className="flex flex-col gap-4">
-          <Eyebrow index="02">Direct line</Eyebrow>
+          <Eyebrow>Direct line</Eyebrow>
           <a
             href={`mailto:${site.email}`}
             data-cursor
@@ -22,7 +22,7 @@ export function ContactDetails() {
           </a>
           <p className="max-w-[40ch] text-[length:var(--text-lg)] text-fg-muted text-pretty">
             Prefer to talk it through? Email us and we&apos;ll find a time to
-            jump on a call — no pitch theater, just the work.
+            jump on a call - no pitch theater, just the work.
           </p>
         </div>
       </Reveal>

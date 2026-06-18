@@ -1,10 +1,10 @@
-# Full-width "airy reference" redesign — Implementation Plan
+# Full-width "airy reference" redesign - Implementation Plan
 
 > **For agentic workers:** REQUIRED SUB-SKILL: Use superpowers:subagent-driven-development (recommended) or superpowers:executing-plans to implement this plan task-by-task. Steps use checkbox (`- [ ]`) syntax for tracking.
 
-**Goal:** Make every section run full-viewport width (remove the ~1536px cap) and reskin the whole site to the Left Coast reference look — airy, light, full-bleed, asymmetric, white soft-shadow cards on a warm-gray page, gold accent dropped to neutral, 3D hero kept as a full-bleed backdrop.
+**Goal:** Make every section run full-viewport width (remove the ~1536px cap) and reskin the whole site to the Left Coast reference look - airy, light, full-bleed, asymmetric, white soft-shadow cards on a warm-gray page, gold accent dropped to neutral, 3D hero kept as a full-bleed backdrop.
 
-**Architecture:** A token + layout-primitive change in `styles/globals.css` makes `.container-x` full-width (so every section becomes full-bleed automatically); each section is then restructured onto a 12-column grid into one of five archetypes (asymmetric header / white-card row / text-left-media-right / full-bleed grid / feature panel). No content changes — `lib/content/*` is untouched, so all Vitest content/validation tests stay green.
+**Architecture:** A token + layout-primitive change in `styles/globals.css` makes `.container-x` full-width (so every section becomes full-bleed automatically); each section is then restructured onto a 12-column grid into one of five archetypes (asymmetric header / white-card row / text-left-media-right / full-bleed grid / feature panel). No content changes - `lib/content/*` is untouched, so all Vitest content/validation tests stay green.
 
 **Tech Stack:** Next.js 16 (App Router), React 19, TypeScript, Tailwind CSS v4 (CSS-first `@theme`), Motion (Framer Motion), three / R3F, Lenis, Vitest.
 
@@ -14,14 +14,14 @@
 
 ## Conventions (read once, applied in every task)
 
-**Standard checks** — run after each task unless noted:
+**Standard checks** - run after each task unless noted:
 - `npm run typecheck` → expect: no errors.
 - `npm run lint` → expect: clean (no new warnings/errors).
 - `npm run test` → expect: all pass (content/validation tests are untouched and must stay green).
 
-**Build/visual checks** — run at the end of each phase:
+**Build/visual checks** - run at the end of each phase:
 - `npm run build` → expect: success.
-- Visual QA: `npm run dev`, then screenshot the affected route at three widths — **1280px** (laptop), **1920px** (desktop), **2560px** (ultrawide) — using the Playwright MCP (`browser_navigate` → `browser_resize` → `browser_take_screenshot`). Confirm: content reaches the gutters (full-bleed), body text stays in a readable sub-column, no horizontal scroll, cards render as white soft-shadow boxes on the gray page, no gold flecks remain.
+- Visual QA: `npm run dev`, then screenshot the affected route at three widths - **1280px** (laptop), **1920px** (desktop), **2560px** (ultrawide) - using the Playwright MCP (`browser_navigate` → `browser_resize` → `browser_take_screenshot`). Confirm: content reaches the gutters (full-bleed), body text stays in a readable sub-column, no horizontal scroll, cards render as white soft-shadow boxes on the gray page, no gold flecks remain.
 
 **Commit cadence:** one commit per task, conventional-commit style, on branch `redesign/full-width-airy`.
 
@@ -29,11 +29,11 @@
 
 ---
 
-## Shared patterns (canonical code — copy these into sections by archetype)
+## Shared patterns (canonical code - copy these into sections by archetype)
 
 These are the building blocks referenced by name in the section tasks. They use tokens/classes created in Task 1.
 
-**Pattern S — Full-width section shell** (every section). The `.container-x` is now full-width + gutters, so this is the standard wrapper. Drop `border-t border-line` from section wrappers (separation now comes from spacing + gray/white contrast):
+**Pattern S - Full-width section shell** (every section). The `.container-x` is now full-width + gutters, so this is the standard wrapper. Drop `border-t border-line` from section wrappers (separation now comes from spacing + gray/white contrast):
 ```tsx
 <section className="section-lg">
   <div className="container-x">
@@ -42,7 +42,7 @@ These are the building blocks referenced by name in the section tasks. They use 
 </section>
 ```
 
-**Pattern A — Asymmetric header:**
+**Pattern A - Asymmetric header:**
 ```tsx
 <div className="grid-12 items-end gap-y-8">
   <div className="col-span-12 md:col-span-6">
@@ -59,7 +59,7 @@ These are the building blocks referenced by name in the section tasks. They use 
 </div>
 ```
 
-**Pattern C — White card** (use the `.surface-card` helper from Task 1):
+**Pattern C - White card** (use the `.surface-card` helper from Task 1):
 ```tsx
 <div className="surface-card p-10">
   {/* card content */}
@@ -67,7 +67,7 @@ These are the building blocks referenced by name in the section tasks. They use 
 ```
 Interactive cards add hover lift: `className="surface-card surface-card--hover p-10"`.
 
-**Pattern R — White-card row** (replaces every `gap-px … border border-line bg-line` hairline grid):
+**Pattern R - White-card row** (replaces every `gap-px … border border-line bg-line` hairline grid):
 ```tsx
 <div className="mt-14 grid grid-cols-1 gap-5 sm:grid-cols-2 lg:grid-cols-4">
   {items.map((it) => (
@@ -76,7 +76,7 @@ Interactive cards add hover lift: `className="surface-card surface-card--hover p
 </div>
 ```
 
-**Pattern M — Text-left / media-right row:**
+**Pattern M - Text-left / media-right row:**
 ```tsx
 <div className="grid-12 items-center gap-y-10">
   <div className="col-span-12 md:col-span-4">{/* eyebrow + headline + body (max-w-[46ch]) + link */}</div>
@@ -84,7 +84,7 @@ Interactive cards add hover lift: `className="surface-card surface-card--hover p
 </div>
 ```
 
-**Pattern P — Feature panel** (CTA):
+**Pattern P - Feature panel** (CTA):
 ```tsx
 <section className="section-lg">
   <div className="container-x">
@@ -100,14 +100,14 @@ Interactive cards add hover lift: `className="surface-card surface-card--hover p
 
 ---
 
-## Task 1: Foundation — global tokens & layout primitives
+## Task 1: Foundation - global tokens & layout primitives
 
 **Files:**
 - Modify: `styles/globals.css`
 
 - [ ] **Step 1: Invert surfaces + add `--color-surface` in the `@theme` block.** Change the "Surfaces" group and add a surface token:
 ```css
-  /* Surfaces — airy: gray page, white cards */
+  /* Surfaces - airy: gray page, white cards */
   --color-bg: #f3f3f2;
   --color-bg-elev: #ffffff;
   --color-card: #ffffff;
@@ -117,7 +117,7 @@ Interactive cards add hover lift: `className="surface-card surface-card--hover p
 
 - [ ] **Step 2: Neutralize the accent tokens** (drop gold) in `@theme`:
 ```css
-  /* Accent — neutralized to ink (no chroma) */
+  /* Accent - neutralized to ink (no chroma) */
   --color-accent: #171717;
   --color-accent-deep: #000000;
   --color-accent-soft: rgba(0, 0, 0, 0.05);
@@ -130,7 +130,7 @@ And the brand-ink / glow group:
   --color-glow: rgba(0, 0, 0, 0.06);
 ```
 
-- [ ] **Step 3: Rounder radii** in `@theme` — replace the radius group:
+- [ ] **Step 3: Rounder radii** in `@theme` - replace the radius group:
 ```css
   --radius: 1rem;        /* 16px cards */
   --radius-lg: 1rem;
@@ -192,7 +192,7 @@ Also increase vertical rhythm for airiness:
 
 - [ ] **Step 7: Standard checks.** `npm run typecheck`, `npm run lint`, `npm run test`. Expect all green (CSS-only change).
 
-- [ ] **Step 8: Build + spot visual.** `npm run build` (expect success). `npm run dev`, screenshot `/` at 1920px — confirm the page background is gray, the old centered max-width is gone (content now spans wide), and nothing is broken (sections will look unstyled-asymmetric until later tasks — that's expected).
+- [ ] **Step 8: Build + spot visual.** `npm run build` (expect success). `npm run dev`, screenshot `/` at 1920px - confirm the page background is gray, the old centered max-width is gone (content now spans wide), and nothing is broken (sections will look unstyled-asymmetric until later tasks - that's expected).
 
 - [ ] **Step 9: Commit.**
 ```bash
@@ -202,7 +202,7 @@ git commit -m "feat(redesign): full-width tokens, airy surfaces, grid + card hel
 
 ---
 
-## Task 2: UI primitives — neutralize accent + new radius/shadow
+## Task 2: UI primitives - neutralize accent + new radius/shadow
 
 **Files:**
 - Modify: `components/ui/Button.tsx`, `components/ui/Tag.tsx`, `components/ui/Field.tsx`, `components/ui/CoverPanel.tsx`, `components/ui/Eyebrow.tsx`
@@ -231,12 +231,12 @@ git commit -m "feat(redesign): neutralize UI primitives (drop gold, new radius/s
 
 ---
 
-## Task 3: Nav — full-width bar, top light gradient, neutral active
+## Task 3: Nav - full-width bar, top light gradient, neutral active
 
 **Files:**
 - Modify: `components/layout/Nav.tsx`
 
-- [ ] **Step 1:** Read the file. The fixed header inner wrapper already uses `.container-x` (now full-width) — keep it. Add the reference's subtle top wash to the header element: `bg-gradient-to-b from-bg/80 to-transparent backdrop-blur-sm` (or a `before` overlay), so the bar reads as a light gradient strip.
+- [ ] **Step 1:** Read the file. The fixed header inner wrapper already uses `.container-x` (now full-width) - keep it. Add the reference's subtle top wash to the header element: `bg-gradient-to-b from-bg/80 to-transparent backdrop-blur-sm` (or a `before` overlay), so the bar reads as a light gradient strip.
 
 - [ ] **Step 2:** Replace the gold active-link treatment with neutral: the active underline `bg-accent` → `bg-fg`; active text color stays `text-fg`, inactive `text-fg-muted`. Keep the scale/animation behavior.
 
@@ -252,7 +252,7 @@ git commit -m "feat(redesign): full-width neutral nav with top wash"
 
 ---
 
-## Task 4: Footer — full-width dark, flattened to neutral
+## Task 4: Footer - full-width dark, flattened to neutral
 
 **Files:**
 - Modify: `components/layout/Footer.tsx`
@@ -271,7 +271,7 @@ git commit -m "feat(redesign): full-width flat-dark footer, gold removed"
 
 ---
 
-## Task 5: Home — Hero (asymmetric text on full-bleed 3D)
+## Task 5: Home - Hero (asymmetric text on full-bleed 3D)
 
 **Files:**
 - Modify: `components/sections/home/Hero.tsx`
@@ -282,7 +282,7 @@ git commit -m "feat(redesign): full-width flat-dark footer, gold removed"
   - CTAs row below the headline (still in the left column, `mt-11`).
   Keep all motion props, delays, `MagneticButton`, and the scroll cue.
 
-- [ ] **Step 2:** Confirm the `lume`-variant secondary CTA now renders ink (from Task 2) — no gold.
+- [ ] **Step 2:** Confirm the `lume`-variant secondary CTA now renders ink (from Task 2) - no gold.
 
 - [ ] **Step 3: Standard checks** + screenshot `/` hero at 1280/1920/2560 (headline left, sub upper-right, full-bleed, neutral bloom).
 
@@ -294,14 +294,14 @@ git commit -m "feat(redesign): asymmetric full-bleed hero"
 
 ---
 
-## Task 6: Home — Manifesto + ServicesOverview
+## Task 6: Home - Manifesto + ServicesOverview
 
 **Files:**
 - Modify: `components/sections/home/Manifesto.tsx`, `components/sections/home/ServicesOverview.tsx`
 
-- [ ] **Step 1: Manifesto.** Drop `border-t border-line` from the section. Apply **Pattern A**: eyebrow in left col, the big `TextReveal` headline spanning `md:col-span-9` (manifesto is headline-led; no right sub needed — keep its existing single statement, just widen the column and remove the centering cap).
+- [ ] **Step 1: Manifesto.** Drop `border-t border-line` from the section. Apply **Pattern A**: eyebrow in left col, the big `TextReveal` headline spanning `md:col-span-9` (manifesto is headline-led; no right sub needed - keep its existing single statement, just widen the column and remove the centering cap).
 
-- [ ] **Step 2: ServicesOverview.** Drop the section `border-t border-line`. Convert the header (eyebrow+headline left, "all services →" link right) to **Pattern A** layout. Keep the accordion `ServiceRow` behavior; rows now span full width — bump the title size and let the `+` sit at the far right (`ml-auto`). Indices stay neutral (`text-fg-dim`). Keep `data-cursor` and motion.
+- [ ] **Step 2: ServicesOverview.** Drop the section `border-t border-line`. Convert the header (eyebrow+headline left, "all services →" link right) to **Pattern A** layout. Keep the accordion `ServiceRow` behavior; rows now span full width - bump the title size and let the `+` sit at the far right (`ml-auto`). Indices stay neutral (`text-fg-dim`). Keep `data-cursor` and motion.
 
 - [ ] **Step 3: Standard checks.**
 
@@ -313,7 +313,7 @@ git commit -m "feat(redesign): full-width asymmetric manifesto + services list"
 
 ---
 
-## Task 7: Home — SelectedWork (text + edge-to-edge work cards)
+## Task 7: Home - SelectedWork (text + edge-to-edge work cards)
 
 **Files:**
 - Modify: `components/sections/home/SelectedWork.tsx`, `components/sections/work/WorkCard.tsx`
@@ -332,7 +332,7 @@ git commit -m "feat(redesign): full-width selected work + soft-shadow work cards
 
 ---
 
-## Task 8: Home — ProcessTeaser + Stats + Testimonial (white-card rows)
+## Task 8: Home - ProcessTeaser + Stats + Testimonial (white-card rows)
 
 **Files:**
 - Modify: `components/sections/home/ProcessTeaser.tsx`, `components/sections/home/Stats.tsx`, `components/sections/home/Testimonial.tsx`
@@ -353,19 +353,19 @@ git commit -m "feat(redesign): white-card rows for stats, process, testimonial"
 
 ---
 
-## Task 9: Home — CtaBand feature panel + floating logo chips
+## Task 9: Home - CtaBand feature panel + floating logo chips
 
 **Files:**
 - Create: `components/ui/LogoChips.tsx`
 - Modify: `components/sections/home/CtaBand.tsx`
 
-- [ ] **Step 1: Create `LogoChips`.** Renders the `clients` strings (from `@/lib/content/studio`) as small white rounded chips absolutely positioned around the panel at slight rotations, with a subtle entrance + idle float (Motion), gated by `useReducedMotion`. On `< md`, render nothing (the panel stays clean on mobile) — chips are decorative.
+- [ ] **Step 1: Create `LogoChips`.** Renders the `clients` strings (from `@/lib/content/studio`) as small white rounded chips absolutely positioned around the panel at slight rotations, with a subtle entrance + idle float (Motion), gated by `useReducedMotion`. On `< md`, render nothing (the panel stays clean on mobile) - chips are decorative.
 ```tsx
 "use client";
 import { motion, useReducedMotion } from "motion/react";
 import { clients } from "@/lib/content/studio";
 
-// fixed positions (top%, left%, rotateDeg) around the panel edges — 6 chips
+// fixed positions (top%, left%, rotateDeg) around the panel edges - 6 chips
 const SPOTS = [
   { top: "8%", left: "6%", r: -8 },
   { top: "14%", left: "84%", r: 7 },
@@ -433,7 +433,7 @@ git commit -m "feat(redesign): full-bleed work index + grid"
 
 ---
 
-## Task 11: Case study — CaseHero + CaseBody
+## Task 11: Case study - CaseHero + CaseBody
 
 **Files:**
 - Modify: `components/sections/work/CaseHero.tsx`, `components/sections/work/CaseBody.tsx`
@@ -452,7 +452,7 @@ git commit -m "feat(redesign): full-width case hero + body, neutral accents"
 
 ---
 
-## Task 12: Case study — CaseGallery + CaseResults + NextProject
+## Task 12: Case study - CaseGallery + CaseResults + NextProject
 
 **Files:**
 - Modify: `components/sections/work/CaseGallery.tsx`, `components/sections/work/CaseResults.tsx`, `components/sections/work/NextProject.tsx`
@@ -473,7 +473,7 @@ git commit -m "feat(redesign): full-bleed gallery, white-card results, full-widt
 
 ---
 
-## Task 13: Services page — Hero + Disciplines + ProcessSteps + Engagements
+## Task 13: Services page - Hero + Disciplines + ProcessSteps + Engagements
 
 **Files:**
 - Modify: `components/sections/services/ServicesHero.tsx`, `components/sections/services/Disciplines.tsx`, `components/sections/services/ProcessSteps.tsx`, `components/sections/services/Engagements.tsx`
@@ -496,7 +496,7 @@ git commit -m "feat(redesign): full-width services page (asymmetric + white card
 
 ---
 
-## Task 14: Studio page — Hero + Values + Team + Recognition; remove Clients
+## Task 14: Studio page - Hero + Values + Team + Recognition; remove Clients
 
 **Files:**
 - Modify: `components/sections/studio/StudioHero.tsx`, `components/sections/studio/Values.tsx`, `components/sections/studio/Team.tsx`, `components/sections/studio/Recognition.tsx`, `app/studio/page.tsx`
@@ -510,7 +510,7 @@ git commit -m "feat(redesign): full-width services page (asymmetric + white card
 
 - [ ] **Step 4: Recognition.** Full-width list (`.container-x`); keep the award/org/year rows with hairline separators; neutral.
 
-- [ ] **Step 5: `app/studio/page.tsx`.** Remove `<Clients />` from the composition (its content now lives as chips on the CTA panel). The CTA panel (CtaBand, shared) already ends the page — confirm Studio ends on it. Remove the now-unused `Clients` import.
+- [ ] **Step 5: `app/studio/page.tsx`.** Remove `<Clients />` from the composition (its content now lives as chips on the CTA panel). The CTA panel (CtaBand, shared) already ends the page - confirm Studio ends on it. Remove the now-unused `Clients` import.
 
 - [ ] **Step 6: Standard checks** + `npm run build`; screenshot `/studio` at 1920/2560.
 
@@ -522,7 +522,7 @@ git commit -m "feat(redesign): full-width studio page; fold clients into CTA chi
 
 ---
 
-## Task 15: Contact page — full-width form + details
+## Task 15: Contact page - full-width form + details
 
 **Files:**
 - Modify: `app/contact/page.tsx`, `components/sections/contact/ContactDetails.tsx`, `components/sections/contact/ContactForm.tsx`
@@ -531,9 +531,9 @@ git commit -m "feat(redesign): full-width studio page; fold clients into CTA chi
 
 - [ ] **Step 2: ContactDetails.** Neutralize the email hover (`text-accent` → `text-fg`); the detail boxes → `.surface-card` where they read as cards; keep grid divider or convert to gaps.
 
-- [ ] **Step 3: ContactForm.** Neutral field styling already handled in `Field` (Task 2). Success-state card → `.surface-card`; error text neutral-readable (keep a dark/red-neutral? Errors should stay distinguishable — use `text-fg` + bold, NOT gold; a subtle red is acceptable for validation errors since it's a usability signal, but avoid gold). Keep all validation logic untouched (tests depend on it).
+- [ ] **Step 3: ContactForm.** Neutral field styling already handled in `Field` (Task 2). Success-state card → `.surface-card`; error text neutral-readable (keep a dark/red-neutral? Errors should stay distinguishable - use `text-fg` + bold, NOT gold; a subtle red is acceptable for validation errors since it's a usability signal, but avoid gold). Keep all validation logic untouched (tests depend on it).
 
-- [ ] **Step 4: Standard checks** — pay attention to `npm run test` (contact validation tests must pass) + screenshot `/contact` at 1920/2560.
+- [ ] **Step 4: Standard checks** - pay attention to `npm run test` (contact validation tests must pass) + screenshot `/contact` at 1920/2560.
 
 - [ ] **Step 5: Commit.**
 ```bash
@@ -543,7 +543,7 @@ git commit -m "feat(redesign): full-width contact page, neutral fields"
 
 ---
 
-## Task 16: Hero canvas — desaturate any gold tint
+## Task 16: Hero canvas - desaturate any gold tint
 
 **Files:**
 - Modify: `components/three/HeroCanvas.tsx` (and `components/three/HeroFallback.tsx` if it carries gold)
@@ -552,7 +552,7 @@ git commit -m "feat(redesign): full-width contact page, neutral fields"
 
 - [ ] **Step 2:** Read `components/three/HeroFallback.tsx`; if it uses `container-x`/gold, ensure neutral + full-bleed consistency.
 
-- [ ] **Step 3: Standard checks** + screenshot `/` hero with canvas active at 1920 (high-tier device emulation) — confirm neutral scene, no gold bloom.
+- [ ] **Step 3: Standard checks** + screenshot `/` hero with canvas active at 1920 (high-tier device emulation) - confirm neutral scene, no gold bloom.
 
 - [ ] **Step 4: Commit.**
 ```bash
@@ -570,7 +570,7 @@ git commit -m "feat(redesign): desaturate 3D hero to neutral"
 ```bash
 grep -rniE "accent|glow|d49a2e|9c6e1b|lume-soft|#?gold" components/ app/ styles/
 ```
-Review every hit. Legit remaining uses are only the neutralized token *definitions* in `globals.css` and token *names* (`text-accent` now resolves to ink — acceptable, or convert to `text-fg`/`text-ink` for clarity). Fix any visible gold that slipped through (color literals, gradients, glows). The footer gold dot, nav gold underline, and hairline-grid card patterns should all be gone.
+Review every hit. Legit remaining uses are only the neutralized token *definitions* in `globals.css` and token *names* (`text-accent` now resolves to ink - acceptable, or convert to `text-fg`/`text-ink` for clarity). Fix any visible gold that slipped through (color literals, gradients, glows). The footer gold dot, nav gold underline, and hairline-grid card patterns should all be gone.
 
 - [ ] **Step 2: Confirm no leftover hairline-grid card pattern.** Run:
 ```bash
@@ -608,10 +608,10 @@ git commit -m "fix(redesign): final gold-sweep + verification polish"
 - **Spec §4 card language** → Tasks 8, 12, 13, 14 (Pattern R everywhere a hairline grid existed). ✓
 - **Spec §5 archetypes** → A (Tasks 6,8,10,11,13,14,15), B (8,12,13,14), C/M (5,7,11,12), D (7,10,12), E (9). ✓
 - **Spec §6 CTA + Clients merge** → Task 9 (LogoChips) + Task 14 (remove Clients from studio). ✓
-- **Spec §7 page-by-page** → Home (5–9), Work (10–12), Services (13), Studio (14), Contact (15), Nav (3), Footer (4). ✓
+- **Spec §7 page-by-page** → Home (5-9), Work (10-12), Services (13), Studio (14), Contact (15), Nav (3), Footer (4). ✓
 - **Spec §8 primitives** → Task 2 + Eyebrow confirmed. ✓
 - **Spec §3.5 hero canvas desaturation** → Task 16. ✓
 - **Spec §10 verification** → Task 17 (typecheck/lint/test/build + multi-width + a11y + reduced-motion). ✓
 - **Spec §11 risks** → gold sweep (Task 17 Step 1), hero tint fallback (Task 16 Step 1), mobile chips fallback (Task 9 Step 1 hides `< md`), ultrawide line length (capped sub-columns throughout). ✓
 
-**Placeholder scan:** no "TBD/TODO"; foundation + LogoChips have literal code; section tasks give exact patterns + per-component specifics. **Type/name consistency:** `--color-surface`, `--shadow-card`, `.surface-card`, `.surface-card--hover`, `.grid-12`, `--gutter`, `--radius-panel`, `LogoChips`, `clients` — all defined in Task 1/9 and used consistently downstream. ✓
+**Placeholder scan:** no "TBD/TODO"; foundation + LogoChips have literal code; section tasks give exact patterns + per-component specifics. **Type/name consistency:** `--color-surface`, `--shadow-card`, `.surface-card`, `.surface-card--hover`, `.grid-12`, `--gutter`, `--radius-panel`, `LogoChips`, `clients` - all defined in Task 1/9 and used consistently downstream. ✓

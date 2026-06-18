@@ -49,7 +49,7 @@ export function ServicesOverview() {
       <div className="container-x">
         <div className="grid-12 items-end">
           <div className="col-span-12 md:col-span-6">
-            <Eyebrow index="03">{s.eyebrow}</Eyebrow>
+            <Eyebrow>{s.eyebrow}</Eyebrow>
             <h2 className="mt-6 font-display text-[length:var(--text-4xl)] font-light leading-tight tracking-tight text-balance [&_em]:italic [&_em]:text-fg">
               Everything between the idea and the people who&apos;ll{" "}
               <em>love it.</em>

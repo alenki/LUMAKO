@@ -15,7 +15,7 @@ export type ContactValidation = {
   errors: ContactErrors;
 };
 
-/** Basic, permissive email shape check — not RFC-exhaustive, just sane. */
+/** Basic, permissive email shape check - not RFC-exhaustive, just sane. */
 const EMAIL_RE = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
 
 const MESSAGE_MIN = 10;

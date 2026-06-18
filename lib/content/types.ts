@@ -36,25 +36,6 @@ export interface ProcessPhase {
   detail: string;
 }
 
-export interface Value {
-  title: string;
-  body: string;
-}
-
-export interface TeamMember {
-  name: string;
-  role: string;
-  /** Muted tone for the portrait placeholder. */
-  accent: string;
-  photo?: string;
-}
-
-export interface Recognition {
-  award: string;
-  org: string;
-  year: string;
-}
-
 export interface Engagement {
   name: string;
   blurb: string;

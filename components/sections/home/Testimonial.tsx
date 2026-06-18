@@ -8,7 +8,7 @@ export function Testimonial() {
   return (
     <section className="section-lg">
       <div className="container-x">
-        <Eyebrow index="05">{r.eyebrow}</Eyebrow>
+        <Eyebrow>{r.eyebrow}</Eyebrow>
         <TextReveal
           as="h2"
           text={r.headline}

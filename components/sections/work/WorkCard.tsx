@@ -4,6 +4,9 @@ import { CoverPanel } from "@/components/ui/CoverPanel";
 import type { CaseStudy } from "@/lib/content/types";
 import { cn } from "@/lib/utils";
 
+/** Uniform card shape - the Balance cover's ratio. Wider covers center-crop to fit. */
+const CARD_RATIO = 1916 / 1263;
+
 type Props = {
   item: CaseStudy;
   priority?: boolean;
@@ -26,8 +29,8 @@ export function WorkCard({ item, priority, className }: Props) {
           alt={`${item.title} - ${item.sector}`}
           tint={item.accent}
           position={item.coverPosition}
+          ratio={CARD_RATIO}
           priority={priority}
-          className="aspect-[16/9] transition-transform duration-700 ease-[cubic-bezier(.22,1,.36,1)] group-hover:scale-[1.04]"
         />
         <span className="absolute right-5 top-5 flex size-9 items-center justify-center rounded-full border border-line-strong bg-bg/40 text-fg opacity-0 backdrop-blur-md transition-all duration-500 group-hover:opacity-100">
           ↗

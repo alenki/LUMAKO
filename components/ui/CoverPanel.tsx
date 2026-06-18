@@ -12,6 +12,8 @@ type Props = {
   tint?: string;
   /** CSS object-position for the image crop (defaults to "center"). */
   position?: string;
+  /** Aspect ratio (width / height) for the panel. Defaults to 16/9. */
+  ratio?: number;
   /** Eager-load for above-the-fold covers. */
   priority?: boolean;
 };
@@ -30,6 +32,7 @@ export function CoverPanel({
   alt,
   tint,
   position,
+  ratio,
   priority,
 }: Props) {
   const overImage = Boolean(src);
@@ -40,6 +43,7 @@ export function CoverPanel({
         className,
       )}
       style={{
+        aspectRatio: ratio ?? 16 / 9,
         backgroundColor: tint,
         backgroundImage: overImage
           ? undefined

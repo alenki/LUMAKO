@@ -2,13 +2,13 @@
 
 > **For agentic workers:** REQUIRED SUB-SKILL: Use superpowers:subagent-driven-development (recommended) or superpowers:executing-plans to implement this plan task-by-task. Steps use checkbox (`- [ ]`) syntax for tracking.
 
-**Goal:** Build an award-winning, multi-page marketing website for Lumako — a web & product design/build studio — with a cinematic Three.js hero, Editorial-Luxe typography, dark-monochrome + electric-blue palette, and orchestrated Framer Motion.
+**Goal:** Build an award-winning, multi-page marketing website for Lumako - a web & product design/build studio - with a cinematic Three.js hero, Editorial-Luxe typography, dark-monochrome + electric-blue palette, and orchestrated Framer Motion.
 
 **Architecture:** Next.js 15 App Router + TypeScript + Tailwind v4 (CSS-first tokens). A small design-system foundation (tokens, fonts, motion variants, UI primitives) is built first, then a shared shell (nav/footer/cursor/smooth-scroll/page-transitions), then a typed content layer, then the WebGL hero, then pages composed from reusable sections. Verified in-browser with Playwright.
 
 **Tech Stack:** Next.js 15, React 19, TypeScript, Tailwind CSS v4, `motion` (Framer Motion), three + @react-three/fiber + @react-three/drei + @react-three/postprocessing, Lenis, next/font (Fraunces, Hanken Grotesk) + geist (Geist Mono), Vitest (logic units).
 
-**Plan granularity note (conscious adaptation of writing-plans):** This is a large, visual project executed by context-aware agents. Foundational/shared/hard pieces include complete code. Repetitive page-section work is specified as concrete build contracts (exact component name, layout, content source, motion, acceptance criteria) — concrete enough to implement without ambiguity, without pre-writing JSX that would only be re-typed during the build. TDD (Vitest) is applied to pure logic (utils, validation, content invariants); visual correctness is verified via typecheck + `next build` + Playwright screenshots, which is the appropriate "test" for presentation code.
+**Plan granularity note (conscious adaptation of writing-plans):** This is a large, visual project executed by context-aware agents. Foundational/shared/hard pieces include complete code. Repetitive page-section work is specified as concrete build contracts (exact component name, layout, content source, motion, acceptance criteria) - concrete enough to implement without ambiguity, without pre-writing JSX that would only be re-typed during the build. TDD (Vitest) is applied to pure logic (utils, validation, content invariants); visual correctness is verified via typecheck + `next build` + Playwright screenshots, which is the appropriate "test" for presentation code.
 
 ---
 
@@ -50,7 +50,7 @@ tests/
 
 ---
 
-## Phase 0 — Scaffold & Configuration
+## Phase 0 - Scaffold & Configuration
 
 ### Task 0.1: Initialize Next.js project
 
@@ -205,7 +205,7 @@ const hanken = Hanken_Grotesk({ subsets: ["latin"], display: "swap", variable: "
 
 export const metadata: Metadata = {
   metadataBase: new URL("https://lumako.studio"),
-  title: { default: "Lumako — Web & Product Studio", template: "%s — Lumako" },
+  title: { default: "Lumako - Web & Product Studio", template: "%s - Lumako" },
   description: "Lumako is a web & product design/build studio. We design & build the products people don't forget.",
   openGraph: { type: "website", siteName: "Lumako" },
 };
@@ -226,7 +226,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
 
 ---
 
-## Phase 1 — Design-System Foundation
+## Phase 1 - Design-System Foundation
 
 ### Task 1.1: Utilities + motion library + hooks (with tests)
 
@@ -282,7 +282,7 @@ export function useDeviceTier() {
 ```
 - [ ] **Step 7: Commit** `feat: utils, motion variants, device/motion hooks`.
 
-### Task 1.2: Primitive components — Reveal, TextReveal, Counter, Marquee, Eyebrow, SectionHeading, Tag, Button, MagneticButton, Logo, Field
+### Task 1.2: Primitive components - Reveal, TextReveal, Counter, Marquee, Eyebrow, SectionHeading, Tag, Button, MagneticButton, Logo, Field
 
 For EACH primitive: implement as a focused client/server component, then verify it renders in isolation on a temporary `/sandbox` route, then remove from sandbox. Acceptance contracts:
 
@@ -290,7 +290,7 @@ For EACH primitive: implement as a focused client/server component, then verify 
 - [ ] **TextReveal** (`components/ui/TextReveal.tsx`, client): splits text into lines/words, applies `maskReveal` stagger; prop `text`/`children`, `as` (h1..p), `stagger?`. Reduced-motion → plain text.
 - [ ] **Counter** (`components/ui/Counter.tsx`, client): animates number 0→value when in view using `useMotionValue`+`animate`; props `value`, `suffix?`, `decimals?`.
 - [ ] **Marquee** (`components/ui/Marquee.tsx`, client): infinite horizontal scroll of children (duplicated track) via CSS/Framer; pauses on reduced motion; props `speed?`, `reverse?`.
-- [ ] **Eyebrow** (`components/ui/Eyebrow.tsx`, server): mono uppercase label with leading index, e.g. `(01) — WHAT WE BELIEVE`; props `index?`, `children`. Uses `font-mono text-mono-sm tracking-widest text-fg-muted`.
+- [ ] **Eyebrow** (`components/ui/Eyebrow.tsx`, server): mono uppercase label with leading index, e.g. `(01) - WHAT WE BELIEVE`; props `index?`, `children`. Uses `font-mono text-mono-sm tracking-widest text-fg-muted`.
 - [ ] **SectionHeading** (`components/ui/SectionHeading.tsx`, server): Fraunces display heading with optional italic accent span; props `children`, `className`.
 - [ ] **Tag** (`components/ui/Tag.tsx`, server): hairline pill chip; props `children`, `active?`.
 - [ ] **Button** (`components/ui/Button.tsx`): variants `primary` (blue), `ghost` (hairline), `link` (animated underline). Renders `<a>`/`<Link>` or `<button>`; props `href?`, `variant`, `children`.
@@ -303,7 +303,7 @@ For EACH primitive: implement as a focused client/server component, then verify 
 
 ---
 
-## Phase 2 — Shared Shell
+## Phase 2 - Shared Shell
 
 ### Task 2.1: SmoothScroll, Cursor, PageTransition, LocalTime
 
@@ -344,7 +344,7 @@ export default function SmoothScroll({ children }: { children: React.ReactNode }
 
 ---
 
-## Phase 3 — Content Data Layer (with tests)
+## Phase 3 - Content Data Layer (with tests)
 
 ### Task 3.1: Types + content + invariant tests
 
@@ -389,7 +389,7 @@ describe("content invariants", () => {
 
 ---
 
-## Phase 4 — Signature Three.js Hero
+## Phase 4 - Signature Three.js Hero
 
 ### Task 4.1: WebGL scene + fallback + composition
 
@@ -399,22 +399,22 @@ describe("content invariants", () => {
 - [ ] **Starfield** (client/R3F): instanced points drifting slowly; subtle parallax to pointer; count scaled by device tier.
 - [ ] **WireframeForm** (client/R3F): luminous wireframe geometry (e.g., `icosahedronGeometry` detail 4 or torus-knot) with thin emissive line material; slow auto-rotation; mouse-parallax tilt via `useFrame`; scroll progress (passed as prop or via Lenis) dollies camera through it.
 - [ ] **HeroCanvas** (client): `<Canvas dpr={[1, 1.75]} gl={{ antialias: true }}>` with `<Starfield/>`, `<WireframeForm/>`, and `<EffectComposer><Bloom .../></EffectComposer>` from @react-three/postprocessing (intensity tuned, mipmapBlur). Exported but consumed via `next/dynamic(() => import(...), { ssr: false, loading: HeroFallback })`.
-- [ ] **Hero** (`sections/home/Hero.tsx`, client): full-viewport section; renders `HeroCanvas` (dynamic) when `useDeviceTier()==="high"` && not reduced-motion, else `HeroFallback`; overlays composited content — `Eyebrow` ("(web & product studio)"), `TextReveal` headline ("We design & build the products people don't forget." — "don't forget" italic Fraunces), sub paragraph, `MagneticButton` CTA, scroll cue; staggered load orchestration.
+- [ ] **Hero** (`sections/home/Hero.tsx`, client): full-viewport section; renders `HeroCanvas` (dynamic) when `useDeviceTier()==="high"` && not reduced-motion, else `HeroFallback`; overlays composited content - `Eyebrow` ("(web & product studio)"), `TextReveal` headline ("We design & build the products people don't forget." - "don't forget" italic Fraunces), sub paragraph, `MagneticButton` CTA, scroll cue; staggered load orchestration.
 - [ ] **Verify:** `npm run dev` → 3D renders, 60fps (DevTools perf), no console errors; toggle reduced-motion (DevTools rendering) → fallback shows; `npm run build` succeeds (no SSR/window errors); Playwright screenshot hero.
 - [ ] **Commit** `feat: cinematic webgl hero with graceful fallback`.
 
 ---
 
-## Phase 5 — Pages (parallelizable after Phases 0–4)
+## Phase 5 - Pages (parallelizable after Phases 0-4)
 
 Each section component pulls from `lib/content`, uses primitives + motion, and is wrapped in `Reveal`/`whileInView`. Each page is a thin composition. Acceptance for every page: typecheck clean, `next build` clean, responsive at 390/768/1440, reduced-motion safe, Playwright screenshot captured.
 
 ### Task 5.1: Home (`app/page.tsx` + `sections/home/*`)
 - [ ] **Manifesto:** Eyebrow `(01)` + large Fraunces statement w/ italic accents (from `copy.ts`); hairline framing.
-- [ ] **ServicesOverview:** Eyebrow `(02)`; interactive list of 6 services — row hover reveals blurb + (optional) accent media; index numbers in mono; link to /services.
-- [ ] **SelectedWork:** Eyebrow `(03)`; 3–4 featured `WorkCard`s (large), alternating layout, parallax cover media, hover reveal of title/disciplines; "View all work" link.
+- [ ] **ServicesOverview:** Eyebrow `(02)`; interactive list of 6 services - row hover reveals blurb + (optional) accent media; index numbers in mono; link to /services.
+- [ ] **SelectedWork:** Eyebrow `(03)`; 3-4 featured `WorkCard`s (large), alternating layout, parallax cover media, hover reveal of title/disciplines; "View all work" link.
 - [ ] **ProcessTeaser:** condensed numbered phases → link to /services.
-- [ ] **Stats:** 3–4 `Counter`s (e.g., projects, years, awards, NPS) on hairline grid.
+- [ ] **Stats:** 3-4 `Counter`s (e.g., projects, years, awards, NPS) on hairline grid.
 - [ ] **Testimonial:** single large Fraunces pull-quote + attribution.
 - [ ] **CtaBand:** big "Let's build something unforgettable." + `MagneticButton` → /contact; accent glow.
 - [ ] Compose in `app/page.tsx`. **Commit** `feat: home page`.
@@ -437,7 +437,7 @@ Each section component pulls from `lib/content`, uses primitives + motion, and i
 - [ ] `StudioHero` (manifesto), `Values` (4, editorial grid), `Team` (portrait grid, hover reveal), `Recognition` (awards `Marquee`), `Clients` (`Marquee`). Metadata.
 - [ ] **Commit** `feat: studio page`.
 
-### Task 5.6: Contact (`app/contact/page.tsx`, `sections/contact/*`, `app/api/contact/route.ts`) — with validation tests
+### Task 5.6: Contact (`app/contact/page.tsx`, `sections/contact/*`, `app/api/contact/route.ts`) - with validation tests
 - [ ] **Step 1 (TDD):** `tests/contact-validation.test.ts` for a pure `validateContact(data)` in `sections/contact/validation.ts` (required name/email, email regex, message min length → returns `{ ok, errors }`). Write failing test, implement, pass.
 - [ ] **ContactForm** (client): `Field`s (name, email, company, budget select, services multi-`Tag`, message); uses `validateContact`; POSTs to `/api/contact`; success state animation; mailto fallback link.
 - [ ] **api/contact/route.ts:** validate server-side with same `validateContact`; return `{ ok: true }` (no external email dependency for v1; structured for later integration).
@@ -449,7 +449,7 @@ Each section component pulls from `lib/content`, uses primitives + motion, and i
 
 ---
 
-## Phase 6 — Polish & Verification
+## Phase 6 - Polish & Verification
 
 ### Task 6.1: Cross-cutting QA pass
 - [ ] **Responsive sweep:** Playwright screenshot every route at 390×844, 768×1024, 1440×900; fix overflow/spacing/type issues.
@@ -467,15 +467,15 @@ Each section component pulls from `lib/content`, uses primitives + motion, and i
 
 ---
 
-## Phase 7 — Imagery (optional, confirm first)
+## Phase 7 - Imagery (optional, confirm first)
 - [ ] **Confirm with user** before spending Higgsfield credits. If yes: generate a curated on-brand set (dark cinematic device mockups + abstract luminous renders) for case covers/galleries + studio team/portraits; save to `public/images/`; wire into `work.ts`/`studio.ts`. If no: keep gradient/noise placeholders. **Commit** `feat: brand imagery`.
 
 ---
 
 ## Self-Review (against spec)
 
-**Spec coverage:** Concept/positioning → copy.ts + Hero/Manifesto (✓). Palette/tokens → Task 0.2 (✓). Type trio → Task 0.3 (✓). Fluid scale → 0.2 (✓). Motion language (easing, masked reveals, Lenis, cursor, page transitions, magnetic, marquee, counters) → Phases 1–2 (✓). 3D hero + degradation → Phase 4 (✓). All 6 routes incl. work/[slug] → Phase 5 (✓). Shared shell (nav/footer/live time) → Phase 2 (✓). Contact form (+api/mailto) → 5.6 (✓). Imagery/Higgsfield + confirm → Phase 7 (✓). Perf/a11y/reduced-motion → Phase 6 (✓). SEO/OG → 0.3 meta + 5.7 (✓). File structure → matches spec §6 (✓).
+**Spec coverage:** Concept/positioning → copy.ts + Hero/Manifesto (✓). Palette/tokens → Task 0.2 (✓). Type trio → Task 0.3 (✓). Fluid scale → 0.2 (✓). Motion language (easing, masked reveals, Lenis, cursor, page transitions, magnetic, marquee, counters) → Phases 1-2 (✓). 3D hero + degradation → Phase 4 (✓). All 6 routes incl. work/[slug] → Phase 5 (✓). Shared shell (nav/footer/live time) → Phase 2 (✓). Contact form (+api/mailto) → 5.6 (✓). Imagery/Higgsfield + confirm → Phase 7 (✓). Perf/a11y/reduced-motion → Phase 6 (✓). SEO/OG → 0.3 meta + 5.7 (✓). File structure → matches spec §6 (✓).
 
-**Placeholder scan:** Foundational code is complete. Page-section tasks are concrete build contracts (named component, content source, layout, motion, acceptance) per the stated granularity adaptation — not vague TODOs.
+**Placeholder scan:** Foundational code is complete. Page-section tasks are concrete build contracts (named component, content source, layout, motion, acceptance) per the stated granularity adaptation - not vague TODOs.
 
-**Type consistency:** `cn`, motion variants (`fadeUp`/`stagger`/`maskReveal`), `useDeviceTier`, content interfaces (`Service`/`CaseStudy`/`Discipline`/`ProcessPhase`/`Value`/`TeamMember`), `validateContact` — referenced consistently across tasks. CSS token names (`--color-accent`, `--font-display`, `--text-7xl`, `--vw-*`) match between globals and component usage.
+**Type consistency:** `cn`, motion variants (`fadeUp`/`stagger`/`maskReveal`), `useDeviceTier`, content interfaces (`Service`/`CaseStudy`/`Discipline`/`ProcessPhase`/`Value`/`TeamMember`), `validateContact` - referenced consistently across tasks. CSS token names (`--color-accent`, `--font-display`, `--text-7xl`, `--vw-*`) match between globals and component usage.

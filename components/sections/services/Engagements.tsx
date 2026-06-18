@@ -10,7 +10,7 @@ export function Engagements() {
       <div className="container-x">
         <div className="grid-12 items-end">
           <div className="col-span-12 md:col-span-6">
-            <Eyebrow index="03">{s.engagementsEyebrow}</Eyebrow>
+            <Eyebrow>{s.engagementsEyebrow}</Eyebrow>
             <h2 className="mt-6 font-display text-[length:var(--text-5xl)] font-light leading-tight tracking-tight text-balance">
               {s.engagementsHeadline}
             </h2>
