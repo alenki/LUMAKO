@@ -30,7 +30,7 @@ export function Hero() {
       <div className="container-x relative z-10 flex flex-1 flex-col">
         {/* headline fills the available height */}
         <div className="flex flex-1 flex-col justify-center">
-          <h1 className="font-display font-extrabold uppercase leading-[0.85] tracking-[-0.05em] text-[length:clamp(46px,10.8vw,210px)]">
+          <h1 className="font-display font-extrabold uppercase leading-[0.85] max-[760px]:leading-[0.9] tracking-[-0.05em] text-[length:clamp(46px,10.8vw,210px)]">
             {lines.map((line, i) => (
               <span
                 key={line}
