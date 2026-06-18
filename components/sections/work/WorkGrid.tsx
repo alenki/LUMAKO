@@ -60,7 +60,7 @@ export function WorkGrid() {
                 transition: { duration: 0.35, ease: easeOutExpo },
               }}
             >
-              <WorkCard item={item} index={`0${i + 1}`} />
+              <WorkCard item={item} index={`0${i + 1}`} priority={i === 0} />
             </motion.div>
           ))}
         </AnimatePresence>

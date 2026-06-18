@@ -1,6 +1,5 @@
 "use client";
 
-import Link from "next/link";
 import { CoverPanel } from "@/components/ui/CoverPanel";
 import type { CaseStudy } from "@/lib/content/types";
 import { cn } from "@/lib/utils";
@@ -9,19 +8,28 @@ type Props = {
   item: CaseStudy;
   index?: string;
   large?: boolean;
+  priority?: boolean;
   className?: string;
 };
 
-export function WorkCard({ item, index, large, className }: Props) {
+export function WorkCard({ item, index, large, priority, className }: Props) {
   return (
-    <Link
-      href={`/work/${item.slug}`}
+    <a
+      href={item.href}
+      target="_blank"
+      rel="noopener noreferrer"
       data-cursor
+      aria-label={`${item.title} - ${item.client} (opens the live site in a new tab)`}
       className={cn("group block", className)}
     >
       <div className="surface-card surface-card--hover relative overflow-hidden">
         <CoverPanel
           index={index}
+          src={item.cover}
+          alt={`${item.title} - ${item.sector}`}
+          tint={item.accent}
+          position={item.coverPosition}
+          priority={priority}
           className={cn(
             "transition-transform duration-700 ease-[cubic-bezier(.22,1,.36,1)] group-hover:scale-[1.04]",
             large ? "aspect-[16/10]" : "aspect-[4/3]",
@@ -38,12 +46,10 @@ export function WorkCard({ item, index, large, className }: Props) {
             {item.title}
           </h3>
           <p className="mt-1.5 text-fg-muted">
-            {item.client} — {item.sector}
+            {item.client} - {item.sector}
           </p>
         </div>
-        <span className="shrink-0 label-caps !text-fg-dim">
-          {item.year}
-        </span>
+        <span className="shrink-0 label-caps !text-fg-dim">{item.year}</span>
       </div>
 
       <div className="mt-4 flex flex-wrap gap-2">
@@ -56,6 +62,6 @@ export function WorkCard({ item, index, large, className }: Props) {
           </span>
         ))}
       </div>
-    </Link>
+    </a>
   );
 }

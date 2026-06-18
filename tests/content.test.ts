@@ -1,31 +1,31 @@
 import { describe, it, expect } from "vitest";
-import { work, featuredWork, getCase, getNextCase } from "@/lib/content/work";
+import { work, featuredWork, disciplines } from "@/lib/content/work";
 import { services, processPhases } from "@/lib/content/services";
 
 describe("work content invariants", () => {
-  it("has at least 6 case studies", () => {
-    expect(work.length).toBeGreaterThanOrEqual(6);
+  it("has exactly 5 projects", () => {
+    expect(work.length).toBe(5);
   });
   it("slugs are unique and url-safe", () => {
     const slugs = work.map((w) => w.slug);
     expect(new Set(slugs).size).toBe(slugs.length);
     slugs.forEach((s) => expect(s).toMatch(/^[a-z0-9-]+$/));
   });
-  it("has at least 3 featured case studies", () => {
+  it("has at least 3 featured projects", () => {
     expect(featuredWork.length).toBeGreaterThanOrEqual(3);
   });
-  it("every case has results and a non-empty approach", () => {
+  it("every project has a cover image, a live link, a summary, and disciplines", () => {
     work.forEach((c) => {
-      expect(c.results.length).toBeGreaterThan(0);
-      expect(c.approach.length).toBeGreaterThan(0);
-      expect(c.gallery.length).toBeGreaterThan(0);
+      expect(c.cover).toMatch(/^\/work\/.+\.webp$/);
+      expect(c.href).toMatch(/^https:\/\/.+/);
+      expect(c.summary.length).toBeGreaterThan(0);
+      expect(c.disciplines.length).toBeGreaterThan(0);
     });
   });
-  it("getCase resolves and getNextCase cycles", () => {
-    expect(getCase("clinic-booking")?.client).toBe("Clinic group");
-    expect(getCase("does-not-exist")).toBeUndefined();
-    const last = work[work.length - 1].slug;
-    expect(getNextCase(last).slug).toBe(work[0].slug);
+  it("the filter list contains only disciplines present in the work", () => {
+    const present = new Set(work.flatMap((w) => w.disciplines));
+    disciplines.forEach((d) => expect(present.has(d)).toBe(true));
+    expect(disciplines).toContain("Web");
   });
 });
 

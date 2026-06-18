@@ -8,43 +8,25 @@ export interface Service {
   deliverables: string[];
 }
 
-export interface WorkResult {
-  label: string;
-  value: number;
-  prefix?: string;
-  suffix?: string;
-}
-
-export interface CaseApproach {
-  title: string;
-  body: string;
-}
-
-export interface GalleryPanel {
-  caption: string;
-  /** Muted tint for the placeholder gradient. */
-  accent?: string;
-  /** Relative width hint for layout (1 = full, 0.5 = half). */
-  span?: 1 | 2;
-}
-
 export interface CaseStudy {
   slug: string;
-  client: string;
+  /** Brand / project name shown as the card title. */
   title: string;
-  year: string;
-  role: string;
+  /** What the business is, e.g. "Specialty coffee & roaster". */
+  client: string;
+  /** What was built, e.g. "Marketing site". */
   sector: string;
+  year: string;
   disciplines: Discipline[];
-  /** Muted tone used for the cover gradient + accents. */
+  /** Brand tone used as the load-in color behind the cover image. */
   accent: string;
-  /** Optional real cover image (future). */
-  cover?: string;
+  /** Real cover image served from /public, e.g. "/work/balance-coffee.webp". */
+  cover: string;
+  /** CSS object-position for the cover crop (defaults to "center"). */
+  coverPosition?: string;
+  /** Live site the card links out to. */
+  href: string;
   summary: string;
-  challenge: string;
-  approach: CaseApproach[];
-  gallery: GalleryPanel[];
-  results: WorkResult[];
   featured?: boolean;
 }
 

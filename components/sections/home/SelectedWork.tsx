@@ -42,7 +42,7 @@ export function SelectedWork() {
                 i % 2 === 1 && "md:mt-24",
               )}
             >
-              <WorkCard item={item} index={`0${i + 1}`} large />
+              <WorkCard item={item} index={`0${i + 1}`} large priority={i === 0} />
             </Reveal>
           ))}
         </div>
