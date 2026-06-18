@@ -533,8 +533,11 @@ Expected: all succeed; no unused-import or unresolved-module errors.
 
 - [ ] **Step 6: Commit**
 
+The `git rm` in Step 2 already staged the deletions; stage only the README edit (this branch
+has unrelated working-tree changes - do **not** use `git add -A`):
+
 ```bash
-git add -A
+git add README.md
 git commit -m "chore(hero): delete dead blueprint canvas stack + its tests"
 ```
 
