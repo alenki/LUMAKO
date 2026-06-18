@@ -1,6 +1,6 @@
-# Lumako — Web · AI · Apps
+# Lumako - Web · AI · Apps
 
-The official website for **Lumako**, a solo full-stack studio that ships web, AI, and
+The official website for **Lumako**, a full-stack studio that ships web, AI, and
 app products. A high-end, proof-led marketing site: light monochrome + a single lume-gold
 accent, Inter Tight typography, a cinematic (light-graded) Three.js hero, and orchestrated motion.
 
@@ -13,7 +13,7 @@ accent, Inter Tight typography, a cinematic (light-graded) Three.js hero, and or
 - **Next.js 16** (App Router) · **React 19** · **TypeScript**
 - **Tailwind CSS v4** (CSS-first `@theme` tokens)
 - **Motion** (Framer Motion) for animation + page transitions
-- **Canvas 2D** — the "drafted, then built" blueprint hero (no WebGL deps)
+- **SVG + Motion** - the self-drawing gold marker in the home hero
 - **Lenis** smooth scroll
 - Fonts: **Inter Tight** (display + body) · **Geist Mono** (code only)
 - **Vitest** for unit tests
@@ -39,7 +39,7 @@ npm run test       # vitest (utils, content invariants, contact validation)
 
 | Route | Description |
 |---|---|
-| `/` | Home — 3D hero, manifesto, services, selected work, process, proof, receipts, CTA |
+| `/` | Home - 3D hero, manifesto, services, selected work, process, proof, receipts, CTA |
 | `/work` | Filterable case-study index |
 | `/work/[slug]` | Case study detail (statically generated) |
 | `/services` | Disciplines, process, engagement models |
@@ -53,7 +53,7 @@ app/          # routes, layout, api/contact, sitemap, robots
 components/
   layout/     # Nav, Footer, Cursor, SmoothScroll, PageTransition, LocalTime
   ui/         # primitives: Button, MagneticButton, Reveal, TextReveal, Counter, Marquee, Field, CoverPanel…
-  hero/       # HeroBlueprint (Canvas 2D) + blueprint/ (geometry, phases, render)
+  hero/       # HeroMarker - the self-drawing gold marker circle (SVG)
   sections/   # page-specific composed sections (home, work, services, studio, contact)
 lib/
   content/    # typed content: services, work, studio, copy, site
@@ -72,7 +72,7 @@ docs/superpowers/  # design spec + implementation plan
   gradient on low-power / touch devices.
 - **Performance:** the 3D canvas is client-only (`ssr: false`), DPR-capped, and light-graded
   (no postprocessing bloom); all routes are statically prerendered.
-- **Color discipline:** lume gold (`#D49A2E`) is the only accent — wordmark dot, focus rings,
+- **Color discipline:** lume gold (`#D49A2E`) is the only accent - wordmark dot, focus rings,
   key rules, and the single dark footer glow. No second accent, no drop shadows, no gradients
   except that one footer glow. Ink primary buttons; one lume button per view.
 
