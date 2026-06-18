@@ -36,7 +36,11 @@ export function blend(a: string, b: string, t: number): string {
 
 /** Face fill tone: lower tone = more shaded (grayer), tone 1 = lit surface. */
 function toneColor(tone: number, c: BlueprintColors): string {
-  return blend(c.dim, c.surface, clamp(tone, 0, 1));
+  // Map the form's tones (~0.7..1.0) across a visible gray→white range so the
+  // built solid reads against the warm-white page: lit top near white, shaded
+  // sides a clear gray.
+  const t = clamp((tone - 0.68) / 0.32, 0, 1);
+  return blend("#9a9a9a", c.surface, t);
 }
 
 /** Faint dot measure-grid with radial alpha falloff around the form. */
@@ -92,12 +96,12 @@ export function renderBlueprint(
   const { width, height } = dims;
   ctx.clearRect(0, 0, width, height);
 
-  const scale = Math.min(width, height) * 0.16;
+  const scale = Math.min(width, height) * 0.125;
   const origin: Vec2 = {
-    x: width * 0.62 + pointer.x * width * 0.02,
-    y: height * 0.54 + pointer.y * height * 0.02,
+    x: width * 0.68 + pointer.x * width * 0.015,
+    y: height * 0.5 + pointer.y * height * 0.015,
   };
-  const rotY = s.rotationTurns * Math.PI * 2 + pointer.x * 0.25;
+  const rotY = s.rotationTurns * Math.PI * 2 + pointer.x * 0.2;
   const pts = form.vertices.map((v) => project(v, rotY, scale, origin));
 
   drawField(ctx, origin, scale, s.gridOpacity, colors);
@@ -105,7 +109,7 @@ export function renderBlueprint(
   // contact shadow
   if (s.shadowOpacity > 0) {
     ctx.save();
-    ctx.globalAlpha = s.shadowOpacity * 0.12;
+    ctx.globalAlpha = s.shadowOpacity * 0.16;
     ctx.fillStyle = colors.ink;
     ctx.beginPath();
     ctx.ellipse(origin.x, origin.y + scale * 1.1, scale * 1.6, scale * 0.5, 0, 0, Math.PI * 2);
@@ -113,40 +117,51 @@ export function renderBlueprint(
     ctx.restore();
   }
 
-  // built faces, back-to-front
+  // Built solid: fill each face AND stroke its outline back-to-front, so nearer
+  // faces occlude the farther faces' edges — it reads opaque, not see-through.
   if (s.fillOpacity > 0) {
     ctx.save();
-    ctx.globalAlpha = s.fillOpacity;
+    ctx.lineJoin = "round";
+    const edgeColor = blend(colors.lineStrong, colors.ink, s.edgeInk);
+    const edgeWidth = lerp(1, 1.4, s.edgeInk);
     for (const face of sortedFaces(form, rotY)) {
-      ctx.fillStyle = toneColor(face.tone, colors);
       ctx.beginPath();
       face.loop.forEach((i, k) =>
         k === 0 ? ctx.moveTo(pts[i].x, pts[i].y) : ctx.lineTo(pts[i].x, pts[i].y),
       );
       ctx.closePath();
+      ctx.globalAlpha = s.fillOpacity;
+      ctx.fillStyle = toneColor(face.tone, colors);
       ctx.fill();
+      ctx.strokeStyle = edgeColor;
+      ctx.lineWidth = edgeWidth;
+      ctx.stroke();
     }
     ctx.restore();
   }
 
-  // self-drawing wireframe edges
-  ctx.save();
-  ctx.lineCap = "round";
-  const n = form.edges.length;
-  form.edges.forEach(([a, b], i) => {
-    const edgeP = easeOutExpo(clamp(s.drawProgress * n - i, 0, 1));
-    if (edgeP <= 0) return;
-    const A = pts[a];
-    const B = pts[b];
-    ctx.globalAlpha = 1;
+  // Self-drawing wireframe — the blueprint "draft". Shown while unbuilt, then
+  // faded out (1 - fillOpacity) as the solid takes over.
+  const wire = 1 - s.fillOpacity;
+  if (wire > 0.01 && s.drawProgress > 0) {
+    ctx.save();
+    ctx.lineCap = "round";
     ctx.strokeStyle = blend(colors.lineStrong, colors.ink, s.edgeInk);
-    ctx.lineWidth = lerp(1, 1.5, s.edgeInk);
-    ctx.beginPath();
-    ctx.moveTo(A.x, A.y);
-    ctx.lineTo(lerp(A.x, B.x, edgeP), lerp(A.y, B.y, edgeP));
-    ctx.stroke();
-  });
-  ctx.restore();
+    ctx.lineWidth = lerp(1, 1.4, s.edgeInk);
+    const n = form.edges.length;
+    form.edges.forEach(([a, b], i) => {
+      const edgeP = easeOutExpo(clamp(s.drawProgress * n - i, 0, 1));
+      if (edgeP <= 0) return;
+      const A = pts[a];
+      const B = pts[b];
+      ctx.globalAlpha = wire;
+      ctx.beginPath();
+      ctx.moveTo(A.x, A.y);
+      ctx.lineTo(lerp(A.x, B.x, edgeP), lerp(A.y, B.y, edgeP));
+      ctx.stroke();
+    });
+    ctx.restore();
+  }
 
   drawAnnotations(ctx, origin, scale, s.annotationOpacity, colors);
 

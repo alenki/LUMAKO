@@ -14,7 +14,7 @@ export function Hero() {
 
   return (
     <section className="relative flex min-h-dvh items-center overflow-hidden">
-      {/* white legibility wash behind the scene — the lume glow lives only in the footer */}
+      {/* white legibility wash behind the scene - the lume glow lives only in the footer */}
       <div className="glow-accent pointer-events-none absolute inset-0" />
       <div className="absolute inset-0">
         <HeroBlueprint />
@@ -24,14 +24,14 @@ export function Hero() {
         className="pointer-events-none absolute inset-0"
         style={{
           background:
-            "radial-gradient(120% 80% at 30% 40%, rgba(255,255,255,0), rgba(255,255,255,0.65) 80%)",
+            "radial-gradient(120% 80% at 30% 40%, rgba(255,255,255,0), rgba(255,255,255,0.45) 80%)",
         }}
       />
       <div className="noise-veil" />
 
       <div className="container-x relative z-10 pt-[var(--header-h)]">
         <div className="grid-12 items-end gap-y-10">
-          {/* LEFT column — headline + CTAs */}
+          {/* LEFT column - headline + CTAs */}
           <div className="col-span-12 md:col-span-7">
             <TextReveal
               as="h1"
@@ -56,7 +56,7 @@ export function Hero() {
             </motion.div>
           </div>
 
-          {/* RIGHT column — eyebrow + supporting paragraph */}
+          {/* RIGHT column - eyebrow + supporting paragraph */}
           <div className="col-span-12 md:col-start-9 md:col-span-4 order-first md:order-none">
             <motion.div
               initial={{ opacity: 0, y: 12 }}

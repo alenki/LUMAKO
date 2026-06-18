@@ -93,12 +93,13 @@ function addBox(
   );
 }
 
-/** The hero form: three offset, decreasing slabs - an abstract layered monument. */
+/** The hero form: a clean concentric stepped monument — each slab sits centered
+ *  on the one below, so it reads as one coherent built object at any rotation. */
 export function buildForm(): Form {
   const acc: Form = { vertices: [], edges: [], faces: [] };
-  addBox(acc, 0,     -0.9,  0,    2.4, 0.5, 2.4, 0.96, 0.80);
-  addBox(acc, 0.25,  -0.25, -0.2, 1.7, 0.5, 1.7, 0.98, 0.84);
-  addBox(acc, -0.15, 0.45,  0.25, 1.0, 0.6, 1.0, 1.0,  0.88);
+  addBox(acc, 0, -0.5, 0, 2.0, 0.5,  2.0, 0.97, 0.78);
+  addBox(acc, 0,  0.0, 0, 1.4, 0.55, 1.4, 0.99, 0.82);
+  addBox(acc, 0,  0.5, 0, 0.8, 0.5,  0.8, 1.0,  0.86);
   return acc;
 }
 
