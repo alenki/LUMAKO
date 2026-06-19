@@ -32,8 +32,20 @@ export function WorkMarquee({ items }: { items: CaseStudy[] }) {
 
   useEffect(() => {
     const root = rootRef.current;
-    if (!root || typeof window.matchMedia !== "function") return;
-    // Touch has no hover; reduced motion drops the animation (see globals.css).
+    if (!root) return;
+
+    // Keep the visual clone out of the tab order (it is aria-hidden too) WITHOUT
+    // `inert`: inert also blocks pointer hit-testing, which silently kills the
+    // hover cursor on every clone card once the rail scrolls them into view.
+    root
+      .querySelector("[data-marquee-clone]")
+      ?.querySelectorAll("a")
+      .forEach((a) => {
+        a.tabIndex = -1;
+      });
+
+    // Glide-on-hover: fine pointers only; reduced motion drops the animation.
+    if (typeof window.matchMedia !== "function") return;
     if (!window.matchMedia("(hover: hover)").matches) return;
     if (window.matchMedia("(prefers-reduced-motion: reduce)").matches) return;
 
@@ -86,7 +98,6 @@ export function WorkMarquee({ items }: { items: CaseStudy[] }) {
           style={{ animationDuration: DURATION }}
           data-marquee-clone="true"
           aria-hidden="true"
-          inert
         >
           {items.map((item) => (
             <div key={`${item.slug}-clone`} className={CELL}>

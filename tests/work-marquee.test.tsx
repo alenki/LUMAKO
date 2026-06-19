@@ -70,12 +70,18 @@ describe("WorkMarquee", () => {
     links.forEach((a, i) => expect(a.getAttribute("href")).toBe(work[i].href));
   });
 
-  it("duplicates the set into an inert, aria-hidden clone (each project hit once by SR/keyboard)", () => {
+  it("keeps the clone out of SR + tab order, but hit-testable (aria-hidden + tabindex, NOT inert)", () => {
     const { container } = render(<WorkMarquee items={work} />);
     expect(container.querySelectorAll(".marquee-track").length).toBe(2);
     const clone = container.querySelector("[data-marquee-clone]")!;
     expect(clone.getAttribute("aria-hidden")).toBe("true");
-    expect(clone.hasAttribute("inert")).toBe(true);
+    // NOT inert: inert blocks pointer hit-testing, which kills the hover cursor
+    // on clone cards once the rail scrolls them into view.
+    expect(clone.hasAttribute("inert")).toBe(false);
+    // Clone links are pulled out of the tab order; the real cards stay tabbable.
+    clone.querySelectorAll("a").forEach((a) => expect(a.tabIndex).toBe(-1));
+    const real = container.querySelector(".marquee-track:not([data-marquee-clone])")!;
+    real.querySelectorAll("a").forEach((a) => expect(a.tabIndex).not.toBe(-1));
   });
 
   it("gives each track an animation-duration inline (the .marquee-track class sets none)", () => {
