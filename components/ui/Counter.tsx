@@ -2,6 +2,7 @@
 
 import { useEffect, useRef, useState } from "react";
 import { animate, useInView } from "motion/react";
+import { useReducedMotion } from "@/lib/useReducedMotion";
 import { easeOutExpo } from "@/lib/motion";
 
 type Props = {
@@ -22,17 +23,20 @@ export function Counter({
 }: Props) {
   const ref = useRef<HTMLSpanElement>(null);
   const inView = useInView(ref, { once: true, margin: "-15%" });
+  const reduce = useReducedMotion() ?? false;
   const [display, setDisplay] = useState(0);
 
   useEffect(() => {
     if (!inView) return;
+    // Respect reduced motion: duration 0 settles on the final value instantly
+    // (via onUpdate), so there is no visible count-up.
     const controls = animate(0, value, {
-      duration: 1.6,
+      duration: reduce ? 0 : 1.6,
       ease: easeOutExpo,
       onUpdate: (v) => setDisplay(v),
     });
     return () => controls.stop();
-  }, [inView, value]);
+  }, [inView, value, reduce]);
 
   return (
     <span ref={ref} className={className}>

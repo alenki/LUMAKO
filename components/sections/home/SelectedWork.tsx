@@ -1,5 +1,4 @@
 import Link from "next/link";
-import { Eyebrow } from "@/components/ui/Eyebrow";
 import { Reveal } from "@/components/ui/Reveal";
 import { WorkCard } from "@/components/sections/work/WorkCard";
 import { featuredWork } from "@/lib/content/work";
@@ -13,8 +12,7 @@ export function SelectedWork() {
       <div className="container-x">
         <div className="grid-12 items-end">
           <div className="col-span-12 md:col-span-6">
-            <Eyebrow>{w.eyebrow}</Eyebrow>
-            <h2 className="mt-6 font-display text-[length:var(--text-5xl)] font-light leading-tight tracking-tight">
+            <h2 className="font-display text-[length:clamp(2.75rem,6.5vw,6rem)] font-medium leading-[0.95] tracking-[-0.025em] text-balance">
               {w.headline}
             </h2>
           </div>

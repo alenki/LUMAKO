@@ -2,7 +2,8 @@
 
 import { Fragment } from "react";
 import { motion } from "motion/react";
-import { easeOutExpo } from "@/lib/motion";
+import { useReducedMotion } from "@/lib/useReducedMotion";
+import { focusIn } from "@/lib/motion";
 import { cn } from "@/lib/utils";
 
 const tags = {
@@ -47,13 +48,10 @@ function segment(text: string, highlight?: string | readonly string[]): Segment[
   return out.filter((s) => s.str.length > 0);
 }
 
-const word = {
-  hidden: { y: "130%" },
-  show: { y: 0, transition: { duration: 0.95, ease: easeOutExpo } },
-};
-
-/** Editorial word-by-word mask reveal. Each word wipes up from a clipped line.
- *  A literal `\n` in `text` forces a hard line break between word groups. */
+/** Editorial word-by-word reveal. Each word fades and rises a touch while
+ *  resolving from a soft blur - settling into focus rather than snapping up.
+ *  A literal `\n` in `text` forces a hard line break between word groups.
+ *  Reduced motion renders plain, static text. */
 export function TextReveal({
   text,
   highlight,
@@ -61,22 +59,28 @@ export function TextReveal({
   className,
   highlightClassName = "italic text-fg",
   delay = 0,
-  stagger = 0.06,
+  stagger = 0.045,
 }: Props) {
+  const reduce = useReducedMotion() ?? false;
   const Tag = tags[as];
   const lines = text.split("\n");
 
+  // When motion is allowed, the container orchestrates a staggered child reveal;
+  // otherwise it renders inert and the words show immediately.
+  const container = reduce
+    ? {}
+    : {
+        initial: "hidden",
+        whileInView: "show",
+        viewport: { once: true, margin: "-10%" },
+        variants: {
+          hidden: {},
+          show: { transition: { staggerChildren: stagger, delayChildren: delay } },
+        },
+      };
+
   return (
-    <Tag
-      className={className}
-      initial="hidden"
-      whileInView="show"
-      viewport={{ once: true, margin: "-10%" }}
-      variants={{
-        hidden: {},
-        show: { transition: { staggerChildren: stagger, delayChildren: delay } },
-      }}
-    >
+    <Tag className={className} {...container}>
       {lines.map((line, li) => {
         const words: { w: string; hi: boolean }[] = [];
         segment(line, highlight).forEach((seg) => {
@@ -89,18 +93,15 @@ export function TextReveal({
           <Fragment key={li}>
             {li > 0 && <br />}
             {words.map((item, i) => (
-              <span
-                key={i}
-                className="inline-flex overflow-hidden align-bottom leading-[1.05] pb-[0.18em] -mb-[0.18em]"
-              >
+              <Fragment key={i}>
                 <motion.span
-                  variants={word}
+                  variants={reduce ? undefined : focusIn}
                   className={cn("inline-block", item.hi && highlightClassName)}
                 >
                   {item.w}
-            {i < words.length - 1 ? " " : ""}
                 </motion.span>
-              </span>
+                {i < words.length - 1 ? " " : null}
+              </Fragment>
             ))}
           </Fragment>
         );

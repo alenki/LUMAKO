@@ -78,11 +78,17 @@ function roughLoop(cx: number, cy: number, rx: number, ry: number): string {
   return splinePath(points);
 }
 
-/** Build the loop path that wraps an element's current on-screen box. */
-function loopFromRect(rect: DOMRect): string {
+/**
+ * Build the loop path that wraps an element's box, in DOCUMENT coordinates
+ * (the page scroll offset folded into the centre). The loop layer is positioned
+ * in document space, so drawing at document coords lets the browser scroll the
+ * loop in lockstep with the element - glued to the button, with no per-frame JS
+ * and none of the lag a scroll-listener re-measure would add under smooth scroll.
+ */
+function loopFromRect(rect: DOMRect, scrollX: number, scrollY: number): string {
   return roughLoop(
-    rect.left + rect.width / 2,
-    rect.top + rect.height / 2,
+    rect.left + rect.width / 2 + scrollX,
+    rect.top + rect.height / 2 + scrollY,
     Math.max(rect.width / 2 + PAD_X, 16),
     Math.max(rect.height / 2 + PAD_Y, 13),
   );
@@ -92,8 +98,10 @@ const TEXT_SELECTOR = "input, textarea, [contenteditable=''], [contenteditable='
 const LINK_SELECTOR = "a, button, summary, label, [role='button'], [data-cursor]";
 /** Clickable targets that opt out of the gold loop, keeping the plain reticle. */
 const QUIET_SELECTOR = "[data-cursor='quiet']";
+/** Project covers that swap the reticle for the filled lume "View" disc. */
+const VIEW_SELECTOR = "[data-cursor='view']";
 
-type Mode = "rest" | "link" | "text";
+type Mode = "rest" | "link" | "text" | "view";
 
 export function Cursor() {
   const enabled = useCursorEnabled();
@@ -110,7 +118,10 @@ export function Cursor() {
   const ringX = useSpring(x, RING_SPRING);
   const ringY = useSpring(y, RING_SPRING);
 
-  // The active hovered element, tracked so the loop re-measures on scroll.
+  // The element the loop currently wraps, so moving within the same target
+  // doesn't redraw it. The loop is drawn once in document space and then the
+  // browser scrolls it with the page (see loopFromRect), so it stays glued to
+  // the element without a scroll handler; it is only re-measured on the next move.
   const targetRef = useRef<Element | null>(null);
 
   useEffect(() => {
@@ -120,21 +131,28 @@ export function Cursor() {
 
     const wrap = (el: Element) => {
       targetRef.current = el;
-      setLoop(loopFromRect(el.getBoundingClientRect()));
+      setLoop(loopFromRect(el.getBoundingClientRect(), window.scrollX, window.scrollY));
       setLoopKey((k) => k + 1); // remount the path so it draws from scratch
     };
 
-    const move = (e: MouseEvent) => {
-      x.set(e.clientX);
-      y.set(e.clientY);
-      // Functional updates bail out on no-ops without an external ref guard -
-      // a ref guard can desync from state and pin the cursor hidden forever.
-      setHidden((prev) => (prev ? false : prev));
+    // Last pointer position (viewport coords) and whether it is in the window.
+    // Plain closure vars: this effect runs once (x/y are stable motion values),
+    // so they live for its lifetime without the churn of refs.
+    const pointer = { x: -100, y: -100 };
+    let inside = false;
 
-      const el = e.target instanceof Element ? e.target : null;
+    // Decide which mode the element under the pointer warrants, wrapping it if it
+    // is a fresh gold-loop target. Shared by pointer moves AND by scroll - where
+    // the page slides under a still pointer, so the element beneath it changes
+    // with no mousemove to react to.
+    const resolve = (el: Element | null) => {
       let next: Mode = "rest";
       if (el?.closest(TEXT_SELECTOR)) {
         next = "text";
+        targetRef.current = null;
+      } else if (el?.closest(VIEW_SELECTOR)) {
+        // Project covers get the filled "View" disc instead of the gold loop.
+        next = "view";
         targetRef.current = null;
       } else if (el?.closest(QUIET_SELECTOR)) {
         // Opt-out targets (data-cursor="quiet") keep the plain reticle - no loop.
@@ -151,43 +169,58 @@ export function Cursor() {
       setMode((prev) => (prev === next ? prev : next));
     };
 
+    const move = (e: MouseEvent) => {
+      x.set(e.clientX);
+      y.set(e.clientY);
+      pointer.x = e.clientX;
+      pointer.y = e.clientY;
+      inside = true;
+      // Functional updates bail out on no-ops without an external ref guard -
+      // a ref guard can desync from state and pin the cursor hidden forever.
+      setHidden((prev) => (prev ? false : prev));
+      resolve(e.target instanceof Element ? e.target : null);
+    };
+
+    // Scrolling moves the page under a still pointer, so what sits beneath the
+    // cursor changes with no mousemove firing. Re-run the hit-test at the last
+    // pointer position (rAF-throttled, hit-testing forces layout) so hover state
+    // follows the page - both catching a target that scrolls under the cursor and
+    // dropping one that scrolls away. The gold loop is still anchored in document
+    // space, so it keeps scrolling glued to its target with no re-measure here.
+    let scrollRaf = 0;
+    const onScroll = () => {
+      if (!inside || scrollRaf) return;
+      scrollRaf = requestAnimationFrame(() => {
+        scrollRaf = 0;
+        resolve(document.elementFromPoint(pointer.x, pointer.y));
+      });
+    };
+
     const down = () => setPressed(true);
     const up = () => setPressed(false);
     const leave = () => {
+      inside = false;
       setHidden(true);
       setPressed(false);
     };
 
-    // Keep the loop glued to its element while the page moves under it.
-    let raf = 0;
-    const resync = () => {
-      if (raf) return;
-      raf = requestAnimationFrame(() => {
-        raf = 0;
-        const el = targetRef.current;
-        if (el && document.contains(el)) setLoop(loopFromRect(el.getBoundingClientRect()));
-      });
-    };
-
     window.addEventListener("mousemove", move, { passive: true });
+    window.addEventListener("scroll", onScroll, { passive: true });
     window.addEventListener("pointerdown", down, { passive: true });
     window.addEventListener("pointerup", up, { passive: true });
     window.addEventListener("pointercancel", up, { passive: true });
     window.addEventListener("blur", up);
-    window.addEventListener("scroll", resync, { passive: true });
-    window.addEventListener("resize", resync, { passive: true });
     document.addEventListener("mouseleave", leave);
 
     return () => {
       window.removeEventListener("mousemove", move);
+      window.removeEventListener("scroll", onScroll);
       window.removeEventListener("pointerdown", down);
       window.removeEventListener("pointerup", up);
       window.removeEventListener("pointercancel", up);
       window.removeEventListener("blur", up);
-      window.removeEventListener("scroll", resync);
-      window.removeEventListener("resize", resync);
       document.removeEventListener("mouseleave", leave);
-      if (raf) cancelAnimationFrame(raf);
+      if (scrollRaf) cancelAnimationFrame(scrollRaf);
       document.documentElement.classList.remove("has-cursor");
     };
   }, [enabled, x, y]);
@@ -215,7 +248,7 @@ export function Cursor() {
         fill="none"
         style={{ x: ringX, y: ringY, mixBlendMode: "difference" }}
         initial={false}
-        animate={{ opacity: hidden || mode === "text" ? 0 : 1 }}
+        animate={{ opacity: hidden || mode === "text" || mode === "view" ? 0 : 1 }}
         transition={{ duration: 0.2 }}
       >
         <circle r="17" fill="none" stroke="#fff" strokeWidth="1.5" />
@@ -240,7 +273,7 @@ export function Cursor() {
           fill="none"
           style={{ x, y, mixBlendMode: "difference" }}
           initial={false}
-          animate={{ opacity: hidden ? 0 : 1 }}
+          animate={{ opacity: hidden || mode === "view" ? 0 : 1 }}
           transition={{ duration: 0.2 }}
         >
           <motion.circle
@@ -254,8 +287,11 @@ export function Cursor() {
         </motion.svg>
       )}
 
-      {/* The gold marker loop wrapping the hovered target. */}
-      <svg className="fixed inset-0 z-[400] h-full w-full overflow-visible" fill="none" style={fade}>
+      {/* The gold marker loop wrapping the hovered target. Unlike the reticle
+          above (fixed to the viewport, pinned to the pointer), this layer is
+          ABSOLUTE - it lives in the page, drawn at the target's document coords -
+          so it scrolls glued to the button instead of floating over the viewport. */}
+      <svg className="absolute inset-0 z-[400] h-full w-full overflow-visible" fill="none" style={fade}>
         <AnimatePresence>
           {mode === "link" && loop && (
             <motion.path
@@ -276,6 +312,42 @@ export function Cursor() {
           )}
         </AnimatePresence>
       </svg>
+
+      {/* The "View" disc shown over a project cover (data-cursor="view"). It grows
+          out of the reticle: a tiny ink point swells into a full lume coin, warming
+          from ink to gold, and the label only resolves once the disc is large
+          enough to hold it. Opaque (no blend) so it reads as a sticker laid over
+          the photo; dark ink keeps the label crisp on gold. The disc trails the
+          pointer on the same ring spring. */}
+      <AnimatePresence>
+        {mode === "view" && (
+          <motion.div
+            key="view-disc"
+            className="fixed left-0 top-0 z-[400] -ml-12 -mt-12 flex size-24 select-none items-center justify-center rounded-full font-mono"
+            style={{
+              x: ringX,
+              y: ringY,
+              color: "var(--color-fg)",
+              fontSize: "0.8125rem",
+              letterSpacing: "0.06em",
+            }}
+            initial={{ scale: 0.07, opacity: 0, backgroundColor: "#0a0a0a" }}
+            animate={{ scale: pressed ? 0.9 : 1, opacity: 1, backgroundColor: "#d49a2e" }}
+            exit={{ scale: 0.07, opacity: 0, backgroundColor: "#0a0a0a" }}
+            transition={{ duration: 0.62, ease: SETTLE, opacity: { duration: 0.18 } }}
+          >
+            {/* Fades in only after the coin has mostly formed. */}
+            <motion.span
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              exit={{ opacity: 0 }}
+              transition={{ duration: 0.2, ease: SETTLE, delay: 0.34 }}
+            >
+              View
+            </motion.span>
+          </motion.div>
+        )}
+      </AnimatePresence>
     </div>
   );
 }

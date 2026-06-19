@@ -1,77 +1,98 @@
 "use client";
 
-import { useState } from "react";
+import { useRef, useSyncExternalStore } from "react";
 import Link from "next/link";
-import { motion } from "motion/react";
-import { Eyebrow } from "@/components/ui/Eyebrow";
+import { useInView } from "motion/react";
+import { useReducedMotion } from "@/lib/useReducedMotion";
+import { serviceDiagrams } from "./diagrams/registry";
 import { services } from "@/lib/content/services";
-import { copy } from "@/lib/content/copy";
 import type { Service } from "@/lib/content/types";
 
-function ServiceRow({ service }: { service: Service }) {
-  const [open, setOpen] = useState(false);
+// The three core disciplines featured on the home page (Web, AI, Apps).
+const featured = services.slice(0, 3);
+
+// "Is hydrated" via useSyncExternalStore: false on the server + first client paint,
+// true afterwards - renders the decorative diagrams client-only without a
+// setState-in-effect and keeps SSR/hydration in agreement.
+const subscribeNoop = () => () => {};
+const snapClient = () => true;
+const snapServer = () => false;
+
+/** Splits "Web - sites & platforms" into a discipline tag + sentence-case heading. */
+function splitTitle(title: string) {
+  const [tag, ...rest] = title.split(" - ");
+  const heading = rest.join(" - ");
+  return {
+    tag,
+    heading: heading ? heading.charAt(0).toUpperCase() + heading.slice(1) : title,
+  };
+}
+
+/** One discipline: a centered living diagram over a left-aligned caption block.
+ *  The diagram draws once on scroll-in and idles only while the column is on screen. */
+function DisciplineColumn({
+  service,
+  reduce,
+  mounted,
+}: {
+  service: Service;
+  reduce: boolean;
+  mounted: boolean;
+}) {
+  const ref = useRef<HTMLDivElement>(null);
+  const drawn = useInView(ref, { once: true, margin: "-12% 0px -12% 0px" });
+  const live = useInView(ref, { margin: "0px 0px -10% 0px" });
+  const Diagram = serviceDiagrams[service.id];
+  const { tag, heading } = splitTitle(service.title);
+
   return (
-    <div
-      className="group border-t border-line"
-      onMouseEnter={() => setOpen(true)}
-      onMouseLeave={() => setOpen(false)}
-      data-cursor="quiet"
-    >
-      <div className="flex items-center gap-6 py-8">
-        <span className="font-mono text-[length:var(--text-mono)] text-fg-dim">
-          {service.index}
-        </span>
-        <h3 className="font-display text-[length:var(--text-4xl)] font-light tracking-tight text-fg-muted transition-colors duration-300 group-hover:text-fg">
-          {service.title}
-        </h3>
-        <span className="ml-auto text-[length:var(--text-2xl)] text-fg-dim transition-transform duration-300 group-hover:rotate-45 group-hover:text-fg">
-          +
-        </span>
+    <div ref={ref} className="group flex flex-col">
+      {/* large centered living diagram */}
+      <div className="mx-auto aspect-square w-full max-w-[30rem]">
+        <div className="grid h-full w-full place-items-center">
+          {mounted && Diagram && (
+            <Diagram active={drawn || reduce} idle={live && !reduce} reduce={reduce} />
+          )}
+        </div>
       </div>
-      <motion.div
-        initial={false}
-        animate={{ height: open ? "auto" : 0, opacity: open ? 1 : 0 }}
-        transition={{ duration: 0.4, ease: [0.22, 1, 0.36, 1] }}
-        className="overflow-hidden"
+
+      {/* left-aligned caption block */}
+      <span className="mt-10 label-caps">{tag}</span>
+      <h3 className="mt-4 font-[family-name:var(--font-grotesk)] text-[length:var(--text-3xl)] font-semibold leading-[1.1] tracking-[-0.02em] text-balance">
+        {heading}
+      </h3>
+      <p className="mt-5 max-w-[44ch] font-[family-name:var(--font-grotesk)] text-[length:clamp(1.125rem,1.3vw,1.3rem)] leading-relaxed text-[#3f3f3f] text-pretty">
+        {service.blurb}
+      </p>
+      <Link
+        href="/work"
+        data-cursor
+        className="mt-7 inline-flex w-fit self-start items-center gap-2 label-caps transition-colors hover:text-fg"
       >
-        <p className="max-w-[60ch] pb-8 pl-12 text-[length:var(--text-lg)] text-fg-muted text-pretty">
-          {service.blurb}
-        </p>
-      </motion.div>
+        See the work
+        <span className="transition-transform duration-300 group-hover:translate-x-1">→</span>
+      </Link>
     </div>
   );
 }
 
 export function ServicesOverview() {
-  const s = copy.home.services;
+  const reduceRaw = useReducedMotion() ?? false;
+  const mounted = useSyncExternalStore(subscribeNoop, snapClient, snapServer);
+  const reduce = mounted ? reduceRaw : false;
+
   return (
     <section className="section-lg">
       <div className="container-x">
-        <div className="grid-12 items-end">
-          <div className="col-span-12 md:col-span-6">
-            <Eyebrow>{s.eyebrow}</Eyebrow>
-            <h2 className="mt-6 font-display text-[length:var(--text-4xl)] font-light leading-tight tracking-tight text-balance [&_em]:italic [&_em]:text-fg">
-              Everything between the idea and the people who&apos;ll{" "}
-              <em>love it.</em>
-            </h2>
-          </div>
-          <div className="col-span-12 md:col-start-9 md:col-span-4 flex items-start">
-            <Link
-              href={s.link.href}
-              data-cursor
-              className="group flex items-center gap-2 label-caps transition-colors hover:text-fg"
-            >
-              {s.link.label}
-              <span className="transition-transform duration-300 group-hover:translate-x-1">
-                →
-              </span>
-            </Link>
-          </div>
-        </div>
+        {/* one big line */}
+        <h2 className="max-w-[16ch] font-[family-name:var(--font-grotesk)] text-[length:clamp(2.75rem,6.5vw,6rem)] font-medium leading-[0.95] tracking-[-0.025em] text-balance">
+          Let&apos;s build something.
+        </h2>
 
-        <div className="mt-14 border-b border-line">
-          {services.map((service) => (
-            <ServiceRow key={service.id} service={service} />
+        {/* three-discipline gallery */}
+        <div className="mt-20 grid gap-x-[var(--col-gap)] gap-y-20 md:mt-28 md:grid-cols-3">
+          {featured.map((svc) => (
+            <DisciplineColumn key={svc.id} service={svc} reduce={reduce} mounted={mounted} />
           ))}
         </div>
       </div>

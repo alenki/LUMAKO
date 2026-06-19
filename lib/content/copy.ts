@@ -8,12 +8,6 @@ export const copy = {
       ctaPrimary: { label: "Start a project", href: "/contact" },
       ctaSecondary: { label: "See the work", href: "/work" },
     },
-    manifesto: {
-      eyebrow: "The stance",
-      headline:
-        "The demo is the pitch. Most studios sell a proposal and a promise - Lumako shows a working product first, then names the price. Proof carries the sale.",
-      highlight: "The demo is the pitch.",
-    },
     services: {
       eyebrow: "What we build",
       headline: "Web, AI, and apps - from one team on one engine.",
@@ -21,32 +15,27 @@ export const copy = {
       link: { label: "All services", href: "/services" },
     },
     work: {
-      eyebrow: "Selected work",
-      headline: "Shipped, not proposed.",
+      headline: "Work that went live.",
       link: { label: "View all work", href: "/work" },
     },
-    process: {
-      eyebrow: "How it works",
-      headline: "The builders are in the room.",
-      sub: "No handoff between you and the people writing the code. You talk to the team that ships it - start to finish.",
-      link: { label: "The process", href: "/services" },
-    },
-    proof: [
-      { value: "1.5+ yrs", label: "in production" },
-      { value: "Gov + university", label: "delivered builds" },
-      { value: "AI competition", label: "won · university" },
-      { value: "Web · AI · Apps", label: "one engine" },
-    ],
-    receipts: {
-      eyebrow: "Receipts",
-      headline: "The portfolio is the credential.",
-      highlight: "the credential.",
-      items: [
-        "Shipped builds for government bodies and universities.",
-        "Won a university AI competition.",
-        "1.5+ years live in production.",
-        "Live products you can click - not slides.",
+    studio: {
+      eyebrow: "The studio",
+      statement: "We're a studio that ships what others pitch.",
+      highlight: "ships",
+      ledger: [
+        { value: 15, suffix: "+", label: "Builds shipped" },
+        { value: 2, suffix: "+", label: "Years in production" },
       ],
+      receipts: [
+        "Government + university builds",
+        "University AI competition winner",
+        "Web, AI & apps - one engine",
+      ],
+      body: [
+        "We started Lumako to close the gap between what gets promised and what gets shipped. The people who scope the work write the code, so there are no account managers, no handoffs, and no telephone game between you and the build.",
+        "The receipts aren't slides. We've shipped production builds for government and university teams, won a university AI competition, and run web, AI, and apps off a single engine - and you see the working thing before you ever see an invoice.",
+      ],
+      link: { label: "How we work", href: "/services" },
     },
     cta: {
       eyebrow: "Start here",

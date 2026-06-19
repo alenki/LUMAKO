@@ -64,10 +64,11 @@
   --text-mono: clamp(0.7rem, 0.78vw, 0.82rem);
 }
 
-/* Fonts reference runtime variables from next/font - must be inline */
+/* Fonts reference runtime variables from next/font - must be inline.
+   Site-wide type is Inter (standard-width grotesk), exposed as --font-grotesk. */
 @theme inline {
-  --font-display: var(--font-inter-tight);
-  --font-sans: var(--font-inter-tight);
+  --font-display: var(--font-grotesk);
+  --font-sans: var(--font-grotesk);
   --font-mono: var(--font-geist-mono);
 }
 

@@ -7,14 +7,13 @@ import { Button } from "@/components/ui/Button";
 import { HeroMarker } from "@/components/hero/HeroMarker";
 import { splitOnWord } from "@/lib/markWord";
 import { copy } from "@/lib/content/copy";
-import { easeOutExpo } from "@/lib/motion";
-import { cn } from "@/lib/utils";
+import { easeOutSoft } from "@/lib/motion";
 
 export function Hero() {
   const { hero } = copy.home;
   const reduce = useReducedMotion() ?? false;
-  // When the last line finishes rising we release the line masks (so the circle
-  // can overflow) and trigger the marker draw. Pre-revealed under reduced motion.
+  // When the last line finishes settling into place we trigger the marker draw.
+  // Pre-revealed under reduced motion so the circle renders immediately.
   const [revealed, setRevealed] = useState(reduce);
 
   const { lines, mark } = hero;
@@ -32,21 +31,17 @@ export function Hero() {
         <div className="flex flex-1 flex-col justify-center">
           <h1 className="font-display font-extrabold uppercase leading-[0.85] max-[760px]:leading-[0.9] tracking-[-0.05em] text-[length:clamp(46px,10.8vw,210px)]">
             {lines.map((line, i) => (
-              <span
-                key={line}
-                className={cn(
-                  "block pb-[0.04em]",
-                  revealed ? "overflow-visible" : "overflow-hidden",
-                )}
-              >
+              <span key={line} className="block pb-[0.04em]">
                 <motion.span
                   className="inline-block"
-                  initial={reduce ? false : { y: "112%" }}
-                  animate={{ y: 0 }}
+                  initial={
+                    reduce ? false : { opacity: 0, y: "0.3em", filter: "blur(14px)" }
+                  }
+                  animate={{ opacity: 1, y: 0, filter: "blur(0px)" }}
                   transition={
                     reduce
                       ? { duration: 0 }
-                      : { duration: 1, ease: easeOutExpo, delay: 0.3 + i * 0.12 }
+                      : { duration: 0.85, ease: easeOutSoft, delay: 0.15 + i * 0.14 }
                   }
                   onAnimationComplete={
                     !reduce && i === lastIdx ? () => setRevealed(true) : undefined
@@ -73,7 +68,7 @@ export function Hero() {
             className="max-w-[46ch]"
             initial={reduce ? false : { opacity: 0, y: 14 }}
             animate={{ opacity: 1, y: 0 }}
-            transition={reduce ? { duration: 0 } : { duration: 0.9, ease: easeOutExpo, delay: 1.1 }}
+            transition={reduce ? { duration: 0 } : { duration: 0.9, ease: easeOutSoft, delay: 1.1 }}
           >
             <p className="text-[length:var(--text-xl)] text-fg-muted text-pretty">{hero.sub}</p>
             <div className="mt-6 flex flex-wrap gap-3">
@@ -89,7 +84,7 @@ export function Hero() {
           <motion.div
             initial={reduce ? false : { opacity: 0, y: 14 }}
             animate={{ opacity: 1, y: 0 }}
-            transition={reduce ? { duration: 0 } : { duration: 0.9, ease: easeOutExpo, delay: 1.4 }}
+            transition={reduce ? { duration: 0 } : { duration: 0.9, ease: easeOutSoft, delay: 1.4 }}
           >
             <span className="label-caps flex items-center gap-3">
               Scroll

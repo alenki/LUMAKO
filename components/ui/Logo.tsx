@@ -9,7 +9,7 @@ export function Logo({ className }: Props) {
   return (
     <span
       className={cn(
-        "font-display tracking-tight text-[length:var(--text-3xl)] font-medium text-fg select-none",
+        "font-display tracking-tight text-[length:var(--text-3xl)] font-semibold text-fg select-none",
         className,
       )}
     >

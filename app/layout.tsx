@@ -1,5 +1,5 @@
 import type { Metadata } from "next";
-import { Inter_Tight } from "next/font/google";
+import { Inter } from "next/font/google";
 import { GeistMono } from "geist/font/mono";
 import "@/styles/globals.css";
 import { Providers } from "@/components/layout/Providers";
@@ -9,10 +9,12 @@ import { Nav } from "@/components/layout/Nav";
 import { Footer } from "@/components/layout/Footer";
 import { PageTransition, RouteCurtain } from "@/components/layout/PageTransition";
 
-const interTight = Inter_Tight({
+// Site-wide type: Inter (standard-width grotesk). Loaded as a variable font so the
+// full weight range (light -> extrabold) is available across the site.
+const inter = Inter({
   subsets: ["latin"],
   display: "swap",
-  variable: "--font-inter-tight",
+  variable: "--font-grotesk",
 });
 
 export const metadata: Metadata = {
@@ -46,7 +48,7 @@ export default function RootLayout({
   return (
     <html
       lang="en"
-      className={`${interTight.variable} ${GeistMono.variable}`}
+      className={`${inter.variable} ${GeistMono.variable}`}
     >
       <body className="min-h-dvh">
         <a
