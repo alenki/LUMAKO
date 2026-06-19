@@ -290,6 +290,32 @@ body {
   animation-play-state: paused;
 }
 
+/* Pause the rail when a keyboard user focuses a card inside it */
+.group:focus-within .marquee-track {
+  animation-play-state: paused;
+}
+
+/* Work marquee: full-bleed auto-scroller. Clip the off-screen tracks on the X
+   axis only, so card hover shadows still breathe vertically. */
+.work-marquee {
+  overflow-x: clip;
+}
+
+/* Reduced motion: stop the scroll, drop the visual clone, and let the row be
+   scrolled by hand so every project stays reachable. animation: none wins over
+   the global reduced-motion duration override because it clears animation-name. */
+@media (prefers-reduced-motion: reduce) {
+  .work-marquee {
+    overflow-x: auto;
+  }
+  .work-marquee .marquee-track {
+    animation: none !important;
+  }
+  .work-marquee [data-marquee-clone] {
+    display: none;
+  }
+}
+
 /* ----------------------------------------------------------------------------
    Reduced motion - disable all animation/transition + smooth scroll
 ---------------------------------------------------------------------------- */
