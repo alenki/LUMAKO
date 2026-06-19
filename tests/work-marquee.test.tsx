@@ -10,6 +10,7 @@ import { copy } from "@/lib/content/copy";
 // next/image needs the Next build runtime; stub it so these stay unit-level.
 vi.mock("next/image", () => ({
   default: ({ src, alt = "" }: { src: string; alt?: string }) => (
+    // eslint-disable-next-line @next/next/no-img-element -- intentional test stub for next/image
     <img src={src} alt={alt} />
   ),
 }));
