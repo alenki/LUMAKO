@@ -19,7 +19,7 @@ export function WorkSlide({ item }: { item: CaseStudy }) {
       aria-label={`${item.title} - ${item.client} (opens the live site in a new tab)`}
       className="group/slide block"
     >
-      <div className="surface-card surface-card--hover relative overflow-hidden">
+      <div className="surface-card relative overflow-hidden">
         <CoverPanel
           src={item.cover}
           alt={`${item.title} - ${item.sector}`}

@@ -17,14 +17,8 @@ const wordmarkReveal: Variants = {
   },
 };
 
-/** Socials with X pulled to the bottom of the stack. */
-const socials = [
-  ...site.socials.filter((s) => s.label !== "X"),
-  ...site.socials.filter((s) => s.label === "X"),
-];
-
 const linkClass =
-  "w-fit font-medium uppercase tracking-[0.18em] text-[length:var(--text-2xl)] text-fg transition-colors hover:text-fg-muted";
+  "w-fit font-medium uppercase tracking-[0.18em] text-[length:var(--text-2xl)] text-fg";
 
 export function Footer() {
   const reduce = useReducedMotion() ?? false;
@@ -34,7 +28,7 @@ export function Footer() {
       <div className="container-x">
         {/* Socials - top right */}
         <nav aria-label="Social" className="flex flex-col items-end gap-2">
-          {socials.map((s) => (
+          {site.socials.map((s) => (
             <a
               key={s.href}
               href={s.href}
@@ -51,13 +45,13 @@ export function Footer() {
         {/* Closing signature - email pinned to the absolute bottom-right on wide
             screens (where the wordmark leaves a right column), then the monumental
             wordmark anchored to and bleeding off the bottom edge (footer clips it). */}
-        <div className="relative mt-[var(--vw-8)]">
+        <div className="relative mt-[var(--vw-4)]">
           <div className="mb-[var(--vw-2)] flex justify-end min-[1700px]:absolute min-[1700px]:inset-x-0 min-[1700px]:bottom-[12%] min-[1700px]:z-10 min-[1700px]:mb-0">
             <a href={`mailto:${site.email}`} data-cursor className={linkClass}>
               {site.email}
             </a>
           </div>
-          <div className="-ml-[var(--vw-2)] [transform:translateY(0.1em)]">
+          <div className="ml-[calc(var(--vw-2)*-1)] [transform:translateY(0.1em)]">
             <motion.span
               initial={reduce ? false : "hidden"}
               whileInView="show"
@@ -66,7 +60,7 @@ export function Footer() {
               // on a fraction of it being visible instead.
               viewport={{ once: true, amount: 0.2 }}
               variants={wordmarkReveal}
-              className="block select-none font-display font-semibold leading-[0.8] tracking-tight text-fg [font-size:clamp(3rem,19vw,26rem)]"
+              className="block select-none font-display font-semibold leading-[0.8] tracking-[-0.04em] text-fg [font-size:clamp(3rem,20vw,27rem)]"
             >
               Lumako<span className="text-lume -ml-[0.05em]">.</span>
             </motion.span>

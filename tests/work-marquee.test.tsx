@@ -5,7 +5,6 @@ import type { CaseStudy } from "@/lib/content/types";
 import { WorkMarquee } from "@/components/sections/home/WorkMarquee";
 import { work } from "@/lib/content/work";
 import { SelectedWork } from "@/components/sections/home/SelectedWork";
-import { copy } from "@/lib/content/copy";
 
 // next/image needs the Next build runtime; stub it so these stay unit-level.
 vi.mock("next/image", () => ({
@@ -92,11 +91,10 @@ describe("WorkMarquee", () => {
 });
 
 describe("SelectedWork", () => {
-  it("keeps the section header and the view-all link", () => {
-    const { container, getByRole } = render(<SelectedWork />);
-    expect(container.querySelector("h2")?.textContent).toBe(copy.home.work.headline);
-    const link = getByRole("link", { name: new RegExp(copy.home.work.link.label, "i") });
-    expect(link.getAttribute("href")).toBe(copy.home.work.link.href);
+  it("drops the section header and the view-all link (marquee only)", () => {
+    const { container, queryByRole } = render(<SelectedWork />);
+    expect(container.querySelector("h2")).toBeNull();
+    expect(queryByRole("link", { name: /view all work/i })).toBeNull();
   });
 
   it("mounts the marquee with all projects (no static grid)", () => {

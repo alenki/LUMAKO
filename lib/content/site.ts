@@ -12,9 +12,8 @@ export const site = {
   ],
   socials: [
     { label: "Instagram", href: "https://instagram.com" },
-    { label: "X", href: "https://x.com" },
+    { label: "LinkedIn", href: "https://linkedin.com" },
     { label: "WhatsApp", href: "https://wa.me/" },
-    { label: "Telegram", href: "https://t.me/" },
   ],
 } as const;
 

@@ -67,7 +67,7 @@ export function Studio() {
   return (
     <section className="relative flex min-h-dvh flex-col justify-center py-[clamp(4rem,12vh,8rem)]">
       <div className="container-x">
-        <div className="md:pl-[10vw]">
+        <div className="md:pl-[18vw]">
           {/* the lead - the main headline, scaled up to carry the now type-only section */}
           <TextReveal
             as="h2"

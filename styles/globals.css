@@ -260,27 +260,31 @@ body {
   animation-play-state: paused;
 }
 
-/* Each card is its own GPU layer. The track (will-change: transform) translates
-   these pre-rasterized card textures rather than re-rasterizing one giant track
-   texture every frame - that giant-texture resample was what leaked thin white
-   vertical seams between cards on the slow glide. Per-card layers keep the gap
-   outside any sampled texture, so the seams stay gone.
-
-   Promote with `will-change`, NOT `translateZ(0) + backface-visibility:hidden`:
-   the latter pixel-snaps the layer to integer columns, which is invisible at full
-   speed (0.26px/frame) but turns the 0.1x hover drift (0.026px/frame ~ 1px every
-   ~39 frames) into a ~6-steps-per-second stutter that reads as low FPS. `will-change`
-   keeps the layer sub-pixel-sampled, so 6px/s renders as one continuous AA gradient -
-   a smooth calm drift instead of a stair-step. Promoting the cell - not .surface-card,
-   whose :hover translateY would override the transform - keeps the promotion stable
-   through hover and contains the lift's repaint to a single cell. No overflow/contain,
-   so the card's hover shadow still breathes. */
+/* Each card is its own pixel-snapped GPU layer. The track (will-change: transform)
+   translates these pre-rasterized card textures rather than re-rasterizing one giant
+   track texture every frame. Without this, the continuous sub-pixel glide-on-hover
+   resampled the antialiased card edges against the near-white page and leaked thin
+   white vertical seams between cards. The cell also owns the hover-dim fade below, so
+   the opacity change stays a cheap compositor op on an already-promoted layer. */
 .marquee-cell {
-  will-change: transform;
+  transform: translateZ(0);
+  backface-visibility: hidden;
+  transition: opacity 0.4s var(--ease-out-expo);
 }
 
-/* Work marquee: full-bleed auto-scroller. Clip the off-screen tracks on the X
-   axis only, so card hover shadows still breathe vertically. */
+/* Hover spotlight: when any card in the rail is hovered, the rest recede so the
+   hovered project stays full-colour - no lift, no shadow. :has(a:hover) on the rail
+   dims every cell; the cell holding the hovered link then wins (equal specificity,
+   later in source) and stays lit. */
+.work-marquee:has(a:hover) .marquee-cell {
+  opacity: 0.4;
+}
+.work-marquee .marquee-cell:has(a:hover) {
+  opacity: 1;
+}
+
+/* Work marquee: full-bleed auto-scroller. Clip the off-screen tracks on the X axis
+   only; the Y axis stays visible so each card's resting shadow shows. */
 .work-marquee {
   overflow-x: clip;
 }

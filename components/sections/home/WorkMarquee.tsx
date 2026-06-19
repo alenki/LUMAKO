@@ -6,12 +6,15 @@ import type { CaseStudy } from "@/lib/content/types";
 
 /** One full -100% pass. Slow + linear reads as premium. Tunable in one place. */
 const DURATION = "45s";
-/** On hover the rail keeps gliding, just way slower - a calm drift you can read,
- *  not a dead stop. Fraction of full speed. Kept off the very bottom (0.1 = ~6px/s
- *  ~ 1px every ~39 frames): that floor stair-steps into a ~6-per-second stutter on
- *  GPUs that pixel-snap the moving layer. ~0.16 (~10px/s) stays an obvious slowdown
- *  but enough per-frame travel to read as a continuous glide. */
-const HOVER_RATE = 0.16;
+/** On hover the rail keeps gliding, slower so you can read it - not a dead stop.
+ *  Why not slower: the render pipeline is smooth at any speed (steady fps, sub-pixel
+ *  AA verified), but a near-stop crawl (<~10px/s) moves the detail-rich cover
+ *  screenshots a tiny fraction of a pixel per frame, and on a 1x-DPI display the eye
+ *  reads slow-crawling fine detail as shimmer/judder. At full speed that detail moves
+ *  fast enough to blur into clean motion. 0.4 (~25px/s) keeps an obvious "slowed to
+ *  read" cue while moving fast enough to glide smoothly. Speed is the only real lever
+ *  here - tune this one number to trade slowness against smoothness. */
+const HOVER_RATE = 0.4;
 
 /** Card cell: fixed responsive width + uniform right margin so the two duplicated
  *  tracks are perfectly periodic and the -100% loop has zero jump. `marquee-cell`
