@@ -10,7 +10,7 @@ export function SelectedWork() {
       <div className="container-x">
         <div className="grid-12 items-end">
           <div className="col-span-12 md:col-span-6">
-            <h2 className="font-display text-[length:var(--text-5xl)] font-light leading-tight tracking-tight">
+            <h2 className="font-display text-[length:var(--text-5xl)] font-medium leading-[1.05] tracking-[-0.02em] text-balance">
               {w.headline}
             </h2>
           </div>
