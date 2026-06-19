@@ -2,6 +2,8 @@ import { describe, it, expect, vi } from "vitest";
 import { render } from "@testing-library/react";
 import { WorkSlide } from "@/components/sections/work/WorkSlide";
 import type { CaseStudy } from "@/lib/content/types";
+import { WorkMarquee } from "@/components/sections/home/WorkMarquee";
+import { work } from "@/lib/content/work";
 
 // next/image needs the Next build runtime; stub it so these stay unit-level.
 vi.mock("next/image", () => ({
@@ -45,5 +47,37 @@ describe("WorkSlide", () => {
     // sparse: the rich card's metadata must not appear
     expect(container.textContent).not.toContain("Concept site");
     expect(container.textContent).not.toContain("2025");
+  });
+});
+
+describe("WorkMarquee", () => {
+  it("renders every project once in the real (non-clone) track", () => {
+    const { container } = render(<WorkMarquee items={work} />);
+    const real = container.querySelector(".marquee-track:not([data-marquee-clone])")!;
+    const titles = [...real.querySelectorAll("h3")].map((h) => h.textContent);
+    expect(titles.length).toBe(work.length);
+    work.forEach((item) => expect(titles).toContain(item.title));
+  });
+
+  it("links each real card to its live href in document order", () => {
+    const { container } = render(<WorkMarquee items={work} />);
+    const real = container.querySelector(".marquee-track:not([data-marquee-clone])")!;
+    const links = [...real.querySelectorAll("a")];
+    expect(links.length).toBe(work.length);
+    links.forEach((a, i) => expect(a.getAttribute("href")).toBe(work[i].href));
+  });
+
+  it("duplicates the set into an inert, aria-hidden clone (each project hit once by SR/keyboard)", () => {
+    const { container } = render(<WorkMarquee items={work} />);
+    expect(container.querySelectorAll(".marquee-track").length).toBe(2);
+    const clone = container.querySelector("[data-marquee-clone]")!;
+    expect(clone.getAttribute("aria-hidden")).toBe("true");
+    expect(clone.hasAttribute("inert")).toBe(true);
+  });
+
+  it("gives each track an animation-duration inline (the .marquee-track class sets none)", () => {
+    const { container } = render(<WorkMarquee items={work} />);
+    const tracks = [...container.querySelectorAll<HTMLElement>(".marquee-track")];
+    tracks.forEach((t) => expect(t.style.animationDuration).not.toBe(""));
   });
 });
