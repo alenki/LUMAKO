@@ -1,12 +1,14 @@
 "use client";
 
+import { useEffect, useState } from "react";
 import { motion } from "motion/react";
 
 // Family easings (defined inline, no shared import).
 const DRAW = [0.5, 0, 0.3, 1] as const; // HeroMarker pen-ease, for every pathLength self-draw
 const EXPO = [0.22, 1, 0.36, 1] as const; // easeOutExpo, for the gold settle/pop
 
-// Deterministic rounded-rect path (one closed sub-path, clockwise from top-left).
+// Deterministic rounded-rect path (one closed sub-path, clockwise from top-left)
+// so the primary frame self-draws as a single continuous stroke.
 function roundedRect(x: number, y: number, w: number, h: number, r: number) {
   const x2 = x + w;
   const y2 = y + h;
@@ -19,33 +21,73 @@ function roundedRect(x: number, y: number, w: number, h: number, r: number) {
   );
 }
 
-// Three concentric, left-leaning breakpoint frames (outer -> inner draw order).
-const FRAMES = [
-  roundedRect(70, 96, 340, 288, 10), // desktop
-  roundedRect(120, 126, 240, 228, 10), // tablet
-  roundedRect(165, 138, 110, 204, 10), // phone
+// Straight ink as a path (M..L) so it self-draws via pathLength reliably -
+// the same grammar ProofDiagram uses for its sightlines. SVG <line> is never
+// pathLength-animated anywhere in the family.
+const hLine = (x1: number, x2: number, y: number) => `M ${x1},${y} L ${x2},${y}`;
+
+// ONE confident browser window, centered on (240,240). A 324x272 chrome with a
+// 34px header bar. Numbers chosen so the interior content sits on a calm
+// editorial column inside the safe area.
+const FRAME = { x: 78, y: 104, w: 324, h: 272, r: 12 };
+const WINDOW = roundedRect(FRAME.x, FRAME.y, FRAME.w, FRAME.h, FRAME.r);
+
+// Header divider hairline (chrome bar bottom edge).
+const HEADER_Y = FRAME.y + 34; // 138
+// Content padding column inside the chrome.
+const PAD = 26;
+const CONTENT_X = FRAME.x + PAD; // 104
+const CONTENT_R = FRAME.x + FRAME.w - PAD; // 376
+
+// Three evenly-spaced hollow window dots, top-left of the chrome bar - the
+// family's hollow-node motif (token card/fg), not colored OS traffic-lights.
+const DOTS = [0, 1, 2].map((i) => ({
+  cx: FRAME.x + 20 + i * 13,
+  cy: FRAME.y + 17,
+  r: 3,
+}));
+
+// Muted rounded URL / omnibox pill, filling the rest of the chrome bar.
+const OMNI = { x: FRAME.x + 74, y: FRAME.y + 10, w: FRAME.w - 100, h: 14, r: 7 };
+
+// Headline rules: two stacked strokes that read as the page title.
+const HEADLINE = [
+  { x: CONTENT_X, y: HEADER_Y + 30, w: 168 },
+  { x: CONTENT_X, y: HEADER_Y + 44, w: 116 },
 ];
 
-// Header hairline inside each frame, at y = top + 22.
-const HEADERS = [
-  { x1: 70, x2: 410, y: 118 },
-  { x1: 120, x2: 360, y: 148 },
-  { x1: 165, x2: 275, y: 160 },
-];
+// Clean hero media slot outline (the big balanced rectangle below the headline).
+const HERO = { x: CONTENT_X, y: HEADER_Y + 62, w: CONTENT_R - CONTENT_X, h: 92, r: 8 };
 
-// Shared baseline rule at y=240 crossing all frames.
-const BASELINE = { x1: 70, x2: 410, y: 240 };
+// A tidy row of three feature cards along the lower third.
+const CARD_ROW_Y = HERO.y + HERO.h + 22; // top of card row
+const CARD_GAP = 14;
+const CARD_W = (CONTENT_R - CONTENT_X - 2 * CARD_GAP) / 3; // 3 equal columns
+const CARD_H = 40;
+const CARDS = [0, 1, 2].map((i) => ({
+  x: CONTENT_X + i * (CARD_W + CARD_GAP),
+  y: CARD_ROW_Y,
+  w: CARD_W,
+  h: CARD_H,
+  r: 6,
+}));
 
-// 11 dotted column guides (deterministic), spanning y 110..370.
-const COLS = Array.from({ length: 11 }, (_, i) => 70 + (i + 1) * (340 / 12));
+// THE ONE GOLD: the primary CTA button, docked at the right of the headline
+// block (the natural "act now" position beside the page title).
+const CTA = { x: CONTENT_R - 64, y: HEADLINE[0].y - 10, w: 64, h: 24, r: 6 };
+const ctaCx = CTA.x + CTA.w / 2; // 344
+const ctaCy = CTA.y + CTA.h / 2; // 170
 
-// Hollow nodes at the four desktop corners.
-const CORNERS = [
-  { x: 70, y: 96 },
-  { x: 410, y: 96 },
-  { x: 70, y: 384 },
-  { x: 410, y: 384 },
-];
+// Cycle timing (ms): the whole schematic self-draws, holds, clears, then redraws
+// - forever, while the tile is the on-screen focus.
+const ON = 3200; // entrance (~1.9s) + hold
+const OFF = 400; // exactly the retract length - redraw starts the instant it clears, no blank
+
+// Direction-aware exits: on the way out the whole schematic clears quickly and
+// together (none of the staggered entrance delays), so nothing - the window dots
+// especially - is left hanging after the page has gone.
+const EXIT_DRAW = { duration: 0.4, ease: DRAW };
+const EXIT_POP = { duration: 0.28, ease: EXPO };
 
 export function WebDiagram({
   active,
@@ -56,7 +98,37 @@ export function WebDiagram({
   idle: boolean;
   reduce: boolean;
 }) {
-  const drawn = reduce || active;
+  const live = active && idle && !reduce; // cycle only while drawn-in + on-screen
+
+  // The cycle toggles this single boolean on a timer (only inside timer callbacks,
+  // never synchronously in the effect body). The non-cycling states - static under
+  // reduced motion, blank off-screen - are derived below, not stored.
+  const [cycleShown, setCycleShown] = useState(false);
+
+  useEffect(() => {
+    if (!live || reduce) return;
+    let cancelled = false;
+    const timers: ReturnType<typeof setTimeout>[] = [];
+    const loop = () => {
+      if (cancelled) return;
+      setCycleShown(true);
+      timers.push(
+        setTimeout(() => {
+          if (cancelled) return;
+          setCycleShown(false);
+          timers.push(setTimeout(loop, OFF));
+        }, ON),
+      );
+    };
+    timers.push(setTimeout(loop, 0)); // first draw-in is async, off the effect body
+    return () => {
+      cancelled = true;
+      timers.forEach(clearTimeout);
+    };
+  }, [live, reduce]);
+
+  // The single boolean that drives the whole schematic.
+  const shown = reduce ? true : live ? cycleShown : false;
 
   return (
     <svg
@@ -67,157 +139,175 @@ export function WebDiagram({
       preserveAspectRatio="xMidYMid meet"
       style={{ overflow: "visible", pointerEvents: "none" }}
     >
-      {/* (1) CONSTRUCTION GUIDES — 12-column grid, fade in left->right, never pathLength. */}
-      {COLS.map((x, i) => (
-        <motion.line
-          key={x}
-          x1={x}
-          y1={110}
-          x2={x}
-          y2={370}
+      {/* (1) CONSTRUCTION GUIDES - content column rails + a section baseline,
+          fade in only. The page visibly aligns to a column: built with care. */}
+      <motion.g
+        initial={false}
+        animate={{ opacity: shown ? 0.5 : 0 }}
+        transition={reduce ? { duration: 0 } : shown ? { duration: 0.4, ease: EXPO } : EXIT_POP}
+      >
+        {[CONTENT_X, CONTENT_R].map((x) => (
+          <line
+            key={x}
+            x1={x}
+            y1={HEADER_Y + 16}
+            x2={x}
+            y2={FRAME.y + FRAME.h - 18}
+            stroke="var(--color-line)"
+            strokeWidth={1}
+            strokeDasharray="1 5"
+            strokeLinecap="round"
+          />
+        ))}
+        <line
+          x1={CONTENT_X}
+          y1={HERO.y + HERO.h + 11}
+          x2={CONTENT_R}
+          y2={HERO.y + HERO.h + 11}
           stroke="var(--color-line)"
           strokeWidth={1}
           strokeDasharray="1 5"
           strokeLinecap="round"
-          initial={false}
-          animate={{ opacity: drawn ? 0.5 : 0 }}
-          transition={reduce ? { duration: 0 } : { duration: 0.4, ease: EXPO, delay: i * 0.025 }}
         />
-      ))}
+      </motion.g>
 
-      {/* (2) PRIMARY SCHEMATIC — three breakpoint frames, self-draw outer->inner. */}
-      {FRAMES.map((d, i) => (
+      {/* (2) PRIMARY SCHEMATIC - the one browser window, self-draws as a single stroke. */}
+      <motion.path
+        d={WINDOW}
+        fill="none"
+        stroke="var(--color-fg)"
+        strokeWidth={1.5}
+        strokeLinecap="round"
+        strokeLinejoin="round"
+        initial={false}
+        animate={{ pathLength: shown ? 1 : 0 }}
+        transition={reduce ? { duration: 0 } : shown ? { duration: 1.2, ease: DRAW, delay: 0.25 } : EXIT_DRAW}
+      />
+
+      {/* (2) PRIMARY - chrome header divider, draws just after the frame. */}
+      <motion.path
+        d={hLine(FRAME.x, FRAME.x + FRAME.w, HEADER_Y)}
+        fill="none"
+        stroke="var(--color-fg)"
+        strokeWidth={1.5}
+        strokeLinecap="round"
+        initial={false}
+        animate={{ pathLength: shown ? 1 : 0 }}
+        transition={reduce ? { duration: 0 } : shown ? { duration: 0.7, ease: DRAW, delay: 0.85 } : EXIT_DRAW}
+      />
+
+      {/* (3) SECONDARY INK - the muted URL / omnibox pill, wipes in. */}
+      <motion.path
+        d={roundedRect(OMNI.x, OMNI.y, OMNI.w, OMNI.h, OMNI.r)}
+        fill="none"
+        stroke="var(--color-fg-muted)"
+        strokeWidth={1.25}
+        strokeLinecap="round"
+        strokeLinejoin="round"
+        initial={false}
+        animate={{ pathLength: shown ? 1 : 0 }}
+        transition={reduce ? { duration: 0 } : shown ? { duration: 0.6, ease: DRAW, delay: 0.92 } : EXIT_DRAW}
+      />
+
+      {/* (3) SECONDARY INK - headline rules (the page title), wipe in left->right. */}
+      {HEADLINE.map((h, i) => (
         <motion.path
-          key={i}
-          d={d}
+          key={`hl${i}`}
+          d={hLine(h.x, h.x + h.w, h.y)}
           fill="none"
-          stroke="var(--color-fg)"
-          strokeWidth={1.5}
-          strokeLinecap="round"
-          strokeLinejoin="round"
-          initial={false}
-          animate={{ pathLength: drawn ? 1 : 0 }}
-          transition={reduce ? { duration: 0 } : { duration: 1.3, ease: DRAW, delay: 0.25 + i * 0.12 }}
-        />
-      ))}
-
-      {/* (3) SECONDARY INK — header hairlines, wipe in left->right. */}
-      {HEADERS.map((h, i) => (
-        <motion.line
-          key={`h${i}`}
-          x1={h.x1}
-          y1={h.y}
-          x2={h.x2}
-          y2={h.y}
           stroke="var(--color-fg-muted)"
           strokeWidth={1.25}
           strokeLinecap="round"
           initial={false}
-          animate={{ pathLength: drawn ? 1 : 0 }}
-          transition={reduce ? { duration: 0 } : { duration: 0.5, ease: DRAW, delay: 0.9 + i * 0.06 }}
+          animate={{ pathLength: shown ? 1 : 0 }}
+          transition={
+            reduce
+              ? { duration: 0 }
+              : shown
+                ? { duration: 0.5, ease: DRAW, delay: 0.98 + i * 0.07 }
+                : EXIT_DRAW
+          }
         />
       ))}
 
-      {/* (3) SECONDARY INK — shared baseline rule across all frames. */}
-      <motion.line
-        x1={BASELINE.x1}
-        y1={BASELINE.y}
-        x2={BASELINE.x2}
-        y2={BASELINE.y}
+      {/* (3) SECONDARY INK - clean hero media slot outline, wipes in. */}
+      <motion.path
+        d={roundedRect(HERO.x, HERO.y, HERO.w, HERO.h, HERO.r)}
+        fill="none"
         stroke="var(--color-fg-muted)"
         strokeWidth={1.25}
         strokeLinecap="round"
+        strokeLinejoin="round"
         initial={false}
-        animate={{ pathLength: drawn ? 1 : 0 }}
-        transition={reduce ? { duration: 0 } : { duration: 0.6, ease: DRAW, delay: 1.0 }}
+        animate={{ pathLength: shown ? 1 : 0 }}
+        transition={reduce ? { duration: 0 } : shown ? { duration: 0.9, ease: DRAW, delay: 1.0 } : EXIT_DRAW}
       />
 
-      {/* (4) NODES — hollow dots at the four desktop corners, pop in. */}
-      {CORNERS.map((n, i) => (
+      {/* (3) SECONDARY INK - tidy row of three feature cards, wipe in left->right. */}
+      {CARDS.map((c, i) => (
+        <motion.path
+          key={`card${i}`}
+          d={roundedRect(c.x, c.y, c.w, c.h, c.r)}
+          fill="none"
+          stroke="var(--color-fg-muted)"
+          strokeWidth={1.25}
+          strokeLinecap="round"
+          strokeLinejoin="round"
+          initial={false}
+          animate={{ pathLength: shown ? 1 : 0 }}
+          transition={
+            reduce
+              ? { duration: 0 }
+              : shown
+                ? { duration: 0.55, ease: DRAW, delay: 1.08 + i * 0.08 }
+                : EXIT_DRAW
+          }
+        />
+      ))}
+
+      {/* (4) NODES - hollow window dots, pop in (the family's hollow-node motif). */}
+      {DOTS.map((d, i) => (
         <motion.circle
-          key={`n${i}`}
-          cx={n.x}
-          cy={n.y}
-          r={2.5}
+          key={`dot${i}`}
+          cx={d.cx}
+          cy={d.cy}
+          r={d.r}
           fill="var(--color-card)"
           stroke="var(--color-fg)"
           strokeWidth={1.25}
           initial={false}
-          animate={{ opacity: drawn ? 1 : 0, scale: drawn ? 1 : 0 }}
-          transition={reduce ? { duration: 0 } : { duration: 0.4, ease: EXPO, delay: 0.95 + i * 0.05 }}
-          style={{ transformOrigin: `${n.x}px ${n.y}px` }}
+          animate={{ opacity: shown ? 1 : 0, scale: shown ? 1 : 0 }}
+          transition={
+            reduce
+              ? { duration: 0 }
+              : shown
+                ? { duration: 0.4, ease: EXPO, delay: 0.95 + i * 0.05 }
+                : EXIT_POP
+          }
+          style={{ transformOrigin: `${d.cx}px ${d.cy}px` }}
         />
       ))}
 
-      {/* SECONDARY INK — content rows beneath the hero module on the phone screen. */}
-      {[
-        { y: 230, w: 84 },
-        { y: 242, w: 58 },
-        { y: 254, w: 70 },
-      ].map((r, i) => (
-        <motion.line
-          key={`row${i}`}
-          x1={178}
-          y1={r.y}
-          x2={178 + r.w}
-          y2={r.y}
-          stroke="var(--color-fg-muted)"
-          strokeWidth={1.25}
-          strokeLinecap="round"
-          initial={false}
-          animate={{ pathLength: drawn ? 1 : 0 }}
-          transition={reduce ? { duration: 0 } : { duration: 0.4, ease: DRAW, delay: 1.2 + i * 0.07 }}
-        />
-      ))}
-
-      {/* THE ONE GOLD ELEMENT — the live hero module rendered on the phone screen.
-          A restrained content block: scales up from its top edge (EXPO), arrives
-          last, then breathes at idle. */}
-      <motion.rect
-        x={178}
-        y={166}
-        width={84}
-        height={50}
-        rx={4}
+      {/* THE ONE GOLD ELEMENT - the primary CTA button. Pops in last (EXPO settle)
+          and retracts with the rest of the schematic each cycle. The single warm
+          subject. */}
+      <motion.path
+        d={roundedRect(CTA.x, CTA.y, CTA.w, CTA.h, CTA.r)}
         fill="var(--color-lume)"
         initial={false}
-        animate={
-          reduce
-            ? { scaleY: 1, opacity: 1 }
-            : !active
-              ? { scaleY: 0, opacity: 0 }
-              : idle
-                ? { scaleY: 1, opacity: [1, 0.82, 1] }
-                : { scaleY: 1, opacity: 1 }
-        }
+        animate={{ scale: shown ? 1 : 0, opacity: shown ? 1 : 0 }}
         transition={
           reduce
             ? { duration: 0 }
-            : {
-                scaleY: { duration: 0.5, ease: EXPO, delay: 1.1 },
-                opacity: idle
-                  ? { duration: 4, ease: "easeInOut", repeat: Infinity, delay: 1.6 }
-                  : { duration: 0.4, ease: EXPO },
-              }
+            : shown
+              ? {
+                  scale: { duration: 0.55, ease: EXPO, delay: 1.2 },
+                  opacity: { duration: 0.4, ease: EXPO, delay: 1.2 },
+                }
+              : { scale: EXIT_POP, opacity: EXIT_POP }
         }
-        style={{ transformOrigin: "178px 166px" }}
+        style={{ transformOrigin: `${ctaCx}px ${ctaCy}px` }}
       />
-
-      {/* continuous render-scan: a faint hairline sweeps down the frame, forever */}
-      {idle && !reduce && (
-        <motion.line
-          x1={80}
-          y1={0}
-          x2={400}
-          y2={0}
-          stroke="var(--color-line-strong)"
-          strokeWidth={1}
-          strokeLinecap="round"
-          initial={{ y: 108, opacity: 0 }}
-          animate={{ y: [108, 372], opacity: [0, 0.6, 0.6, 0] }}
-          transition={{ duration: 2.8, ease: "easeInOut", repeat: Infinity, delay: 1.0 }}
-        />
-      )}
     </svg>
   );
 }

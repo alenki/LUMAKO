@@ -11,7 +11,7 @@ export function Engagements() {
         <div className="grid-12 items-end">
           <div className="col-span-12 md:col-span-6">
             <Eyebrow>{s.engagementsEyebrow}</Eyebrow>
-            <h2 className="mt-6 font-display text-[length:var(--text-5xl)] font-light leading-tight tracking-tight text-balance">
+            <h2 className="mt-6 font-display text-[length:var(--text-5xl)] font-medium leading-tight tracking-tight text-balance">
               {s.engagementsHeadline}
             </h2>
           </div>
@@ -24,10 +24,10 @@ export function Engagements() {
               index={i}
               className="surface-card flex h-full flex-col p-10"
             >
-              <h3 className="font-display text-[length:var(--text-3xl)] font-light tracking-tight">
+              <h3 className="font-display text-[length:var(--text-3xl)] font-semibold tracking-tight">
                 {engagement.name}
               </h3>
-              <p className="mt-3 text-[length:var(--text-lg)] text-fg-muted text-pretty">
+              <p className="mt-3 text-[length:var(--text-lg)] text-fg-body leading-relaxed text-pretty">
                 {engagement.blurb}
               </p>
               <ul className="mt-8 border-t border-line">

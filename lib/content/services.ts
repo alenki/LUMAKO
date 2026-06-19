@@ -62,13 +62,13 @@ export const services: Service[] = [
     index: "05",
     title: "Positioning & proof",
     blurb:
-      "Finding the sharpest version of the idea, then leading with the demo. Clarity is the cheapest performance gain you'll ever buy.",
+      "Finding the sharpest version of the idea, then leading with the proof. Clarity is the cheapest performance gain you'll ever buy.",
     deliverables: [
       "Positioning & messaging",
       "Proof & receipts framing",
       "Naming",
       "Scope & roadmap",
-      "Demo-first launch plan",
+      "Proof-led launch plan",
     ],
   },
   {
@@ -90,27 +90,27 @@ export const services: Service[] = [
 export const processPhases: ProcessPhase[] = [
   {
     index: "01",
+    name: "Proof",
+    detail:
+      "We start with the receipts: shipped builds for government and university teams, a won AI competition, live products you can click. You judge us on work, not promises.",
+  },
+  {
+    index: "02",
     name: "Scope",
     detail:
       "We agree on the problem and what done looks like. One outcome the build has to deliver - written down before anything is made.",
   },
   {
-    index: "02",
-    name: "Build",
-    detail:
-      "We build the working thing across the stack - web, AI, app. No handoff, no telephone game: the people planning it write the code.",
-  },
-  {
     index: "03",
-    name: "Demo",
+    name: "Price",
     detail:
-      "You get a working product to click, not a deck to imagine. The demo opens the conversation; words only fill the gaps.",
+      "With the scope set, we name the price upfront - clear and fixed before any code is written. No surprise invoice at the end.",
   },
   {
     index: "04",
-    name: "Price",
+    name: "Build",
     detail:
-      "With the build in front of you, we name the price. Proof carries the sale - the outcome comes before the invoice.",
+      "We build the working thing across the stack - web, AI, app. No handoff, no telephone game: the people planning it write the code.",
   },
   {
     index: "05",
@@ -133,7 +133,7 @@ export const engagements: Engagement[] = [
     detail: [
       "Fixed scope & timeline",
       "Web, AI, or app build - shipped",
-      "Demo before the price",
+      "Fixed price, agreed upfront",
     ],
   },
   {

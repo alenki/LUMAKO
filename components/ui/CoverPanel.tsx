@@ -84,7 +84,7 @@ export function CoverPanel({
       {label ? (
         <span
           className={cn(
-            "absolute bottom-5 left-5 right-5 font-display text-[length:var(--text-3xl)] font-light leading-tight",
+            "absolute bottom-5 left-5 right-5 font-display text-[length:var(--text-3xl)] font-semibold leading-tight",
             overImage
               ? "text-white [text-shadow:0_1px_8px_rgba(0,0,0,0.5)]"
               : "text-fg/90",

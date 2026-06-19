@@ -18,13 +18,13 @@ const inter = Inter({
 });
 
 export const metadata: Metadata = {
-  metadataBase: new URL("https://lumako.com"),
+  metadataBase: new URL("https://lumako.net"),
   title: {
     default: "Lumako | Web · AI · Apps",
     template: "%s | Lumako",
   },
   description:
-    "Lumako is a full-stack studio that ships web, AI, and app products - and shows the working build before the pitch.",
+    "Lumako is a full-stack studio that ships web, AI, and app products - judged on a track record of shipped work, not promises.",
   keywords: [
     "web development",
     "AI products",
@@ -37,7 +37,7 @@ export const metadata: Metadata = {
     siteName: "Lumako",
     title: "Lumako - Web · AI · Apps",
     description:
-      "Lumako is a full-stack studio that ships web, AI, and app products - and shows the working build before the pitch.",
+      "Lumako is a full-stack studio that ships web, AI, and app products - judged on a track record of shipped work, not promises.",
   },
   twitter: { card: "summary_large_image" },
 };

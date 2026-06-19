@@ -25,13 +25,13 @@ export default function WorkPage() {
                 text={w.headline}
                 highlight={w.highlight}
                 delay={0.1}
-                className="mt-8 block font-display text-[length:var(--text-7xl)] font-light leading-[0.95] tracking-tight text-balance"
+                className="mt-8 block font-display text-[length:var(--text-7xl)] font-medium leading-[0.95] tracking-tight text-balance"
               />
             </div>
 
             {/* Right: sub paragraph, anchored to baseline */}
             <Reveal index={1} className="col-span-12 md:col-start-9 md:col-span-4 md:pb-2">
-              <p className="text-[length:var(--text-xl)] text-fg-muted text-pretty">
+              <p className="text-[length:var(--text-xl)] text-fg-body leading-relaxed text-pretty">
                 {w.sub}
               </p>
             </Reveal>

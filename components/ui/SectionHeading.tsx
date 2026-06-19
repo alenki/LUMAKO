@@ -12,7 +12,7 @@ export function SectionHeading({ children, as = "h2", className }: Props) {
   return (
     <Tag
       className={cn(
-        "font-display font-light leading-[1.02] tracking-tight text-balance [&_em]:italic [&_em]:text-fg",
+        "font-display font-medium leading-[1.02] tracking-tight text-balance [&_em]:italic [&_em]:text-fg",
         className,
       )}
     >

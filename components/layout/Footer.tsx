@@ -1,123 +1,78 @@
 "use client";
 
-import { useState } from "react";
-import Link from "next/link";
+import { motion } from "motion/react";
+import type { Variants } from "motion/react";
 import { site } from "@/lib/content/site";
-import { Eyebrow } from "@/components/ui/Eyebrow";
-import { cn } from "@/lib/utils";
+import { useReducedMotion } from "@/lib/useReducedMotion";
+import { easeOutExpo } from "@/lib/motion";
+
+/** Monumental closing wordmark settles up from a soft blur as it scrolls in. */
+const wordmarkReveal: Variants = {
+  hidden: { opacity: 0, y: "0.14em", filter: "blur(14px)" },
+  show: {
+    opacity: 1,
+    y: 0,
+    filter: "blur(0px)",
+    transition: { duration: 0.9, ease: easeOutExpo },
+  },
+};
+
+/** Socials with X pulled to the bottom of the stack. */
+const socials = [
+  ...site.socials.filter((s) => s.label !== "X"),
+  ...site.socials.filter((s) => s.label === "X"),
+];
+
+const linkClass =
+  "w-fit font-medium uppercase tracking-[0.18em] text-[length:var(--text-2xl)] text-fg transition-colors hover:text-fg-muted";
 
 export function Footer() {
-  const [email, setEmail] = useState("");
-  const [done, setDone] = useState(false);
+  const reduce = useReducedMotion() ?? false;
 
   return (
-    <footer className="footer-glow relative overflow-hidden text-[#fafafa]">
-      <div className="container-x section relative">
-        <div className="grid-12">
-          {/* Newsletter / pitch */}
-          <div className="col-span-12 md:col-span-4">
-            <Eyebrow className="!text-white/60">Stay in the light</Eyebrow>
-            <p className="mt-6 font-display text-[length:var(--text-3xl)] font-light leading-tight text-balance text-[#fafafa]">
-              Occasional notes on craft, product, and the web - no noise.
-            </p>
-            <form
-              className="mt-8 flex max-w-md items-center gap-3 border-b border-white/20 pb-3 focus-within:border-white/50"
-              onSubmit={(e) => {
-                e.preventDefault();
-                if (email.includes("@")) setDone(true);
-              }}
+    <footer className="relative overflow-hidden bg-bg pb-0 pt-[var(--py-section-lg)]">
+      <div className="container-x">
+        {/* Socials - top right */}
+        <nav aria-label="Social" className="flex flex-col items-end gap-2">
+          {socials.map((s) => (
+            <a
+              key={s.href}
+              href={s.href}
+              target="_blank"
+              rel="noopener noreferrer"
+              data-cursor
+              className={linkClass}
             >
-              <input
-                type="email"
-                required
-                value={email}
-                onChange={(e) => setEmail(e.target.value)}
-                placeholder="you@studio.com"
-                className="w-full bg-transparent text-[#fafafa] outline-none placeholder:text-white/40"
-                aria-label="Email address"
-              />
-              <button
-                type="submit"
-                data-cursor
-                className="shrink-0 label-caps !text-[#fafafa] transition-colors hover:!text-white"
-              >
-                {done ? "Joined ✓" : "Join →"}
-              </button>
-            </form>
-          </div>
+              {s.label}
+            </a>
+          ))}
+        </nav>
 
-          <div className="col-span-6 md:col-span-2 md:col-start-6">
-            <FooterCol title="Pages">
-              {site.nav.map((item) => (
-                <Link
-                  key={item.href}
-                  href={item.href}
-                  data-cursor
-                  className="w-fit text-[length:var(--text-lg)] text-white/60 transition-colors hover:text-[#fafafa]"
-                >
-                  {item.label}
-                </Link>
-              ))}
-            </FooterCol>
+        {/* Closing signature - email pinned to the absolute bottom-right on wide
+            screens (where the wordmark leaves a right column), then the monumental
+            wordmark anchored to and bleeding off the bottom edge (footer clips it). */}
+        <div className="relative mt-[var(--vw-8)]">
+          <div className="mb-[var(--vw-2)] flex justify-end min-[1700px]:absolute min-[1700px]:inset-x-0 min-[1700px]:bottom-[12%] min-[1700px]:z-10 min-[1700px]:mb-0">
+            <a href={`mailto:${site.email}`} data-cursor className={linkClass}>
+              {site.email}
+            </a>
           </div>
-
-          <div className="col-span-6 md:col-span-2">
-            <FooterCol title="Social">
-              {site.socials.map((s) => (
-                <a
-                  key={s.href}
-                  href={s.href}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  data-cursor
-                  className="w-fit text-[length:var(--text-lg)] text-white/60 transition-colors hover:text-[#fafafa]"
-                >
-                  {s.label}
-                </a>
-              ))}
-            </FooterCol>
+          <div className="-ml-[var(--vw-2)] [transform:translateY(0.1em)]">
+            <motion.span
+              initial={reduce ? false : "hidden"}
+              whileInView="show"
+              // The wordmark is the last thing on the page, so a negative bottom
+              // viewport margin would park it in a dead zone and never fire. Trigger
+              // on a fraction of it being visible instead.
+              viewport={{ once: true, amount: 0.2 }}
+              variants={wordmarkReveal}
+              className="block select-none font-display font-semibold leading-[0.8] tracking-tight text-fg [font-size:clamp(3rem,19vw,26rem)]"
+            >
+              Lumako<span className="text-lume -ml-[0.05em]">.</span>
+            </motion.span>
           </div>
-
-          <div className="col-span-12 md:col-span-3 md:col-start-10">
-            <FooterCol title="Contact" alignEnd>
-              <a
-                href={`mailto:${site.email}`}
-                data-cursor
-                className="w-fit text-[length:var(--text-lg)] text-white/60 transition-colors hover:text-[#fafafa]"
-              >
-                {site.email}
-              </a>
-              <span className="text-[length:var(--text-lg)] text-white/40">{site.locale}</span>
-            </FooterCol>
-          </div>
-        </div>
-
-        {/* Monumental wordmark */}
-        <div className="mt-[var(--vw-8)] select-none">
-          <span className="block bg-gradient-to-b from-white/85 to-white/5 bg-clip-text font-display leading-[0.8] tracking-tight text-transparent [font-size:clamp(5rem,22vw,20rem)]">
-            Lumako<span className="text-white/20">.</span>
-          </span>
         </div>
       </div>
     </footer>
-  );
-}
-
-function FooterCol({
-  title,
-  children,
-  alignEnd,
-}: {
-  title: string;
-  children: React.ReactNode;
-  alignEnd?: boolean;
-}) {
-  return (
-    <div className={cn(alignEnd && "md:text-right")}>
-      <span className="label-caps !text-white/50">{title}</span>
-      <div className={cn("mt-5 flex flex-col gap-3 text-[length:var(--text-lg)]", alignEnd && "md:items-end")}>
-        {children}
-      </div>
-    </div>
   );
 }

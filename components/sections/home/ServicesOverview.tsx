@@ -4,6 +4,7 @@ import { useRef, useSyncExternalStore } from "react";
 import Link from "next/link";
 import { useInView } from "motion/react";
 import { useReducedMotion } from "@/lib/useReducedMotion";
+import { TextReveal } from "@/components/ui/TextReveal";
 import { serviceDiagrams } from "./diagrams/registry";
 import { services } from "@/lib/content/services";
 import type { Service } from "@/lib/content/types";
@@ -61,7 +62,7 @@ function DisciplineColumn({
       <h3 className="mt-4 font-[family-name:var(--font-grotesk)] text-[length:var(--text-3xl)] font-semibold leading-[1.1] tracking-[-0.02em] text-balance">
         {heading}
       </h3>
-      <p className="mt-5 max-w-[44ch] font-[family-name:var(--font-grotesk)] text-[length:clamp(1.125rem,1.3vw,1.3rem)] leading-relaxed text-[#3f3f3f] text-pretty">
+      <p className="mt-5 max-w-[44ch] font-[family-name:var(--font-grotesk)] text-[length:clamp(1.125rem,1.3vw,1.3rem)] leading-relaxed text-fg-body text-pretty">
         {service.blurb}
       </p>
       <Link
@@ -85,9 +86,11 @@ export function ServicesOverview() {
     <section className="section-lg">
       <div className="container-x">
         {/* one big line */}
-        <h2 className="max-w-[16ch] font-[family-name:var(--font-grotesk)] text-[length:clamp(2.75rem,6.5vw,6rem)] font-medium leading-[0.95] tracking-[-0.025em] text-balance">
-          Let&apos;s build something.
-        </h2>
+        <TextReveal
+          as="h2"
+          text="Let's build something."
+          className="max-w-[16ch] font-[family-name:var(--font-grotesk)] text-[length:clamp(2.75rem,6.5vw,6rem)] font-medium leading-[0.95] tracking-[-0.025em] text-balance"
+        />
 
         {/* three-discipline gallery */}
         <div className="mt-20 grid gap-x-[var(--col-gap)] gap-y-20 md:mt-28 md:grid-cols-3">

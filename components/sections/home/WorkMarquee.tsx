@@ -7,12 +7,18 @@ import type { CaseStudy } from "@/lib/content/types";
 /** One full -100% pass. Slow + linear reads as premium. Tunable in one place. */
 const DURATION = "45s";
 /** On hover the rail keeps gliding, just way slower - a calm drift you can read,
- *  not a dead stop. Fraction of full speed. */
-const HOVER_RATE = 0.1;
+ *  not a dead stop. Fraction of full speed. Kept off the very bottom (0.1 = ~6px/s
+ *  ~ 1px every ~39 frames): that floor stair-steps into a ~6-per-second stutter on
+ *  GPUs that pixel-snap the moving layer. ~0.16 (~10px/s) stays an obvious slowdown
+ *  but enough per-frame travel to read as a continuous glide. */
+const HOVER_RATE = 0.16;
 
 /** Card cell: fixed responsive width + uniform right margin so the two duplicated
- *  tracks are perfectly periodic and the -100% loop has zero jump. */
-const CELL = "me-5 shrink-0 md:me-8 w-[clamp(330px,42vw,720px)]";
+ *  tracks are perfectly periodic and the -100% loop has zero jump. `marquee-cell`
+ *  promotes each cell to its own pixel-snapped compositor layer (globals.css) so the
+ *  gliding track translates clean per-card textures instead of resampling one giant
+ *  texture - which is what bled white sub-pixel seams between cards on hover. */
+const CELL = "marquee-cell me-5 shrink-0 md:me-8 w-[clamp(330px,42vw,720px)]";
 
 /**
  * Full-bleed auto-sliding work rail. The list is rendered twice: the real set

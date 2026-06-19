@@ -2,7 +2,7 @@
 
 The official website for **Lumako**, a full-stack studio that ships web, AI, and
 app products. A high-end, proof-led marketing site: light monochrome + a single lume-gold
-accent, Inter Tight typography, a cinematic (light-graded) Three.js hero, and orchestrated motion.
+accent, Inter typography (weighted headings, dark body), a cinematic (light-graded) Three.js hero, and orchestrated motion.
 
 **Live concept:** "The demo is the pitch."
 
@@ -15,7 +15,7 @@ accent, Inter Tight typography, a cinematic (light-graded) Three.js hero, and or
 - **Motion** (Framer Motion) for animation + page transitions
 - **SVG + Motion** - the self-drawing gold marker in the home hero
 - **Lenis** smooth scroll
-- Fonts: **Inter Tight** (display + body) · **Geist Mono** (code only)
+- Fonts: **Inter** (one variable family - display + body) · **Geist Mono** (code only)
 - **Vitest** for unit tests
 
 ## Getting started
@@ -75,6 +75,19 @@ docs/superpowers/  # design spec + implementation plan
 - **Color discipline:** lume gold (`#D49A2E`) is the only accent - wordmark dot, focus rings,
   key rules, and the single dark footer glow. No second accent, no drop shadows, no gradients
   except that one footer glow. Ink primary buttons; one lume button per view.
+- **Typography:** one family - **Inter** (variable), exposed as `--font-grotesk` and mapped to
+  both `--font-display` and `--font-sans`; Geist Mono is reserved for code / the ledger marks.
+  The reading is set by the home "Let's build something" disciplines section
+  (`ServicesOverview`) and held site-wide:
+  - **Headings carry weight, never thinness** - `font-medium` for display / section / hero
+    headlines, `font-semibold` for card and sub-headings, tight tracking. The one exception is
+    the home hero (`MOST WORK GETS SCROLLED PAST`), kept `font-extrabold uppercase` as the signature.
+  - **Body copy** uses `--color-fg-body` (`#3f3f3f`) with `leading-relaxed` - darker and more
+    present than the label gray.
+  - **Eyebrows / small labels** stay quiet via the shared `.label-caps` (uppercase, `.18em`,
+    `--color-fg-muted`). Text-color ladder: `--color-fg` `#0a0a0a` (ink / headings) →
+    `--color-fg-body` `#3f3f3f` (body) → `--color-fg-muted` `#737373` (labels / meta) →
+    `--color-fg-dim` `#a1a1a1` (fine print).
 
 ---
 

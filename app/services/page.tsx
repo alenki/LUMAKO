@@ -3,7 +3,6 @@ import { ServicesHero } from "@/components/sections/services/ServicesHero";
 import { Disciplines } from "@/components/sections/services/Disciplines";
 import { ProcessSteps } from "@/components/sections/services/ProcessSteps";
 import { Engagements } from "@/components/sections/services/Engagements";
-import { CtaBand } from "@/components/sections/home/CtaBand";
 import { copy } from "@/lib/content/copy";
 
 export const metadata: Metadata = {
@@ -18,7 +17,6 @@ export default function ServicesPage() {
       <Disciplines />
       <ProcessSteps />
       <Engagements />
-      <CtaBand />
     </>
   );
 }

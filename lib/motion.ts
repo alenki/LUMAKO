@@ -18,7 +18,7 @@ export const fadeUp: Variants = {
 };
 
 /** "Settle into focus" reveal - fade + short rise + de-blur. Smoother and softer
- *  than a hard mask wipe; used per-word by TextReveal and per-line by the hero. */
+ *  than a hard mask wipe. TextReveal applies the same language per-letter. */
 export const focusIn: Variants = {
   hidden: { opacity: 0, y: "0.4em", filter: "blur(10px)" },
   show: {

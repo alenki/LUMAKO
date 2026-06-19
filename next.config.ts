@@ -1,4 +1,5 @@
 import type { NextConfig } from "next";
+import { initOpenNextCloudflareForDev } from "@opennextjs/cloudflare";
 
 const nextConfig: NextConfig = {
   images: {
@@ -7,5 +8,9 @@ const nextConfig: NextConfig = {
     formats: ["image/avif", "image/webp"],
   },
 };
+
+// Lets `next dev` read the Cloudflare context (bindings/env) via
+// getCloudflareContext(). No-op in production builds.
+initOpenNextCloudflareForDev();
 
 export default nextConfig;

@@ -19,30 +19,11 @@ export const copy = {
       link: { label: "View all work", href: "/work" },
     },
     studio: {
-      eyebrow: "The studio",
-      statement: "We're a studio that ships what others pitch.",
-      highlight: "ships",
-      ledger: [
-        { value: 15, suffix: "+", label: "Builds shipped" },
-        { value: 2, suffix: "+", label: "Years in production" },
-      ],
-      receipts: [
-        "Government + university builds",
-        "University AI competition winner",
-        "Web, AI & apps - one engine",
-      ],
-      body: [
-        "We started Lumako to close the gap between what gets promised and what gets shipped. The people who scope the work write the code, so there are no account managers, no handoffs, and no telephone game between you and the build.",
-        "The receipts aren't slides. We've shipped production builds for government and university teams, won a university AI competition, and run web, AI, and apps off a single engine - and you see the working thing before you ever see an invoice.",
-      ],
-      link: { label: "How we work", href: "/services" },
-    },
-    cta: {
-      eyebrow: "Start here",
-      headline: "Tell us what you're building.",
-      highlight: "building.",
-      sub: "Send the problem and what done looks like. You'll get a working direction back - proof before pitch, the outcome before the invoice.",
-      button: { label: "Start a project", href: "/contact" },
+      // One flowing statement, broken by the mark into a lead + a wide "what we make"
+      // line. The craft string carries explicit breaks so it always sets as three
+      // length-balanced lines (TextReveal still exposes the joined sentence to a11y).
+      lead: "Lumako is a full-stack studio",
+      craft: "We design, build, and\nship web, AI, and apps\nfor real businesses",
     },
   },
 
@@ -59,7 +40,7 @@ export const copy = {
     highlight: "end to end.",
     sub: "Engage Lumako for the part you need, or the whole build. One team across the stack - no handoff, no telephone game.",
     processEyebrow: "How it works",
-    processHeadline: "Demo-first, then pitch.",
+    processHeadline: "Proof first. Price upfront.",
     engagementsEyebrow: "Engagements",
     engagementsHeadline: "Ways to work together.",
   },
@@ -68,7 +49,7 @@ export const copy = {
     eyebrow: "Start a project",
     headline: "Tell us what you're building.",
     highlight: "building.",
-    sub: "The more you share, the sharper the first response. Every serious inquiry gets a reply - proof before pitch.",
+    sub: "The more you share, the sharper the first response. Every serious inquiry gets a reply - specific and real, never a templated pitch.",
     budgets: ["< $5k", "$5k-$15k", "$15k-$40k", "$40k+", "Not sure yet"],
     serviceOptions: ["Web", "AI", "Apps", "Brand", "Motion"],
     success: {
@@ -81,7 +62,7 @@ export const copy = {
     home: {
       title: "Lumako - Web · AI · Apps",
       description:
-        "Lumako is a full-stack studio that ships web, AI, and app products - and shows the working build before the pitch.",
+        "Lumako is a full-stack studio that ships web, AI, and app products - judged on a track record of shipped work, not promises.",
     },
     work: {
       title: "Work",
@@ -91,7 +72,7 @@ export const copy = {
     services: {
       title: "Services",
       description:
-        "Web, AI, and apps from one team, end to end. Demo-first, then pitch.",
+        "Web, AI, and apps from one team, end to end. Proof first, price upfront.",
     },
     contact: {
       title: "Contact",

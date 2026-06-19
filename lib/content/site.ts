@@ -1,7 +1,7 @@
 export const site = {
   name: "Lumako",
-  tagline: "Web · AI · Apps - shipped, not proposed",
-  email: "hello@lumako.com",
+  tagline: "Web · AI · Apps - shipped & proven",
+  email: "hello@lumako.net",
   locale: "Global",
   timezone: "Europe/Moscow",
   nav: [

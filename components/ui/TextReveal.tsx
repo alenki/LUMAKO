@@ -2,8 +2,9 @@
 
 import { Fragment } from "react";
 import { motion } from "motion/react";
+import type { Variants } from "motion/react";
 import { useReducedMotion } from "@/lib/useReducedMotion";
-import { focusIn } from "@/lib/motion";
+import { easeOutSoft } from "@/lib/motion";
 import { cn } from "@/lib/utils";
 
 const tags = {
@@ -21,7 +22,9 @@ type Props = {
   as?: keyof typeof tags;
   className?: string;
   highlightClassName?: string;
+  /** Seconds before the first letter begins. */
   delay?: number;
+  /** Seconds between each letter's reveal - smaller flows faster. */
   stagger?: number;
 };
 
@@ -48,9 +51,24 @@ function segment(text: string, highlight?: string | readonly string[]): Segment[
   return out.filter((s) => s.str.length > 0);
 }
 
-/** Editorial word-by-word reveal. Each word fades and rises a touch while
- *  resolving from a soft blur - settling into focus rather than snapping up.
+type Word = { chars: string[]; hi: boolean };
+
+/** Flatten a line into whole words (each keeping its accent flag) so letters can
+ *  animate individually while words stay unbreakable across line wraps. */
+function wordsOf(line: string, highlight?: string | readonly string[]): Word[] {
+  const words: Word[] = [];
+  for (const seg of segment(line, highlight)) {
+    for (const w of seg.str.split(" ")) {
+      if (w.length) words.push({ chars: Array.from(w), hi: seg.hi });
+    }
+  }
+  return words;
+}
+
+/** Editorial letter-by-letter reveal. Each glyph fades and rises a touch while
+ *  resolving from a soft blur, staggered so the line settles as a flowing wave.
  *  A literal `\n` in `text` forces a hard line break between word groups.
+ *  The full sentence is exposed to assistive tech; the per-letter spans are not.
  *  Reduced motion renders plain, static text. */
 export function TextReveal({
   text,
@@ -59,53 +77,94 @@ export function TextReveal({
   className,
   highlightClassName = "italic text-fg",
   delay = 0,
-  stagger = 0.045,
+  stagger = 0.07,
 }: Props) {
   const reduce = useReducedMotion() ?? false;
   const Tag = tags[as];
   const lines = text.split("\n");
 
-  // When motion is allowed, the container orchestrates a staggered child reveal;
-  // otherwise it renders inert and the words show immediately.
-  const container = reduce
-    ? {}
-    : {
-        initial: "hidden",
-        whileInView: "show",
-        viewport: { once: true, margin: "-10%" },
-        variants: {
-          hidden: {},
-          show: { transition: { staggerChildren: stagger, delayChildren: delay } },
-        },
-      };
-
-  return (
-    <Tag className={className} {...container}>
-      {lines.map((line, li) => {
-        const words: { w: string; hi: boolean }[] = [];
-        segment(line, highlight).forEach((seg) => {
-          seg.str
-            .split(" ")
-            .filter(Boolean)
-            .forEach((w) => words.push({ w, hi: seg.hi }));
-        });
-        return (
+  // Reduced motion: plain static text, accent preserved, no per-letter spans.
+  if (reduce) {
+    return (
+      <Tag className={className}>
+        {lines.map((line, li) => (
           <Fragment key={li}>
             {li > 0 && <br />}
-            {words.map((item, i) => (
-              <Fragment key={i}>
-                <motion.span
-                  variants={reduce ? undefined : focusIn}
-                  className={cn("inline-block", item.hi && highlightClassName)}
-                >
-                  {item.w}
-                </motion.span>
-                {i < words.length - 1 ? " " : null}
-              </Fragment>
-            ))}
+            {segment(line, highlight).map((seg, si) =>
+              seg.hi ? (
+                <span key={si} className={highlightClassName}>
+                  {seg.str}
+                </span>
+              ) : (
+                <Fragment key={si}>{seg.str}</Fragment>
+              ),
+            )}
           </Fragment>
-        );
-      })}
+        ))}
+      </Tag>
+    );
+  }
+
+  const letter: Variants = {
+    hidden: { opacity: 0, y: "0.3em", filter: "blur(8px)" },
+    show: (i: number) => {
+      const at = delay + i * stagger;
+      return {
+        opacity: 1,
+        y: 0,
+        filter: "blur(0px)",
+        transition: {
+          duration: 0.78,
+          ease: easeOutSoft,
+          delay: at,
+          // Sharpen fast so only the 1-2 leading letters read as blurred,
+          // while the fade + rise still settles slowly behind them.
+          filter: { duration: 0.14, ease: easeOutSoft, delay: at },
+        },
+      };
+    },
+  };
+
+  // One running index across every line so the cascade flows continuously.
+  let i = 0;
+
+  return (
+    <Tag
+      aria-label={lines.join(" ")}
+      className={className}
+      initial="hidden"
+      whileInView="show"
+      viewport={{ once: true, margin: "-10%" }}
+    >
+      {/* aria-hidden wrapper keeps the decorative letters out of the a11y tree;
+          the reveal still reaches each glyph via motion's variant context. */}
+      <span aria-hidden="true">
+        {lines.map((line, li) => {
+          const words = wordsOf(line, highlight);
+          return (
+            <Fragment key={li}>
+              {li > 0 && <br />}
+              {words.map((word, wi) => (
+                <Fragment key={wi}>
+                  <span className="inline-block whitespace-nowrap">
+                    {word.chars.map((ch, ci) => (
+                      <motion.span
+                        key={ci}
+                        variants={letter}
+                        custom={i++}
+                        className={cn("inline-block", word.hi && highlightClassName)}
+                      >
+                        {ch}
+                      </motion.span>
+                    ))}
+                  </span>
+                  {wi < words.length - 1 ? " " : null}
+                </Fragment>
+              ))}
+            </Fragment>
+          );
+        })}
+      </span>
     </Tag>
   );
 }

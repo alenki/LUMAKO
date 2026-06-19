@@ -111,7 +111,7 @@ export function Nav() {
                   <Link
                     href={item.href}
                     onClick={() => setOpen(false)}
-                    className="font-display text-[length:var(--text-6xl)] font-light leading-tight text-fg"
+                    className="font-display text-[length:var(--text-6xl)] font-medium leading-tight text-fg"
                   >
                     {item.label}
                   </Link>

@@ -32,14 +32,14 @@ export function WorkCard({ item, priority, className }: Props) {
           ratio={CARD_RATIO}
           priority={priority}
         />
-        <span className="absolute right-5 top-5 flex size-9 items-center justify-center rounded-full border border-line-strong bg-bg/40 text-fg opacity-0 backdrop-blur-md transition-all duration-500 group-hover:opacity-100">
+        <span className="absolute right-5 top-5 flex size-9 items-center justify-center rounded-full border border-line-strong bg-bg/85 text-fg opacity-0 transition-opacity duration-500 group-hover:opacity-100">
           ↗
         </span>
       </div>
 
       <div className="mt-5 flex items-start justify-between gap-4">
         <div>
-          <h3 className="font-display text-[length:var(--text-3xl)] font-light leading-tight tracking-tight text-fg transition-colors">
+          <h3 className="font-display text-[length:var(--text-3xl)] font-semibold leading-tight tracking-tight text-fg transition-colors">
             {item.title}
           </h3>
           <p className="mt-1.5 text-fg-muted">

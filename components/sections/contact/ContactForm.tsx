@@ -84,10 +84,10 @@ export function ContactForm() {
         <span className="label-caps text-fg-muted">
           (✓) Sent
         </span>
-        <h2 className="mt-6 font-display text-[length:var(--text-4xl)] font-light leading-tight tracking-tight text-balance">
+        <h2 className="mt-6 font-display text-[length:var(--text-4xl)] font-medium leading-tight tracking-tight text-balance">
           {s.title}
         </h2>
-        <p className="mt-4 max-w-[44ch] text-[length:var(--text-lg)] text-fg-muted text-pretty">
+        <p className="mt-4 max-w-[44ch] text-[length:var(--text-lg)] text-fg-body leading-relaxed text-pretty">
           {s.body}
         </p>
         <p className="mt-8 text-[length:var(--text-base)] text-fg-dim">

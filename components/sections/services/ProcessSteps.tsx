@@ -11,7 +11,7 @@ export function ProcessSteps() {
         <div className="grid-12 items-end">
           <div className="col-span-12 md:col-span-6">
             <Eyebrow>{s.processEyebrow}</Eyebrow>
-            <h2 className="mt-6 font-display text-[length:var(--text-5xl)] font-light leading-tight tracking-tight text-balance">
+            <h2 className="mt-6 font-display text-[length:var(--text-5xl)] font-medium leading-tight tracking-tight text-balance">
               {s.processHeadline}
             </h2>
           </div>
@@ -28,10 +28,10 @@ export function ProcessSteps() {
               <span className="label-caps col-span-12 md:col-span-1 text-fg-dim">
                 {phase.index}
               </span>
-              <h3 className="col-span-12 md:col-span-4 font-display text-[length:var(--text-4xl)] font-light leading-tight tracking-tight">
+              <h3 className="col-span-12 md:col-span-4 font-display text-[length:var(--text-4xl)] font-semibold leading-tight tracking-tight">
                 {phase.name}
               </h3>
-              <p className="col-span-12 md:col-span-7 max-w-[52ch] text-[length:var(--text-lg)] text-fg-muted text-pretty">
+              <p className="col-span-12 md:col-span-7 max-w-[52ch] text-[length:var(--text-lg)] text-fg-body leading-relaxed text-pretty">
                 {phase.detail}
               </p>
             </Reveal>

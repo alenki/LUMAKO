@@ -1,112 +1,96 @@
 "use client";
 
-import Link from "next/link";
 import { motion } from "motion/react";
 import { useReducedMotion } from "@/lib/useReducedMotion";
-import { Eyebrow } from "@/components/ui/Eyebrow";
 import { TextReveal } from "@/components/ui/TextReveal";
-import { Reveal } from "@/components/ui/Reveal";
-import { Counter } from "@/components/ui/Counter";
 import { easeOutExpo } from "@/lib/motion";
 import { copy } from "@/lib/content/copy";
 
 /**
- * The studio section - Lumako's identity + proof moment, sitting between the work
- * gallery and the services overview. Built in the house drafting language: a
- * confident statement, a self-drawing "ledger" rule carrying the two honest
- * count-up numbers and the real receipts, then a two-column manifesto. The single
- * lume register tick on the rule is the only signal color in the section.
+ * The studio section - a full-viewport, type-driven editorial statement. A lead
+ * ("Lumako is a full-stack studio"), a small drawn mark, then a wide "what we make"
+ * line that carries across at least half the page. Left-indented column, vertically
+ * centred in the viewport. Big type, oceans of air. Minimal by design.
  */
+
+const viewport = { once: true, margin: "-15% 0px -15% 0px" } as const;
+
+/** The mark - a drawn hourglass: two ink trapezoids around a single lume diamond
+ *  (the section's one sanctioned accent). Strokes draw in on scroll; the gem pops. */
+function StudioMark({ reduce }: { reduce: boolean }) {
+  const stroke = (delay: number) => ({
+    initial: reduce ? { pathLength: 1, opacity: 1 } : { pathLength: 0, opacity: 0 },
+    whileInView: { pathLength: 1, opacity: 1 },
+    viewport,
+    transition: reduce ? { duration: 0 } : { duration: 0.7, ease: easeOutExpo, delay },
+  });
+  return (
+    <svg
+      width="40"
+      height="50"
+      viewBox="0 0 48 60"
+      fill="none"
+      aria-hidden="true"
+      className="overflow-visible"
+    >
+      <motion.path
+        d="M9 13 L39 13 L33 22 L15 22 Z"
+        stroke="var(--color-fg)"
+        strokeWidth="1.75"
+        strokeLinejoin="round"
+        {...stroke(0)}
+      />
+      <motion.path
+        d="M15 38 L33 38 L39 47 L9 47 Z"
+        stroke="var(--color-fg)"
+        strokeWidth="1.75"
+        strokeLinejoin="round"
+        {...stroke(0.18)}
+      />
+      <motion.path
+        d="M24 24 L31 30 L24 36 L17 30 Z"
+        fill="var(--color-lume)"
+        style={{ transformOrigin: "center" }}
+        initial={reduce ? { scale: 1, opacity: 1 } : { scale: 0, opacity: 0 }}
+        whileInView={{ scale: 1, opacity: 1 }}
+        viewport={viewport}
+        transition={reduce ? { duration: 0 } : { duration: 0.45, ease: easeOutExpo, delay: 0.6 }}
+      />
+    </svg>
+  );
+}
+
 export function Studio() {
   const s = copy.home.studio;
   const reduce = useReducedMotion() ?? false;
 
-  // Reveal-on-scroll, once, slightly early - matches the house viewport timing.
-  const viewport = { once: true, margin: "-15%" } as const;
-
   return (
-    <section className="section-lg">
+    <section className="relative flex min-h-dvh flex-col justify-center py-[clamp(4rem,12vh,8rem)]">
       <div className="container-x">
-        {/* the statement */}
-        <div className="max-w-[19ch]">
-          <Eyebrow>{s.eyebrow}</Eyebrow>
+        <div className="md:pl-[10vw]">
+          {/* the lead - the main headline, scaled up to carry the now type-only section */}
           <TextReveal
             as="h2"
-            text={s.statement}
-            highlight={s.highlight}
-            className="mt-6 block font-display text-[length:var(--text-6xl)] font-light leading-[1.02] tracking-[-0.02em] text-balance"
+            text={s.lead}
+            stagger={0.04}
+            className="block max-w-[15ch] font-display text-[length:clamp(3rem,10.5vw,9.75rem)] font-medium leading-[1.0] tracking-[-0.03em] text-balance"
+          />
+
+          {/* the mark - the section's single lume accent, set tight to the lines */}
+          <div className="mt-6 md:mt-8">
+            <StudioMark reduce={reduce} />
+          </div>
+
+          {/* the "what we make" statement - same flowing voice a size down. Breaks are
+              baked into the copy (see copy.ts) so it sets as three length-balanced lines. */}
+          <TextReveal
+            as="p"
+            text={s.craft}
+            delay={0.1}
+            stagger={0.028}
+            className="mt-6 block max-w-[26ch] font-display text-[length:clamp(2rem,7.5vw,6.75rem)] font-semibold leading-[1.06] tracking-[-0.02em]"
           />
         </div>
-
-        {/* the ledger - a drafted, measured record that draws on scroll-in */}
-        <div className="mt-16 md:mt-24">
-          {/* the rule self-draws left -> right; one lume register tick fades in at the origin */}
-          <div className="relative h-px w-full">
-            <motion.span
-              aria-hidden
-              className="absolute inset-0 origin-left bg-[var(--color-line-strong)]"
-              initial={reduce ? { scaleX: 1 } : { scaleX: 0 }}
-              whileInView={{ scaleX: 1 }}
-              viewport={viewport}
-              transition={reduce ? { duration: 0 } : { duration: 1.1, ease: easeOutExpo }}
-            />
-            <motion.span
-              aria-hidden
-              className="absolute left-0 top-1/2 h-3.5 w-px -translate-y-1/2 bg-[var(--color-lume-deep)]"
-              initial={reduce ? { opacity: 1 } : { opacity: 0 }}
-              whileInView={{ opacity: 1 }}
-              viewport={viewport}
-              transition={reduce ? { duration: 0 } : { duration: 0.5, ease: easeOutExpo, delay: 0.9 }}
-            />
-          </div>
-
-          <div className="mt-10 grid grid-cols-1 gap-y-12 md:grid-cols-12 md:items-end">
-            {/* the two honest numbers */}
-            <div className="flex gap-x-10 sm:gap-x-16 md:col-span-7 md:gap-x-24">
-              {s.ledger.map((n) => (
-                <div key={n.label}>
-                  <Counter
-                    value={n.value}
-                    suffix={n.suffix}
-                    className="block font-display font-medium tabular-nums leading-[0.85] tracking-[-0.03em] text-[length:clamp(3rem,6.5vw,5.5rem)]"
-                  />
-                  <p className="mt-4 label-caps">{n.label}</p>
-                </div>
-              ))}
-            </div>
-
-            {/* the receipts, plotted as register marks */}
-            <ul className="space-y-3 md:col-span-4 md:col-start-9">
-              {s.receipts.map((r) => (
-                <li
-                  key={r}
-                  className="flex items-baseline gap-3 font-mono text-[length:var(--text-mono)] tracking-wide text-fg-muted"
-                >
-                  <span aria-hidden className="mt-[0.55em] h-px w-3 shrink-0 bg-[var(--color-line-strong)]" />
-                  {r}
-                </li>
-              ))}
-            </ul>
-          </div>
-        </div>
-
-        {/* the manifesto */}
-        <Reveal as="div" className="grid-12 mt-16 gap-y-8 md:mt-24">
-          <p className="col-span-12 text-[length:var(--text-lg)] text-fg-muted text-pretty md:col-span-5">
-            {s.body[0]}
-          </p>
-          <div className="col-span-12 md:col-span-5 md:col-start-7">
-            <p className="text-[length:var(--text-lg)] text-fg-muted text-pretty">{s.body[1]}</p>
-            <Link
-              href={s.link.href}
-              data-cursor
-              className="group mt-8 inline-flex items-center gap-2 label-caps transition-colors hover:text-fg"
-            >
-              {s.link.label}
-              <span className="transition-transform duration-300 group-hover:translate-x-1">→</span>
-            </Link>
-          </div>
-        </Reveal>
       </div>
     </section>
   );

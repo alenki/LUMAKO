@@ -15,6 +15,7 @@
   /* Text - ink on light */
   --color-fg: #0a0a0a;
   --color-fg-muted: #737373;
+  --color-fg-body: #3f3f3f; /* body copy - darker than muted (the disciplines-section reading) */
   --color-fg-dim: #a1a1a1;
 
   /* Lines - hairline #E5E5E5 */
@@ -38,9 +39,6 @@
   --color-lume: #d49a2e;
   --color-lume-soft: #f4e6c6;
   --color-lume-deep: #9c6e1b;
-
-  /* Footer signature - the one warm lume glow on the dark closing band */
-  --color-glow: rgba(212, 154, 46, 0.4);
 
   /* Radii - rounder */
   --radius: 1rem;        /* 16px cards */
@@ -93,7 +91,6 @@
   --header-h: 4.5rem;
   --gutter: clamp(1.25rem, 3.5vw, 4rem);
   --col-gap: clamp(1rem, 2vw, 2rem);
-  --radius-panel: 1.5rem; /* used by the CtaBand feature panel (Task 9) */
   --shadow-card: 0 1px 2px rgba(0,0,0,.04), 0 10px 30px rgba(0,0,0,.06);
   --shadow-card-hover: 0 2px 4px rgba(0,0,0,.05), 0 18px 48px rgba(0,0,0,.09);
 }
@@ -224,38 +221,6 @@ body {
   background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
 }
 
-/* ----------------------------------------------------------------------------
-   Footer = the single dark closing band
----------------------------------------------------------------------------- */
-.footer-glow {
-  position: relative;
-  background: linear-gradient(180deg, #18181b 0%, #0a0a0a 100%);
-}
-/* The one lume glow - warm light emerging from the dark closing band.
-   This is the only place the glow appears (brandbook §04). */
-.footer-glow::before {
-  content: "";
-  position: absolute;
-  top: -40%;
-  left: -10%;
-  width: 60%;
-  height: 160%;
-  background: radial-gradient(
-    closest-side,
-    var(--color-glow),
-    rgba(212, 154, 46, 0.1) 55%,
-    rgba(212, 154, 46, 0) 75%
-  );
-  pointer-events: none;
-  z-index: 0;
-}
-.footer-glow > * { position: relative; z-index: 1; }
-
-/* Keyboard focus rings must stay visible against the dark footer band */
-.footer-glow :focus-visible {
-  outline-color: #fafafa;
-}
-
 /* Hero scroll cue - a light pulse falling down a hairline */
 @keyframes scrollcue {
   0% {
@@ -293,6 +258,25 @@ body {
 /* Pause the rail when a keyboard user focuses a card inside it */
 .group:focus-within .marquee-track {
   animation-play-state: paused;
+}
+
+/* Each card is its own GPU layer. The track (will-change: transform) translates
+   these pre-rasterized card textures rather than re-rasterizing one giant track
+   texture every frame - that giant-texture resample was what leaked thin white
+   vertical seams between cards on the slow glide. Per-card layers keep the gap
+   outside any sampled texture, so the seams stay gone.
+
+   Promote with `will-change`, NOT `translateZ(0) + backface-visibility:hidden`:
+   the latter pixel-snaps the layer to integer columns, which is invisible at full
+   speed (0.26px/frame) but turns the 0.1x hover drift (0.026px/frame ~ 1px every
+   ~39 frames) into a ~6-steps-per-second stutter that reads as low FPS. `will-change`
+   keeps the layer sub-pixel-sampled, so 6px/s renders as one continuous AA gradient -
+   a smooth calm drift instead of a stair-step. Promoting the cell - not .surface-card,
+   whose :hover translateY would override the transform - keeps the promotion stable
+   through hover and contains the lift's repaint to a single cell. No overflow/contain,
+   so the card's hover shadow still breathes. */
+.marquee-cell {
+  will-change: transform;
 }
 
 /* Work marquee: full-bleed auto-scroller. Clip the off-screen tracks on the X

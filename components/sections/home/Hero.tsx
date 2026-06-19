@@ -70,7 +70,7 @@ export function Hero() {
             animate={{ opacity: 1, y: 0 }}
             transition={reduce ? { duration: 0 } : { duration: 0.9, ease: easeOutSoft, delay: 1.1 }}
           >
-            <p className="text-[length:var(--text-xl)] text-fg-muted text-pretty">{hero.sub}</p>
+            <p className="text-[length:var(--text-xl)] text-fg-body leading-relaxed text-pretty">{hero.sub}</p>
             <div className="mt-6 flex flex-wrap gap-3">
               <Button href={hero.ctaPrimary.href} variant="primary">
                 {hero.ctaPrimary.label}

@@ -22,7 +22,9 @@ export function Counter({
   className,
 }: Props) {
   const ref = useRef<HTMLSpanElement>(null);
-  const inView = useInView(ref, { once: true, margin: "-15%" });
+  // Inset only vertically (house convention): a horizontal inset would leave a
+  // left/right dead-zone where an element near the gutter never registers in view.
+  const inView = useInView(ref, { once: true, margin: "-15% 0px -15% 0px" });
   const reduce = useReducedMotion() ?? false;
   const [display, setDisplay] = useState(0);
 

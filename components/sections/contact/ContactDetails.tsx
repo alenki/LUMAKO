@@ -13,14 +13,14 @@ export function ContactDetails() {
           <a
             href={`mailto:${site.email}`}
             data-cursor="quiet"
-            className="group block w-fit font-display text-[length:var(--text-4xl)] font-light leading-tight tracking-tight text-fg transition-colors duration-300 hover:text-fg"
+            className="group block w-fit font-display text-[length:var(--text-4xl)] font-medium leading-tight tracking-tight text-fg transition-colors duration-300 hover:text-fg"
           >
             {site.email}
             <span className="ml-1 inline-block transition-transform duration-300 group-hover:translate-x-1 group-hover:-translate-y-1">
               ↗
             </span>
           </a>
-          <p className="max-w-[40ch] text-[length:var(--text-lg)] text-fg-muted text-pretty">
+          <p className="max-w-[40ch] text-[length:var(--text-lg)] text-fg-body leading-relaxed text-pretty">
             Prefer to talk it through? Email us and we&apos;ll find a time to
             jump on a call - no pitch theater, just the work.
           </p>

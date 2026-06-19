@@ -27,13 +27,13 @@ export function WorkSlide({ item }: { item: CaseStudy }) {
           position={item.coverPosition}
           ratio={CARD_RATIO}
         />
-        <span className="absolute right-5 top-5 flex size-9 items-center justify-center rounded-full border border-line-strong bg-bg/40 text-fg opacity-0 backdrop-blur-md transition-all duration-500 group-hover/slide:opacity-100">
+        <span className="absolute right-5 top-5 flex size-9 items-center justify-center rounded-full border border-line-strong bg-bg/85 text-fg opacity-0 transition-opacity duration-500 group-hover/slide:opacity-100">
           ↗
         </span>
       </div>
 
       <div className="mt-4 flex flex-wrap items-center gap-x-3 gap-y-2">
-        <h3 className="font-display text-[length:var(--text-2xl)] font-light leading-tight tracking-tight text-fg">
+        <h3 className="font-display text-[length:var(--text-2xl)] font-semibold leading-tight tracking-tight text-fg">
           {item.title}
         </h3>
         <div className="flex flex-wrap gap-2">

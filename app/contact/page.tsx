@@ -23,13 +23,13 @@ export default function ContactPage() {
               as="h1"
               text={c.headline}
               highlight={c.highlight}
-              className="mt-8 block font-display text-[length:var(--text-6xl)] font-light leading-[1.02] tracking-tight text-balance"
+              className="mt-8 block font-display text-[length:var(--text-6xl)] font-medium leading-[1.02] tracking-tight text-balance"
             />
           </div>
           {c.sub && (
             <div className="col-span-12 md:col-start-9 md:col-span-4">
               <Reveal index={1}>
-                <p className="text-[length:var(--text-xl)] text-fg-muted text-pretty">
+                <p className="text-[length:var(--text-xl)] text-fg-body leading-relaxed text-pretty">
                   {c.sub}
                 </p>
               </Reveal>

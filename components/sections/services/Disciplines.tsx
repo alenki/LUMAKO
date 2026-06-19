@@ -15,10 +15,10 @@ export function Disciplines() {
               <span className="label-caps text-fg-dim">
                 {service.index}
               </span>
-              <h2 className="mt-5 max-w-[14ch] font-display text-[length:var(--text-5xl)] font-light leading-tight tracking-tight text-balance">
+              <h2 className="mt-5 max-w-[14ch] font-display text-[length:var(--text-5xl)] font-medium leading-tight tracking-tight text-balance">
                 {service.title}
               </h2>
-              <p className="mt-6 max-w-[44ch] text-[length:var(--text-xl)] text-fg-muted text-pretty">
+              <p className="mt-6 max-w-[44ch] text-[length:var(--text-xl)] text-fg-body leading-relaxed text-pretty">
                 {service.blurb}
               </p>
             </div>
