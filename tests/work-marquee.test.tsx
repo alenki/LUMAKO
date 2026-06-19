@@ -4,6 +4,8 @@ import { WorkSlide } from "@/components/sections/work/WorkSlide";
 import type { CaseStudy } from "@/lib/content/types";
 import { WorkMarquee } from "@/components/sections/home/WorkMarquee";
 import { work } from "@/lib/content/work";
+import { SelectedWork } from "@/components/sections/home/SelectedWork";
+import { copy } from "@/lib/content/copy";
 
 // next/image needs the Next build runtime; stub it so these stay unit-level.
 vi.mock("next/image", () => ({
@@ -79,5 +81,21 @@ describe("WorkMarquee", () => {
     const { container } = render(<WorkMarquee items={work} />);
     const tracks = [...container.querySelectorAll<HTMLElement>(".marquee-track")];
     tracks.forEach((t) => expect(t.style.animationDuration).not.toBe(""));
+  });
+});
+
+describe("SelectedWork", () => {
+  it("keeps the section header and the view-all link", () => {
+    const { container, getByRole } = render(<SelectedWork />);
+    expect(container.querySelector("h2")?.textContent).toBe(copy.home.work.headline);
+    const link = getByRole("link", { name: new RegExp(copy.home.work.link.label, "i") });
+    expect(link.getAttribute("href")).toBe(copy.home.work.link.href);
+  });
+
+  it("mounts the marquee with all projects (no static grid)", () => {
+    const { container } = render(<SelectedWork />);
+    expect(container.querySelector(".work-marquee")).not.toBeNull();
+    const real = container.querySelector(".marquee-track:not([data-marquee-clone])")!;
+    expect(real.querySelectorAll("h3").length).toBe(work.length);
   });
 });
