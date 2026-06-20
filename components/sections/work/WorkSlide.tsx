@@ -17,7 +17,7 @@ export function WorkSlide({ item }: { item: CaseStudy }) {
       rel="noopener noreferrer"
       data-cursor="view"
       aria-label={`${item.title} - ${item.client} (opens the live site in a new tab)`}
-      className="group/slide block"
+      className="block"
     >
       <div className="surface-card relative overflow-hidden">
         <CoverPanel
@@ -27,7 +27,7 @@ export function WorkSlide({ item }: { item: CaseStudy }) {
           position={item.coverPosition}
           ratio={CARD_RATIO}
         />
-        <span className="absolute right-5 top-5 flex size-9 items-center justify-center rounded-full border border-line-strong bg-bg/85 text-fg opacity-0 transition-opacity duration-500 group-hover/slide:opacity-100">
+        <span className="slide-cta absolute right-5 top-5 flex size-9 items-center justify-center rounded-full border border-line-strong bg-bg/85 text-fg opacity-0 transition-opacity duration-500">
           ↗
         </span>
       </div>

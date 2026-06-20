@@ -94,6 +94,21 @@ function loopFromRect(rect: DOMRect, scrollX: number, scrollY: number): string {
   );
 }
 
+/**
+ * True when the element is painted in VIEWPORT space, not page space - i.e. it
+ * sits inside a `position: fixed` ancestor (the navbar), so it stays put as the
+ * page scrolls. Such a target's loop must live in the fixed layer and skip the
+ * scroll offset, or - drawn in document space - it would scroll away from a link
+ * that never moves. Walks the ancestor chain; `wrap` calls this only on a fresh
+ * target, so the per-node getComputedStyle never lands on a hot path.
+ */
+function isViewportAnchored(el: Element): boolean {
+  for (let node: Element | null = el; node; node = node.parentElement) {
+    if (getComputedStyle(node).position === "fixed") return true;
+  }
+  return false;
+}
+
 const TEXT_SELECTOR = "input, textarea, [contenteditable=''], [contenteditable='true']";
 const LINK_SELECTOR = "a, button, summary, label, [role='button'], [data-cursor]";
 /** Clickable targets that opt out of the gold loop, keeping the plain reticle. */
@@ -109,6 +124,9 @@ export function Cursor() {
   const [mode, setMode] = useState<Mode>("rest");
   const [pressed, setPressed] = useState(false);
   const [loop, setLoop] = useState<string | null>(null);
+  // Whether the current loop lives in the fixed (viewport) layer rather than the
+  // absolute (document) layer - true for targets inside the fixed navbar.
+  const [loopFixed, setLoopFixed] = useState(false);
   const [loopKey, setLoopKey] = useState(0);
 
   const x = useMotionValue(-100);
@@ -131,7 +149,18 @@ export function Cursor() {
 
     const wrap = (el: Element) => {
       targetRef.current = el;
-      setLoop(loopFromRect(el.getBoundingClientRect(), window.scrollX, window.scrollY));
+      // A fixed-layer target (the navbar) stays in the viewport as the page
+      // scrolls, so draw its loop at viewport coords (no scroll offset) and render
+      // it in the fixed layer. Page targets fold the scroll offset in and ride the
+      // absolute layer, which the browser scrolls glued to them.
+      const fixed = isViewportAnchored(el);
+      const rect = el.getBoundingClientRect();
+      setLoop(
+        fixed
+          ? loopFromRect(rect, 0, 0)
+          : loopFromRect(rect, window.scrollX, window.scrollY),
+      );
+      setLoopFixed(fixed);
       setLoopKey((k) => k + 1); // remount the path so it draws from scratch
     };
 
@@ -206,6 +235,11 @@ export function Cursor() {
 
     window.addEventListener("mousemove", move, { passive: true });
     window.addEventListener("scroll", onScroll, { passive: true });
+    // Same "content moved under a still pointer" case as scroll, but driven by an
+    // in-place CSS animation (the work marquee glides its cards under the cursor).
+    // The rail fires this each frame so the View disc follows the project actually
+    // beneath the cursor instead of sticking to the card that glided away.
+    window.addEventListener("lumako:hover-recheck", onScroll, { passive: true });
     window.addEventListener("pointerdown", down, { passive: true });
     window.addEventListener("pointerup", up, { passive: true });
     window.addEventListener("pointercancel", up, { passive: true });
@@ -215,6 +249,7 @@ export function Cursor() {
     return () => {
       window.removeEventListener("mousemove", move);
       window.removeEventListener("scroll", onScroll);
+      window.removeEventListener("lumako:hover-recheck", onScroll);
       window.removeEventListener("pointerdown", down);
       window.removeEventListener("pointerup", up);
       window.removeEventListener("pointercancel", up);
@@ -228,6 +263,28 @@ export function Cursor() {
   if (!enabled) return null;
 
   const fade = { opacity: hidden ? 0 : 1, transition: "opacity 0.2s" };
+
+  // One loop definition, rendered into whichever layer matches the target's
+  // coordinate space (see the two <svg> layers below). Keyed on loopKey so a
+  // fresh target remounts the path and self-draws from scratch.
+  const loopPath =
+    mode === "link" && loop ? (
+      <motion.path
+        key={loopKey}
+        d={loop}
+        stroke="var(--color-lume)"
+        strokeWidth={3}
+        strokeLinecap="round"
+        strokeLinejoin="round"
+        initial={{ pathLength: 0, opacity: 0 }}
+        animate={{ pathLength: 1, opacity: 1 }}
+        exit={{ pathLength: 0, opacity: 0 }}
+        transition={{
+          pathLength: { duration: 0.3, ease: DRAW_EASE },
+          opacity: { duration: 0.12 },
+        }}
+      />
+    ) : null;
 
   return (
     // Static wrapper - deliberately NOT a stacking context (no position/z-index).

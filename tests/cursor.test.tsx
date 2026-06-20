@@ -124,6 +124,31 @@ describe("Cursor", () => {
     await waitFor(() => expect(queryByText("View")).toBeNull(), { timeout: 2000 });
   });
 
+  it("catches the View disc when a project glides under a still pointer (hover-recheck)", async () => {
+    // The work marquee animates its cards under a motionless cursor - no mousemove,
+    // no scroll - and fires "lumako:hover-recheck" each frame so the cursor re-hit-
+    // tests at its last pointer position, the same path scrolling uses.
+    const { container, findByText, queryByText } = render(
+      <>
+        <a href="#" data-cursor="view" data-testid="view">Balance</a>
+        <span data-testid="blank">elsewhere</span>
+        <Cursor />
+      </>,
+    );
+    const link = container.querySelector("[data-testid='view']")!;
+    const blank = container.querySelector("[data-testid='blank']")!;
+
+    // Pointer rests over empty space - no disc yet.
+    fireEvent.mouseMove(blank, { clientX: 20, clientY: 20 });
+    expect(queryByText("View")).toBeNull();
+
+    // A project glides under the (unmoved) pointer; the rail pokes the cursor.
+    document.elementFromPoint = (() => link) as typeof document.elementFromPoint;
+    window.dispatchEvent(new Event("lumako:hover-recheck"));
+
+    expect(await findByText("View")).not.toBeNull();
+  });
+
   it("keeps the plain reticle - no gold loop - over a data-cursor='quiet' target", () => {
     const { container } = render(
       <>

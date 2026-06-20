@@ -40,38 +40,13 @@ const CTRL: Pt[] = NODES.map(ctrlOf);
 const spoke = (n: Pt, c: Pt) =>
   `M ${C},${C} Q ${c[0].toFixed(2)},${c[1].toFixed(2)} ${n[0].toFixed(2)},${n[1].toFixed(2)}`;
 
-// Sample the bowed spoke at t = node..core, so the idle signal rides the wire
-// exactly (piecewise-linear through points on the same quadratic).
-function rideXs(n: Pt, c: Pt): number[] {
-  return [1, 0.8, 0.6, 0.4, 0.2, 0].map((t) => {
-    const u = 1 - t;
-    return u * u * C + 2 * u * t * c[0] + t * t * n[0];
-  });
-}
-function rideYs(n: Pt, c: Pt): number[] {
-  return [1, 0.8, 0.6, 0.4, 0.2, 0].map((t) => {
-    const u = 1 - t;
-    return u * u * C + 2 * u * t * c[1] + t * t * n[1];
-  });
-}
+// Symmetric timing (shared with WebDiagram): each element retracts over the SAME
+// duration it drew in, so the disappear is exactly as slow as the appear. Only the
+// staggered entrance delays are dropped on the way out.
 
-// Idle rhythm: one request -> response per STEP, marching around the ring.
-const STEP = 1.3; // seconds between consecutive channels lighting up
-const CYCLE = NODES.length * STEP; // full lap of the ring
-const BASE = 2.0; // entrance has fully resolved by here
-
-export function AiDiagram({
-  active,
-  idle,
-  reduce,
-}: {
-  active: boolean;
-  idle: boolean;
-  reduce: boolean;
-}) {
-  const drawn = reduce || active;
-  const live = idle && !reduce; // run the perpetual message loop only while focused
-
+// `shown` (the draw vs retract boolean) and the cycle clock are owned by
+// ServicesOverview and shared across all three diagrams, so they stay frame-locked.
+export function AiDiagram({ shown, reduce }: { shown: boolean; reduce: boolean }) {
   return (
     <svg
       viewBox="60 60 360 360"
@@ -81,7 +56,7 @@ export function AiDiagram({
       preserveAspectRatio="xMidYMid meet"
       style={{ overflow: "visible", pointerEvents: "none" }}
     >
-      {/* (1) CONSTRUCTION GUIDE: one dotted orbit, fade in only */}
+      {/* (1) CONSTRUCTION GUIDE: one dotted orbit, fades in / out with the cycle */}
       <motion.path
         d={ORBIT}
         fill="none"
@@ -90,8 +65,8 @@ export function AiDiagram({
         strokeDasharray="1 5"
         strokeLinecap="round"
         initial={false}
-        animate={{ opacity: drawn ? 0.7 : 0 }}
-        transition={reduce ? { duration: 0 } : { duration: 0.5, ease: EXPO, delay: 0.15 }}
+        animate={{ opacity: shown ? 0.7 : 0 }}
+        transition={reduce ? { duration: 0 } : { duration: 0.5, ease: EXPO, delay: shown ? 0.15 : 0 }}
       />
 
       {/* (2) PRIMARY SCHEMATIC: six spokes self-draw outward from the core */}
@@ -104,14 +79,14 @@ export function AiDiagram({
           strokeWidth={1.5}
           strokeLinecap="round"
           initial={false}
-          animate={{ pathLength: drawn ? 1 : 0 }}
+          animate={{ pathLength: shown ? 1 : 0 }}
           transition={
-            reduce ? { duration: 0 } : { duration: 0.6, ease: DRAW, delay: 0.35 + i * 0.13 }
+            reduce ? { duration: 0 } : { duration: 0.6, ease: DRAW, delay: shown ? 0.35 + i * 0.13 : 0 }
           }
         />
       ))}
 
-      {/* (4) NODES: hollow endpoints pop in as their spoke lands */}
+      {/* (4) NODES: hollow endpoints pop in as their spoke lands, retract together */}
       {NODES.map(([x, y], i) => (
         <motion.circle
           key={`node-${i}`}
@@ -122,62 +97,24 @@ export function AiDiagram({
           stroke="var(--color-fg)"
           strokeWidth={1.25}
           initial={false}
-          animate={{ opacity: drawn ? 1 : 0, scale: drawn ? 1 : 0 }}
+          animate={{ opacity: shown ? 1 : 0, scale: shown ? 1 : 0 }}
           transition={
-            reduce ? { duration: 0 } : { duration: 0.4, ease: EXPO, delay: 0.6 + i * 0.13 }
+            reduce ? { duration: 0 } : { duration: 0.4, ease: EXPO, delay: shown ? 0.6 + i * 0.13 : 0 }
           }
           style={{ transformOrigin: `${x}px ${y}px` }}
         />
       ))}
 
-      {/* Idle answer-flares: each endpoint pings gold when its reply lands - the
-          assistant answering on that channel, one conversation at a time. */}
-      {live &&
-        NODES.map(([x, y], i) => (
-          <motion.circle
-            key={`flare-${i}`}
-            cx={x}
-            cy={y}
-            r={4}
-            fill="var(--color-lume)"
-            initial={{ opacity: 0, scale: 0.8 }}
-            animate={{ opacity: [0, 1, 0], scale: [0.8, 1.55, 0.8] }}
-            transition={{
-              duration: 0.75,
-              ease: "easeOut",
-              repeat: Infinity,
-              repeatDelay: CYCLE - 0.75,
-              delay: BASE + i * STEP + 1.0,
-            }}
-            style={{ transformOrigin: `${x}px ${y}px` }}
-          />
-        ))}
-
-      {/* THE ONE GOLD: the assistant core - soft halo + lume disc. The halo
-          breathes while live (alive, listening); the disc is the steady model. */}
+      {/* THE ONE GOLD: the assistant core - soft halo + lume disc. Pops in last
+          (EXPO settle) and retracts with the rest of the schematic each cycle. */}
       <motion.circle
         cx={C}
         cy={C}
         r={12}
         fill="var(--color-lume-soft)"
         initial={false}
-        animate={
-          reduce
-            ? { opacity: 0.6, scale: 1 }
-            : live
-              ? { opacity: [0.4, 0.85, 0.4], scale: drawn ? 1 : 0 }
-              : { opacity: drawn ? 0.6 : 0, scale: drawn ? 1 : 0 }
-        }
-        transition={
-          reduce
-            ? { duration: 0 }
-            : live
-              ? {
-                  scale: { duration: 0.5, ease: EXPO, delay: 0.1 },
-                  opacity: { duration: 3, ease: "easeInOut", repeat: Infinity, delay: 0.1 },
-                }
-              : { duration: 0.4, ease: EXPO, delay: 0.1 }
-        }
+        animate={{ opacity: shown ? 0.6 : 0, scale: shown ? 1 : 0 }}
+        transition={reduce ? { duration: 0 } : { duration: 0.5, ease: EXPO, delay: shown ? 1.0 : 0 }}
         style={{ transformOrigin: `${C}px ${C}px` }}
       />
       <motion.circle
@@ -186,34 +123,10 @@ export function AiDiagram({
         r={6}
         fill="var(--color-lume)"
         initial={false}
-        animate={{ scale: drawn ? 1 : 0 }}
-        transition={reduce ? { duration: 0 } : { duration: 0.5, ease: EXPO, delay: 0.1 }}
+        animate={{ opacity: shown ? 1 : 0, scale: shown ? 1 : 0 }}
+        transition={reduce ? { duration: 0 } : { duration: 0.5, ease: EXPO, delay: shown ? 1.1 : 0 }}
         style={{ transformOrigin: `${C}px ${C}px` }}
       />
-
-      {/* Idle inbound signals: a lume dot rides each spoke from its endpoint into
-          the core, one in flight at a time around the ring - messages arriving. */}
-      {live &&
-        NODES.map((n, i) => (
-          <motion.circle
-            key={`signal-${i}`}
-            r={2.5}
-            fill="var(--color-lume)"
-            initial={{ cx: n[0], cy: n[1], opacity: 0 }}
-            animate={{
-              cx: rideXs(n, CTRL[i]),
-              cy: rideYs(n, CTRL[i]),
-              opacity: [0, 1, 1, 1, 1, 0],
-            }}
-            transition={{
-              duration: 0.85,
-              ease: "easeIn",
-              repeat: Infinity,
-              repeatDelay: CYCLE - 0.85,
-              delay: BASE + i * STEP,
-            }}
-          />
-        ))}
     </svg>
   );
 }

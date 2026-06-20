@@ -26,6 +26,8 @@ type Props = {
   delay?: number;
   /** Seconds between each letter's reveal - smaller flows faster. */
   stagger?: number;
+  /** Word after which to hug the brand's lume accent period (the "Lumako." wordmark dot). Set once. */
+  dotAfter?: string;
 };
 
 type Segment = { str: string; hi: boolean };
@@ -78,6 +80,7 @@ export function TextReveal({
   highlightClassName = "italic text-fg",
   delay = 0,
   stagger = 0.07,
+  dotAfter,
 }: Props) {
   const reduce = useReducedMotion() ?? false;
   const Tag = tags[as];
@@ -85,20 +88,32 @@ export function TextReveal({
 
   // Reduced motion: plain static text, accent preserved, no per-letter spans.
   if (reduce) {
+    let dotPlaced = false;
     return (
       <Tag className={className}>
         {lines.map((line, li) => (
           <Fragment key={li}>
             {li > 0 && <br />}
-            {segment(line, highlight).map((seg, si) =>
-              seg.hi ? (
-                <span key={si} className={highlightClassName}>
-                  {seg.str}
-                </span>
-              ) : (
-                <Fragment key={si}>{seg.str}</Fragment>
-              ),
-            )}
+            {segment(line, highlight).map((seg, si) => {
+              if (seg.hi) {
+                return (
+                  <span key={si} className={highlightClassName}>
+                    {seg.str}
+                  </span>
+                );
+              }
+              const at = dotAfter && !dotPlaced ? seg.str.indexOf(dotAfter) : -1;
+              if (at === -1) return <Fragment key={si}>{seg.str}</Fragment>;
+              dotPlaced = true;
+              const end = at + dotAfter!.length;
+              return (
+                <Fragment key={si}>
+                  {seg.str.slice(0, end)}
+                  <span className="text-lume">.</span>
+                  {seg.str.slice(end)}
+                </Fragment>
+              );
+            })}
           </Fragment>
         ))}
       </Tag>
@@ -127,6 +142,8 @@ export function TextReveal({
 
   // One running index across every line so the cascade flows continuously.
   let i = 0;
+  // The lume wordmark dot is placed once, after the first matching word.
+  let dotPlaced = false;
 
   return (
     <Tag
@@ -144,23 +161,38 @@ export function TextReveal({
           return (
             <Fragment key={li}>
               {li > 0 && <br />}
-              {words.map((word, wi) => (
-                <Fragment key={wi}>
-                  <span className="inline-block whitespace-nowrap">
-                    {word.chars.map((ch, ci) => (
-                      <motion.span
-                        key={ci}
-                        variants={letter}
-                        custom={i++}
-                        className={cn("inline-block", word.hi && highlightClassName)}
-                      >
-                        {ch}
-                      </motion.span>
-                    ))}
-                  </span>
-                  {wi < words.length - 1 ? " " : null}
-                </Fragment>
-              ))}
+              {words.map((word, wi) => {
+                const showDot =
+                  !!dotAfter && !dotPlaced && word.chars.join("") === dotAfter;
+                if (showDot) dotPlaced = true;
+                return (
+                  <Fragment key={wi}>
+                    {/* dot stays inside the word wrapper so it hugs the last glyph, no gap */}
+                    <span className="inline-block whitespace-nowrap">
+                      {word.chars.map((ch, ci) => (
+                        <motion.span
+                          key={ci}
+                          variants={letter}
+                          custom={i++}
+                          className={cn("inline-block", word.hi && highlightClassName)}
+                        >
+                          {ch}
+                        </motion.span>
+                      ))}
+                      {showDot && (
+                        <motion.span
+                          variants={letter}
+                          custom={i++}
+                          className="inline-block text-lume"
+                        >
+                          .
+                        </motion.span>
+                      )}
+                    </span>
+                    {wi < words.length - 1 ? " " : null}
+                  </Fragment>
+                );
+              })}
             </Fragment>
           );
         })}

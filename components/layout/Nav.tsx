@@ -6,7 +6,6 @@ import { usePathname } from "next/navigation";
 import { AnimatePresence, motion } from "motion/react";
 import { site } from "@/lib/content/site";
 import { Logo } from "@/components/ui/Logo";
-import { LanguageToggle, type Locale } from "@/components/ui/LanguageToggle";
 import { cn } from "@/lib/utils";
 import { easeOutExpo } from "@/lib/motion";
 import { useScrolled } from "@/lib/mediaHooks";
@@ -14,7 +13,6 @@ import { useScrolled } from "@/lib/mediaHooks";
 export function Nav() {
   const pathname = usePathname();
   const [open, setOpen] = useState(false);
-  const [locale, setLocale] = useState<Locale>("en");
   const scrolled = useScrolled(24);
 
   const isActive = (href: string) =>
@@ -42,7 +40,7 @@ export function Nav() {
           {/* Center - primary nav, truly centered in the viewport.
              Explicit col-start keeps it in column 2 even when `hidden` on mobile
              removes it from grid auto-placement. */}
-          <nav className="col-start-2 hidden items-center gap-[var(--vw-5)] md:flex">
+          <nav className="col-start-2 hidden items-center gap-[calc(var(--vw)*3.75)] md:flex">
             {site.nav.map((item) => (
               <Link
                 key={item.href}
@@ -60,10 +58,6 @@ export function Nav() {
 
           {/* Right - CTA, mobile toggle */}
           <div className="col-start-3 flex items-center justify-end gap-[var(--vw-3)]">
-            <div className="hidden items-center md:flex">
-              <LanguageToggle value={locale} onChange={setLocale} />
-            </div>
-
             {/* Mobile toggle */}
             <button
               type="button"
@@ -118,8 +112,7 @@ export function Nav() {
                 </motion.div>
               ))}
             </nav>
-            <div className="mt-12 flex items-center justify-between border-t border-line pt-6">
-              <LanguageToggle value={locale} onChange={setLocale} />
+            <div className="mt-12 flex items-center justify-end border-t border-line pt-6">
               <a href={`mailto:${site.email}`} className="text-fg-muted">
                 {site.email}
               </a>

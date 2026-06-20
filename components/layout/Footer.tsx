@@ -47,7 +47,7 @@ export function Footer() {
             wordmark anchored to and bleeding off the bottom edge (footer clips it). */}
         <div className="relative mt-[var(--vw-4)]">
           <div className="mb-[var(--vw-2)] flex justify-end min-[1700px]:absolute min-[1700px]:inset-x-0 min-[1700px]:bottom-[12%] min-[1700px]:z-10 min-[1700px]:mb-0">
-            <a href={`mailto:${site.email}`} data-cursor className={linkClass}>
+            <a href={`mailto:${site.email}`} data-cursor="quiet" className={linkClass}>
               {site.email}
             </a>
           </div>

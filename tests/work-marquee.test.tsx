@@ -1,5 +1,5 @@
-import { describe, it, expect, vi } from "vitest";
-import { render } from "@testing-library/react";
+import { describe, it, expect, vi, afterEach } from "vitest";
+import { render, fireEvent } from "@testing-library/react";
 import { WorkSlide } from "@/components/sections/work/WorkSlide";
 import type { CaseStudy } from "@/lib/content/types";
 import { WorkMarquee } from "@/components/sections/home/WorkMarquee";
@@ -87,6 +87,112 @@ describe("WorkMarquee", () => {
     const { container } = render(<WorkMarquee items={work} />);
     const tracks = [...container.querySelectorAll<HTMLElement>(".marquee-track")];
     tracks.forEach((t) => expect(t.style.animationDuration).not.toBe(""));
+  });
+});
+
+describe("WorkMarquee glide-on-hover spotlight", () => {
+  // Fine pointer + motion allowed -> the JS glide + re-hit-test path is active.
+  function mockHoverMedia() {
+    window.matchMedia = vi.fn().mockImplementation((q: string) => ({
+      matches: q.includes("hover: hover"), // reduced-motion query -> false
+      media: q,
+      onchange: null,
+      addEventListener: vi.fn(),
+      removeEventListener: vi.fn(),
+      addListener: vi.fn(),
+      removeListener: vi.fn(),
+      dispatchEvent: vi.fn(),
+    })) as unknown as typeof window.matchMedia;
+  }
+
+  // Drive requestAnimationFrame by hand so we can advance the rail one frame at a
+  // time. CoverPanel is static (no rAF of its own), so the only caller is the
+  // marquee's own sample loop.
+  function manualFrames() {
+    let next: FrameRequestCallback | null = null;
+    vi.stubGlobal("requestAnimationFrame", (cb: FrameRequestCallback) => {
+      next = cb;
+      return 1;
+    });
+    vi.stubGlobal("cancelAnimationFrame", () => {});
+    return () => {
+      const cb = next;
+      next = null;
+      cb?.(0);
+    };
+  }
+
+  afterEach(() => {
+    vi.unstubAllGlobals();
+    vi.restoreAllMocks();
+    // jsdom has no elementFromPoint; tests stub it on document - clean up here.
+    Reflect.deleteProperty(document, "elementFromPoint");
+  });
+
+  it("hands the spotlight to JS (.js-hover-active) when the glide path is live", () => {
+    mockHoverMedia();
+    manualFrames();
+    const { container } = render(<WorkMarquee items={work} />);
+    expect(
+      container.querySelector(".work-marquee")?.classList.contains("js-hover-active"),
+    ).toBe(true);
+  });
+
+  it("keeps only the card under a still pointer lit as the rail glides (the bug)", () => {
+    mockHoverMedia();
+    const step = manualFrames();
+
+    const { container } = render(<WorkMarquee items={work} />);
+    const root = container.querySelector<HTMLElement>(".work-marquee")!;
+    const cards = [
+      ...container.querySelectorAll<HTMLAnchorElement>(
+        ".marquee-track:not([data-marquee-clone]) a",
+      ),
+    ];
+    expect(cards.length).toBeGreaterThan(1);
+
+    // Pointer comes to rest over the first card.
+    document.elementFromPoint = (() => cards[0]) as typeof document.elementFromPoint;
+    fireEvent.pointerEnter(root, { clientX: 120, clientY: 100 });
+    step();
+    expect(cards[0].classList.contains("is-hovered")).toBe(true);
+
+    // The rail glides a DIFFERENT card under the SAME, unmoved pointer.
+    document.elementFromPoint = (() => cards[1]) as typeof document.elementFromPoint;
+    step();
+    expect(cards[1].classList.contains("is-hovered")).toBe(true);
+    // The card that glided away drops its highlight - exactly what was stuck before.
+    expect(cards[0].classList.contains("is-hovered")).toBe(false);
+
+    // A gap slides under the pointer: nothing in the rail is lit.
+    document.elementFromPoint = (() => document.body) as typeof document.elementFromPoint;
+    step();
+    expect(cards.some((c) => c.classList.contains("is-hovered"))).toBe(false);
+
+    // Leaving the rail clears the spotlight outright.
+    document.elementFromPoint = (() => cards[0]) as typeof document.elementFromPoint;
+    step();
+    expect(cards[0].classList.contains("is-hovered")).toBe(true);
+    fireEvent.pointerLeave(root);
+    expect(cards.some((c) => c.classList.contains("is-hovered"))).toBe(false);
+  });
+
+  it("pokes the custom cursor to re-hit-test on each glide frame", () => {
+    mockHoverMedia();
+    const step = manualFrames();
+    const recheck = vi.fn();
+    window.addEventListener("lumako:hover-recheck", recheck);
+    try {
+      const { container } = render(<WorkMarquee items={work} />);
+      const root = container.querySelector<HTMLElement>(".work-marquee")!;
+      document.elementFromPoint = (() =>
+        container.querySelector("a")) as typeof document.elementFromPoint;
+      fireEvent.pointerEnter(root, { clientX: 40, clientY: 40 });
+      step();
+      expect(recheck).toHaveBeenCalled();
+    } finally {
+      window.removeEventListener("lumako:hover-recheck", recheck);
+    }
   });
 });
 

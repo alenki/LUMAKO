@@ -1,6 +1,6 @@
 "use client";
 
-import { useRef, useSyncExternalStore } from "react";
+import { useEffect, useRef, useState, useSyncExternalStore } from "react";
 import Link from "next/link";
 import { useInView } from "motion/react";
 import { useReducedMotion } from "@/lib/useReducedMotion";
@@ -19,6 +19,13 @@ const subscribeNoop = () => () => {};
 const snapClient = () => true;
 const snapServer = () => false;
 
+// Shared cycle timing (ms): the whole gallery self-draws + holds, then retracts just
+// as slowly as it drew in, then redraws - forever. Run from ONE clock below so all
+// three diagrams stay frame-locked.
+const ON = 3200; // entrance (~1.9s) + hold
+const OFF = 1200; // the symmetric retract length - covers the slowest stroke (the 1.2s
+// browser/phone frame un-drawing); redraw starts the instant the last one clears
+
 /** Splits "Web - sites & platforms" into a discipline tag + sentence-case heading. */
 function splitTitle(title: string) {
   const [tag, ...rest] = title.split(" - ");
@@ -29,30 +36,42 @@ function splitTitle(title: string) {
   };
 }
 
-/** One discipline: a centered living diagram over a left-aligned caption block.
- *  The diagram draws once on scroll-in and idles only while the column is on screen. */
+/** One discipline: a centered living diagram over a left-aligned caption block. The
+ *  diagram is a pure consumer of the section's shared cycle state, so the three draw,
+ *  hold, retract, and redraw in perfect lockstep. */
 function DisciplineColumn({
   service,
   reduce,
   mounted,
+  active,
+  idle,
+  shown,
+  cycleIndex,
 }: {
   service: Service;
   reduce: boolean;
   mounted: boolean;
+  active: boolean;
+  idle: boolean;
+  shown: boolean;
+  cycleIndex: number;
 }) {
-  const ref = useRef<HTMLDivElement>(null);
-  const drawn = useInView(ref, { once: true, margin: "-12% 0px -12% 0px" });
-  const live = useInView(ref, { margin: "0px 0px -10% 0px" });
   const Diagram = serviceDiagrams[service.id];
   const { tag, heading } = splitTitle(service.title);
 
   return (
-    <div ref={ref} className="group flex flex-col">
+    <div className="group flex flex-col">
       {/* large centered living diagram */}
       <div className="mx-auto aspect-square w-full max-w-[36rem]">
         <div className="grid h-full w-full place-items-center">
           {mounted && Diagram && (
-            <Diagram active={drawn || reduce} idle={live && !reduce} reduce={reduce} />
+            <Diagram
+              active={active}
+              idle={idle}
+              reduce={reduce}
+              shown={shown}
+              cycleIndex={cycleIndex}
+            />
           )}
         </div>
       </div>
@@ -82,6 +101,53 @@ export function ServicesOverview() {
   const mounted = useSyncExternalStore(subscribeNoop, snapClient, snapServer);
   const reduce = mounted ? reduceRaw : false;
 
+  // ONE in-view observer + ONE timer for the whole gallery row, so every diagram
+  // shares a single cycle clock and stays frame-locked (rather than each running its
+  // own timer that starts whenever its column happens to cross the threshold).
+  const galleryRef = useRef<HTMLDivElement>(null);
+  const seen = useInView(galleryRef, { once: true, margin: "-12% 0px -12% 0px" });
+  const onScreen = useInView(galleryRef, { margin: "0px 0px -10% 0px" });
+  const live = mounted && seen && onScreen && !reduce;
+
+  // The cycle toggles these on a timer (only inside timer callbacks, never
+  // synchronously in the effect body). `cycleShown` drives draw vs retract for all
+  // three diagrams; `cycleIndex` advances once per cycle (AppsDiagram steps its view).
+  const [cycleShown, setCycleShown] = useState(false);
+  const [cycleIndex, setCycleIndex] = useState(0);
+
+  useEffect(() => {
+    if (!live) return;
+    let cancelled = false;
+    const timers: ReturnType<typeof setTimeout>[] = [];
+    const loop = () => {
+      if (cancelled) return;
+      setCycleShown(true); // draw the current frame in
+      timers.push(
+        setTimeout(() => {
+          if (cancelled) return;
+          setCycleShown(false); // retract (cycleIndex held steady so AppsDiagram doesn't jump tabs)
+          timers.push(
+            setTimeout(() => {
+              if (cancelled) return;
+              setCycleIndex((i) => i + 1); // advance to the next view while blank
+              loop(); // redraw with the next view
+            }, OFF),
+          );
+        }, ON),
+      );
+    };
+    timers.push(setTimeout(loop, 0)); // first draw-in is async, off the effect body
+    return () => {
+      cancelled = true;
+      timers.forEach(clearTimeout);
+    };
+  }, [live]);
+
+  // Shared cycle state, identical for every column → the three move as one.
+  const active = (mounted && seen) || reduce; // sticky "has been drawn in"
+  const idle = onScreen && !reduce;
+  const shown = reduce ? true : live ? cycleShown : false;
+
   return (
     <section className="section-lg">
       <div className="container-x">
@@ -95,9 +161,21 @@ export function ServicesOverview() {
         {/* three-discipline gallery - tracks capped to the reading measure (= the
             diagram width) and pinned to the outer grid lines, so the last column's
             copy reaches the right rule instead of stopping short on wide screens. */}
-        <div className="mt-20 grid gap-x-[var(--col-gap)] gap-y-20 md:mt-28 md:justify-between md:[grid-template-columns:repeat(3,minmax(0,36rem))]">
+        <div
+          ref={galleryRef}
+          className="mt-20 grid gap-x-[var(--col-gap)] gap-y-20 md:mt-28 md:justify-between md:[grid-template-columns:repeat(3,minmax(0,36rem))]"
+        >
           {featured.map((svc) => (
-            <DisciplineColumn key={svc.id} service={svc} reduce={reduce} mounted={mounted} />
+            <DisciplineColumn
+              key={svc.id}
+              service={svc}
+              reduce={reduce}
+              mounted={mounted}
+              active={active}
+              idle={idle}
+              shown={shown}
+              cycleIndex={cycleIndex}
+            />
           ))}
         </div>
       </div>

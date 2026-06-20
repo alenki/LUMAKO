@@ -1,6 +1,5 @@
 "use client";
 
-import { useEffect, useState } from "react";
 import { motion } from "motion/react";
 
 // Family easings (defined inline, no shared import).
@@ -78,58 +77,14 @@ const CTA = { x: CONTENT_R - 64, y: HEADLINE[0].y - 10, w: 64, h: 24, r: 6 };
 const ctaCx = CTA.x + CTA.w / 2; // 344
 const ctaCy = CTA.y + CTA.h / 2; // 170
 
-// Cycle timing (ms): the whole schematic self-draws, holds, clears, then redraws
-// - forever, while the tile is the on-screen focus.
-const ON = 3200; // entrance (~1.9s) + hold
-const OFF = 400; // exactly the retract length - redraw starts the instant it clears, no blank
+// Symmetric timing: each element retracts over the SAME duration it drew in, so the
+// disappear is exactly as slow as the appear. Only the staggered entrance delays are
+// dropped on the way out, so the schematic dissolves together - the lighter ink first,
+// the long window stroke last - rather than snapping away.
 
-// Direction-aware exits: on the way out the whole schematic clears quickly and
-// together (none of the staggered entrance delays), so nothing - the window dots
-// especially - is left hanging after the page has gone.
-const EXIT_DRAW = { duration: 0.4, ease: DRAW };
-const EXIT_POP = { duration: 0.28, ease: EXPO };
-
-export function WebDiagram({
-  active,
-  idle,
-  reduce,
-}: {
-  active: boolean;
-  idle: boolean;
-  reduce: boolean;
-}) {
-  const live = active && idle && !reduce; // cycle only while drawn-in + on-screen
-
-  // The cycle toggles this single boolean on a timer (only inside timer callbacks,
-  // never synchronously in the effect body). The non-cycling states - static under
-  // reduced motion, blank off-screen - are derived below, not stored.
-  const [cycleShown, setCycleShown] = useState(false);
-
-  useEffect(() => {
-    if (!live || reduce) return;
-    let cancelled = false;
-    const timers: ReturnType<typeof setTimeout>[] = [];
-    const loop = () => {
-      if (cancelled) return;
-      setCycleShown(true);
-      timers.push(
-        setTimeout(() => {
-          if (cancelled) return;
-          setCycleShown(false);
-          timers.push(setTimeout(loop, OFF));
-        }, ON),
-      );
-    };
-    timers.push(setTimeout(loop, 0)); // first draw-in is async, off the effect body
-    return () => {
-      cancelled = true;
-      timers.forEach(clearTimeout);
-    };
-  }, [live, reduce]);
-
-  // The single boolean that drives the whole schematic.
-  const shown = reduce ? true : live ? cycleShown : false;
-
+// `shown` (the draw vs retract boolean) and the cycle clock are owned by
+// ServicesOverview and shared across all three diagrams, so they stay frame-locked.
+export function WebDiagram({ shown, reduce }: { shown: boolean; reduce: boolean }) {
   return (
     <svg
       viewBox="60 60 360 360"
@@ -144,7 +99,7 @@ export function WebDiagram({
       <motion.g
         initial={false}
         animate={{ opacity: shown ? 0.5 : 0 }}
-        transition={reduce ? { duration: 0 } : shown ? { duration: 0.4, ease: EXPO } : EXIT_POP}
+        transition={reduce ? { duration: 0 } : { duration: 0.4, ease: EXPO }}
       >
         {[CONTENT_X, CONTENT_R].map((x) => (
           <line
@@ -181,7 +136,7 @@ export function WebDiagram({
         strokeLinejoin="round"
         initial={false}
         animate={{ pathLength: shown ? 1 : 0 }}
-        transition={reduce ? { duration: 0 } : shown ? { duration: 1.2, ease: DRAW, delay: 0.25 } : EXIT_DRAW}
+        transition={reduce ? { duration: 0 } : { duration: 1.2, ease: DRAW, delay: shown ? 0.25 : 0 }}
       />
 
       {/* (2) PRIMARY - chrome header divider, draws just after the frame. */}
@@ -193,7 +148,7 @@ export function WebDiagram({
         strokeLinecap="round"
         initial={false}
         animate={{ pathLength: shown ? 1 : 0 }}
-        transition={reduce ? { duration: 0 } : shown ? { duration: 0.7, ease: DRAW, delay: 0.85 } : EXIT_DRAW}
+        transition={reduce ? { duration: 0 } : { duration: 0.7, ease: DRAW, delay: shown ? 0.85 : 0 }}
       />
 
       {/* (3) SECONDARY INK - the muted URL / omnibox pill, wipes in. */}
@@ -206,7 +161,7 @@ export function WebDiagram({
         strokeLinejoin="round"
         initial={false}
         animate={{ pathLength: shown ? 1 : 0 }}
-        transition={reduce ? { duration: 0 } : shown ? { duration: 0.6, ease: DRAW, delay: 0.92 } : EXIT_DRAW}
+        transition={reduce ? { duration: 0 } : { duration: 0.6, ease: DRAW, delay: shown ? 0.92 : 0 }}
       />
 
       {/* (3) SECONDARY INK - headline rules (the page title), wipe in left->right. */}
@@ -221,11 +176,7 @@ export function WebDiagram({
           initial={false}
           animate={{ pathLength: shown ? 1 : 0 }}
           transition={
-            reduce
-              ? { duration: 0 }
-              : shown
-                ? { duration: 0.5, ease: DRAW, delay: 0.98 + i * 0.07 }
-                : EXIT_DRAW
+            reduce ? { duration: 0 } : { duration: 0.5, ease: DRAW, delay: shown ? 0.98 + i * 0.07 : 0 }
           }
         />
       ))}
@@ -240,7 +191,7 @@ export function WebDiagram({
         strokeLinejoin="round"
         initial={false}
         animate={{ pathLength: shown ? 1 : 0 }}
-        transition={reduce ? { duration: 0 } : shown ? { duration: 0.9, ease: DRAW, delay: 1.0 } : EXIT_DRAW}
+        transition={reduce ? { duration: 0 } : { duration: 0.9, ease: DRAW, delay: shown ? 1.0 : 0 }}
       />
 
       {/* (3) SECONDARY INK - tidy row of three feature cards, wipe in left->right. */}
@@ -256,11 +207,7 @@ export function WebDiagram({
           initial={false}
           animate={{ pathLength: shown ? 1 : 0 }}
           transition={
-            reduce
-              ? { duration: 0 }
-              : shown
-                ? { duration: 0.55, ease: DRAW, delay: 1.08 + i * 0.08 }
-                : EXIT_DRAW
+            reduce ? { duration: 0 } : { duration: 0.55, ease: DRAW, delay: shown ? 1.08 + i * 0.08 : 0 }
           }
         />
       ))}
@@ -278,11 +225,7 @@ export function WebDiagram({
           initial={false}
           animate={{ opacity: shown ? 1 : 0, scale: shown ? 1 : 0 }}
           transition={
-            reduce
-              ? { duration: 0 }
-              : shown
-                ? { duration: 0.4, ease: EXPO, delay: 0.95 + i * 0.05 }
-                : EXIT_POP
+            reduce ? { duration: 0 } : { duration: 0.4, ease: EXPO, delay: shown ? 0.95 + i * 0.05 : 0 }
           }
           style={{ transformOrigin: `${d.cx}px ${d.cy}px` }}
         />
@@ -299,12 +242,10 @@ export function WebDiagram({
         transition={
           reduce
             ? { duration: 0 }
-            : shown
-              ? {
-                  scale: { duration: 0.55, ease: EXPO, delay: 1.2 },
-                  opacity: { duration: 0.4, ease: EXPO, delay: 1.2 },
-                }
-              : { scale: EXIT_POP, opacity: EXIT_POP }
+            : {
+                scale: { duration: 0.55, ease: EXPO, delay: shown ? 1.2 : 0 },
+                opacity: { duration: 0.4, ease: EXPO, delay: shown ? 1.2 : 0 },
+              }
         }
         style={{ transformOrigin: `${ctaCx}px ${ctaCy}px` }}
       />

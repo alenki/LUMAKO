@@ -88,7 +88,7 @@
   --py-section: calc(var(--vw) * 7);
   --py-section-lg: calc(var(--vw) * 10);
 
-  --header-h: 4.5rem;
+  --header-h: 4.125rem;
   --gutter: clamp(1.25rem, 3.5vw, 4rem);
   --col-gap: clamp(1rem, 2vw, 2rem);
   --shadow-card: 0 1px 2px rgba(0,0,0,.04), 0 10px 30px rgba(0,0,0,.06);
@@ -272,14 +272,33 @@ body {
   transition: opacity 0.4s var(--ease-out-expo);
 }
 
-/* Hover spotlight: when any card in the rail is hovered, the rest recede so the
-   hovered project stays full-colour - no lift, no shadow. :has(a:hover) on the rail
-   dims every cell; the cell holding the hovered link then wins (equal specificity,
-   later in source) and stays lit. */
-.work-marquee:has(a:hover) .marquee-cell {
+/* Hover spotlight: while the pointer is anywhere inside the rail, every card
+   recedes to 0.4 and only the card actually under the pointer stays full-colour -
+   no lift, no shadow. The dim rides the rail's OWN :hover, not "is a card lit":
+   the rail box is stationary (only the track translates beneath it), so its :hover
+   is an honest "pointer is in the section" flag with none of the sticky-:hover the
+   per-card hit-testing exists to fix. That keeps the rest dimmed over the gaps
+   between cards too - cursor in the white space lights nothing but holds the dim.
+   Dim and re-light are separate rules; the lit one wins on specificity (its :has()
+   argument adds a type, 0-4-1 vs 0-3-0), not source order.
+
+   Two detection paths for WHICH card is live, because CSS :hover names the right
+   card only while the rail is still. No JS / reduced-motion / coarse pointer (no
+   .js-hover-active): the rail pauses on hover, so a card's own :hover is accurate.
+   Glide-on-hover (.js-hover-active, set by WorkMarquee): the rail keeps moving
+   under the pointer, where a card's :hover sticks to the card that WAS under the
+   cursor; JS re-hit-tests each frame and marks the live card .is-hovered instead. */
+.work-marquee:hover .marquee-cell {
   opacity: 0.4;
 }
-.work-marquee .marquee-cell:has(a:hover) {
+.work-marquee:not(.js-hover-active) .marquee-cell:has(a:hover),
+.work-marquee.js-hover-active .marquee-cell:has(a.is-hovered) {
+  opacity: 1;
+}
+
+/* The corner "open" glyph rides the same spotlight - shown only on the live card. */
+.work-marquee:not(.js-hover-active) .marquee-cell:has(a:hover) .slide-cta,
+.work-marquee.js-hover-active .marquee-cell:has(a.is-hovered) .slide-cta {
   opacity: 1;
 }
 
