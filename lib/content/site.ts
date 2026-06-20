@@ -6,8 +6,8 @@ export const site = {
   timezone: "Europe/Moscow",
   nav: [
     { label: "Home", href: "/" },
+    { label: "About", href: "/about" },
     { label: "Work", href: "/work" },
-    { label: "Services", href: "/services" },
     { label: "Contact", href: "/contact" },
   ],
   socials: [

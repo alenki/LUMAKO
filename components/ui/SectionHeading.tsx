@@ -6,13 +6,13 @@ type Props = {
   className?: string;
 };
 
-/** Inter Tight display heading. Wrap accent words in <em> for italic-accent styling. */
+/** Inter Tight display heading. Wrap accent words in <em> for accent styling. */
 export function SectionHeading({ children, as = "h2", className }: Props) {
   const Tag = as;
   return (
     <Tag
       className={cn(
-        "font-display font-medium leading-[1.02] tracking-tight text-balance [&_em]:italic [&_em]:text-fg",
+        "font-display font-medium leading-[1.02] tracking-tight text-balance [&_em]:text-fg",
         className,
       )}
     >

@@ -4,7 +4,6 @@ import { useState } from "react";
 import { AnimatePresence, motion } from "motion/react";
 import { Field } from "@/components/ui/Field";
 import { Tag } from "@/components/ui/Tag";
-import { MagneticButton } from "@/components/ui/MagneticButton";
 import { Button } from "@/components/ui/Button";
 import {
   validateContact,
@@ -79,10 +78,10 @@ export function ContactForm() {
         initial={{ opacity: 0, y: 24 }}
         animate={{ opacity: 1, y: 0 }}
         transition={{ duration: 0.9, ease: easeOutExpo }}
-        className="surface-card flex min-h-[24rem] flex-col justify-center rounded-[var(--radius)] p-10"
+        className="flex min-h-[24rem] flex-col justify-center border-t border-line pt-12"
       >
-        <span className="label-caps text-fg-muted">
-          (✓) Sent
+        <span className="inline-flex items-center gap-2 label-caps text-lume-deep">
+          <span aria-hidden>✓</span> Sent
         </span>
         <h2 className="mt-6 font-display text-[length:var(--text-4xl)] font-medium leading-tight tracking-tight text-balance">
           {s.title}
@@ -139,11 +138,11 @@ export function ContactForm() {
         placeholder="Optional"
       />
 
-      <fieldset className="flex flex-col gap-4">
+      <fieldset className="flex flex-col">
         <legend className="label-caps">
           Budget
         </legend>
-        <div className="flex flex-wrap gap-3">
+        <div className="mt-4 flex flex-wrap gap-3">
           {budgets.map((option) => (
             <Tag
               key={option}
@@ -156,12 +155,12 @@ export function ContactForm() {
         </div>
       </fieldset>
 
-      <fieldset className="flex flex-col gap-4">
+      <fieldset className="flex flex-col">
         <legend className="label-caps">
           What you need{" "}
           <span className="text-fg-dim">- pick any</span>
         </legend>
-        <div className="flex flex-wrap gap-3">
+        <div className="mt-4 flex flex-wrap gap-3">
           {serviceOptions.map((option) => (
             <Tag
               key={option}
@@ -186,14 +185,20 @@ export function ContactForm() {
       />
 
       <div className="flex flex-wrap items-center gap-x-8 gap-y-4">
-        <MagneticButton type="submit" strength={0.4}>
+        <Button type="submit">
           {status === "submitting" ? "Sending…" : "Send message"}
-        </MagneticButton>
+        </Button>
         <span className="text-[length:var(--text-base)] text-fg-dim">
           Or email{" "}
-          <Button href={`mailto:${site.email}`} variant="link" external>
+          <a
+            href={`mailto:${site.email}`}
+            target="_blank"
+            rel="noopener noreferrer"
+            data-cursor
+            className="font-medium text-fg"
+          >
             {site.email}
-          </Button>
+          </a>
         </span>
       </div>
 

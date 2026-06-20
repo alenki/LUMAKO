@@ -7,7 +7,7 @@ import { Button } from "@/components/ui/Button";
 import { HeroMarker } from "@/components/hero/HeroMarker";
 import { splitOnWord } from "@/lib/markWord";
 import { copy } from "@/lib/content/copy";
-import { easeOutSoft } from "@/lib/motion";
+import { easeOutExpo, easeOutSoft } from "@/lib/motion";
 
 export function Hero() {
   const { hero } = copy.home;
@@ -30,35 +30,44 @@ export function Hero() {
         {/* headline fills the available height */}
         <div className="flex flex-1 flex-col justify-center">
           <h1 className="font-display font-extrabold uppercase leading-[0.85] max-[760px]:leading-[0.9] tracking-[-0.05em] text-[length:clamp(46px,10.8vw,210px)]">
-            {lines.map((line, i) => (
-              <span key={line} className="block pb-[0.04em]">
-                <motion.span
-                  className="inline-block"
-                  initial={
-                    reduce ? false : { opacity: 0, y: "0.3em", filter: "blur(14px)" }
-                  }
-                  animate={{ opacity: 1, y: 0, filter: "blur(0px)" }}
-                  transition={
-                    reduce
-                      ? { duration: 0 }
-                      : { duration: 0.85, ease: easeOutSoft, delay: 0.15 + i * 0.14 }
-                  }
-                  onAnimationComplete={
-                    !reduce && i === lastIdx ? () => setRevealed(true) : undefined
-                  }
+            {lines.map((line, i) => {
+              const isLast = i === lastIdx;
+              return (
+                // Each line slides up from beneath a clipping mask. The py/-my pair
+                // gives the tight leading-[0.85] caps clip headroom without changing
+                // the line rhythm. The marked last line overflows its box (the drawn
+                // circle), so once it settles into place we stop clipping it.
+                <span
+                  key={line}
+                  className="block overflow-hidden py-[0.1em] -my-[0.1em]"
+                  style={isLast && revealed ? { overflow: "visible" } : undefined}
                 >
-                  {i === lastIdx && marked ? (
-                    <>
-                      {marked.before}
-                      <HeroMarker word={marked.word} draw={revealed} reduce={reduce} />
-                      {marked.after}
-                    </>
-                  ) : (
-                    line
-                  )}
-                </motion.span>
-              </span>
-            ))}
+                  <motion.span
+                    className="block will-change-transform"
+                    initial={reduce ? false : { y: "130%" }}
+                    animate={{ y: "0%" }}
+                    transition={
+                      reduce
+                        ? { duration: 0 }
+                        : { duration: 0.95, ease: easeOutExpo, delay: 0.15 + i * 0.14 }
+                    }
+                    onAnimationComplete={
+                      !reduce && isLast ? () => setRevealed(true) : undefined
+                    }
+                  >
+                    {isLast && marked ? (
+                      <>
+                        {marked.before}
+                        <HeroMarker word={marked.word} draw={revealed} reduce={reduce} />
+                        {marked.after}
+                      </>
+                    ) : (
+                      line
+                    )}
+                  </motion.span>
+                </span>
+              );
+            })}
           </h1>
         </div>
 

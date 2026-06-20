@@ -29,7 +29,7 @@ export function Field({
   className,
 }: Props) {
   const fieldCls = cn(
-    "mt-3 w-full bg-transparent border-b py-3 text-[length:var(--text-xl)] text-fg transition-colors duration-300 placeholder:text-fg-dim focus:border-fg",
+    "field-control mt-3 w-full bg-transparent border-b py-3 text-[length:var(--text-xl)] text-fg transition-colors duration-300 placeholder:text-fg-dim focus:border-fg",
     error ? "border-error" : "border-line",
     as === "textarea" && "min-h-36 resize-none",
   );

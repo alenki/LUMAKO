@@ -1,4 +1,4 @@
-/** Centralized page copy. Headings store optional `highlight` substrings for italic-accent treatment. */
+/** Centralized page copy. Headings store optional `highlight` substrings for accent treatment. */
 export const copy = {
   home: {
     hero: {
@@ -7,12 +7,6 @@ export const copy = {
       sub: "Lumako is a full-stack studio - web, AI, and apps that ship and stay live. Built to be remembered, not scrolled past.",
       ctaPrimary: { label: "Start a project", href: "/contact" },
       ctaSecondary: { label: "See the work", href: "/work" },
-    },
-    services: {
-      eyebrow: "What we build",
-      headline: "Web, AI, and apps - from one team on one engine.",
-      highlight: "one engine.",
-      link: { label: "All services", href: "/services" },
     },
     work: {
       headline: "Work that went live.",
@@ -29,29 +23,40 @@ export const copy = {
 
   work: {
     eyebrow: "Work",
-    headline: "Shipped products, doing a job.",
-    highlight: "doing a job.",
+    headline: "Selected works",
+    highlight: "works",
     sub: "A selection of live sites, built for real businesses - coffee, dining, auto, and more. Each one shipped and in the wild; open any to see it live.",
   },
 
-  services: {
-    eyebrow: "Services",
-    headline: "Web, AI, and apps - one team, end to end.",
-    highlight: "end to end.",
-    sub: "Engage Lumako for the part you need, or the whole build. One team across the stack - no handoff, no telephone game.",
-    processEyebrow: "How it works",
-    processHeadline: "Proof first. Price upfront.",
-    engagementsEyebrow: "Engagements",
-    engagementsHeadline: "Ways to work together.",
+  about: {
+    // The studio statement - team voice, leads with the work that proves it.
+    // Hard breaks (\n) are baked in so the lines set at deliberately uneven
+    // lengths (ragged, never boxy); the lume dot hugs "Lumako".
+    statement:
+      "Lumako is a full-stack studio\nbuilding web, AI, and apps.\nWe turn sharp ideas into products that\nship and stay live - then lead with the\nwork that proves it, not promises.",
+    servicesEyebrow: "Our services",
+    services: [
+      "Web",
+      "AI",
+      "Apps",
+      "Brand & identity",
+      "Positioning & proof",
+      "Motion & cinematic AI",
+    ],
+    careersEyebrow: "Careers",
+    careers: "We're always glad to meet people who build.",
+    getInTouch: {
+      heading: "Get in touch",
+      emailLabel: "Send us an email",
+      projectLabel: "Have a project?",
+      projectCta: "Start a brief",
+    },
   },
 
   contact: {
-    eyebrow: "Start a project",
-    headline: "Tell us what you're building.",
-    highlight: "building.",
-    sub: "The more you share, the sharper the first response. Every serious inquiry gets a reply - specific and real, never a templated pitch.",
-    budgets: ["< $5k", "$5k-$15k", "$15k-$40k", "$40k+", "Not sure yet"],
-    serviceOptions: ["Web", "AI", "Apps", "Brand", "Motion"],
+    headline: "Let's start a conversation.",
+    budgets: ["< $5k", "$5k-$10k", "$10k-$20k", "$20k+", "Not sure yet"],
+    serviceOptions: ["Web", "AI", "Apps"],
     success: {
       title: "Got it.",
       body: "Message received. Expect a working, specific reply - not a templated pitch.",
@@ -69,10 +74,10 @@ export const copy = {
       description:
         "Live sites built by Lumako for real businesses - coffee, dining, auto, and more. Each one shipped and in the wild.",
     },
-    services: {
-      title: "Services",
+    about: {
+      title: "About",
       description:
-        "Web, AI, and apps from one team, end to end. Proof first, price upfront.",
+        "Lumako is a full-stack studio building web, AI, and apps for real businesses - judged on a track record of shipped work, not promises.",
     },
     contact: {
       title: "Contact",

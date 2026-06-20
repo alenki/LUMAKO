@@ -23,7 +23,7 @@ export function WorkCard({ item, priority, className }: Props) {
       aria-label={`${item.title} - ${item.client} (opens the live site in a new tab)`}
       className={cn("group block", className)}
     >
-      <div className="surface-card surface-card--hover relative overflow-hidden">
+      <div className="surface-card relative overflow-hidden">
         <CoverPanel
           src={item.cover}
           alt={`${item.title} - ${item.sector}`}
@@ -37,27 +37,13 @@ export function WorkCard({ item, priority, className }: Props) {
         </span>
       </div>
 
-      <div className="mt-5 flex items-start justify-between gap-4">
-        <div>
-          <h3 className="font-display text-[length:var(--text-3xl)] font-semibold leading-tight tracking-tight text-fg transition-colors">
-            {item.title}
-          </h3>
-          <p className="mt-1.5 text-fg-muted">
-            {item.client} - {item.sector}
-          </p>
-        </div>
-        <span className="shrink-0 label-caps !text-fg-dim">{item.year}</span>
-      </div>
-
-      <div className="mt-4 flex flex-wrap gap-2">
-        {item.disciplines.map((d) => (
-          <span
-            key={d}
-            className="rounded-full border border-line px-3 py-1 label-caps"
-          >
-            {d}
-          </span>
-        ))}
+      <div className="mt-5">
+        <h3 className="font-display text-[length:var(--text-3xl)] font-semibold leading-tight tracking-tight text-fg">
+          {item.title}
+        </h3>
+        <p className="mt-1.5 text-fg-muted">
+          {item.client} - {item.sector}
+        </p>
       </div>
     </a>
   );

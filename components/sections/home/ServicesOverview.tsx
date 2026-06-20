@@ -61,7 +61,7 @@ function DisciplineColumn({
   const { tag, heading } = splitTitle(service.title);
 
   return (
-    <div className="group flex flex-col">
+    <div className="group mx-auto flex w-full max-w-[36rem] flex-col">
       {/* large centered living diagram */}
       <div className="mx-auto aspect-square w-full max-w-[36rem]">
         <div className="grid h-full w-full place-items-center">
@@ -164,7 +164,7 @@ export function ServicesOverview() {
             copy reaches the right rule instead of stopping short on wide screens. */}
         <div
           ref={galleryRef}
-          className="mt-20 grid gap-x-[var(--col-gap)] gap-y-20 md:mt-28 md:justify-between md:[grid-template-columns:repeat(3,minmax(0,36rem))]"
+          className="mt-20 grid gap-x-[var(--col-gap)] gap-y-20 lg:mt-28 lg:justify-between lg:[grid-template-columns:repeat(3,minmax(0,36rem))]"
         >
           {featured.map((svc) => (
             <DisciplineColumn

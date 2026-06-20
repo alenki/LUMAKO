@@ -1,70 +1,46 @@
 "use client";
 
-import { useState } from "react";
-import { AnimatePresence, motion } from "motion/react";
-import { Tag } from "@/components/ui/Tag";
+import { motion } from "motion/react";
 import { WorkCard } from "@/components/sections/work/WorkCard";
-import { work, disciplines } from "@/lib/content/work";
+import { work } from "@/lib/content/work";
 import { easeOutExpo } from "@/lib/motion";
-import type { Discipline } from "@/lib/content/types";
-
-type Filter = Discipline | "All";
 
 export function WorkGrid() {
-  const [filter, setFilter] = useState<Filter>("All");
-
-  const filtered =
-    filter === "All"
-      ? work
-      : work.filter((item) => item.disciplines.includes(filter));
-
   return (
     <div>
       <h2 className="sr-only">All projects</h2>
-      {/* Filter row */}
+
+      {/* Grid of every project, staggered in on load.
+
+          `.grid-12` sets `gap: var(--col-gap)` as an unlayered rule, so it beats
+          Tailwind's layered `gap-*` utilities - a plain `gap-y-*` here would be dead.
+          We override the two axes inline (inline styles outrank any selector): the
+          column gap keeps the system token, while the row gap rides a slightly higher
+          floor so a card's caption groups with its own cover and separates clearly from
+          the next card down. It still caps at the same 2rem the 2k layout already uses,
+          so the reference width is unchanged - only the tighter sizes below it open up. */}
       <div
-        className="flex flex-wrap items-center gap-2"
-        role="group"
-        aria-label="Filter work by discipline"
+        className="grid-12"
+        style={{
+          columnGap: "var(--col-gap)",
+          rowGap: "clamp(1.75rem, 0.9rem + 2.6vw, 2rem)",
+        }}
       >
-        <Tag active={filter === "All"} onClick={() => setFilter("All")}>
-          All
-        </Tag>
-        {disciplines.map((d) => (
-          <Tag key={d} active={filter === d} onClick={() => setFilter(d)}>
-            {d}
-          </Tag>
+        {work.map((item, i) => (
+          <motion.div
+            key={item.slug}
+            className="col-span-12 md:col-span-6"
+            initial={{ opacity: 0, y: 28 }}
+            animate={{
+              opacity: 1,
+              y: 0,
+              transition: { duration: 0.7, delay: i * 0.06, ease: easeOutExpo },
+            }}
+          >
+            <WorkCard item={item} priority={i === 0} />
+          </motion.div>
         ))}
       </div>
-
-      {/* Animated grid */}
-      <motion.div
-        layout
-        className="grid-12 mt-16 gap-x-8 gap-y-12"
-      >
-        <AnimatePresence mode="popLayout">
-          {filtered.map((item, i) => (
-            <motion.div
-              key={item.slug}
-              layout
-              className="col-span-12 md:col-span-6"
-              initial={{ opacity: 0, y: 28 }}
-              animate={{
-                opacity: 1,
-                y: 0,
-                transition: { duration: 0.7, delay: i * 0.06, ease: easeOutExpo },
-              }}
-              exit={{
-                opacity: 0,
-                y: 12,
-                transition: { duration: 0.35, ease: easeOutExpo },
-              }}
-            >
-              <WorkCard item={item} priority={i === 0} />
-            </motion.div>
-          ))}
-        </AnimatePresence>
-      </motion.div>
     </div>
   );
 }

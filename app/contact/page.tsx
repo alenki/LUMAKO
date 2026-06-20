@@ -1,9 +1,6 @@
 import type { Metadata } from "next";
-import { Eyebrow } from "@/components/ui/Eyebrow";
 import { TextReveal } from "@/components/ui/TextReveal";
-import { Reveal } from "@/components/ui/Reveal";
 import { ContactForm } from "@/components/sections/contact/ContactForm";
-import { ContactDetails } from "@/components/sections/contact/ContactDetails";
 import { copy } from "@/lib/content/copy";
 
 export const metadata: Metadata = {
@@ -16,33 +13,21 @@ export default function ContactPage() {
   return (
     <section className="section-lg pt-[calc(var(--header-h)+var(--vw-8))]">
       <div className="container-x">
-        <header className="grid-12 items-end">
-          <div className="col-span-12 md:col-span-7">
-            <Eyebrow>{c.eyebrow}</Eyebrow>
+        {/* Full-width on mobile; from lg up the whole column shifts right by a
+            margin that grows with the viewport, so the editorial left void
+            scales the way it does at 2k (the 20% reference) instead of snapping
+            to it at lg and crowding the headline against the gutter. */}
+        <div className="max-w-7xl lg:ml-[10%] xl:ml-[15%] 2xl:ml-[20%]">
+          <header>
             <TextReveal
               as="h1"
               text={c.headline}
-              highlight={c.highlight}
-              className="mt-8 block font-display text-[length:var(--text-6xl)] font-medium leading-[1.02] tracking-tight text-balance"
+              className="block font-display text-[length:var(--text-7xl)] font-medium leading-[1.02] tracking-tight text-balance"
             />
-          </div>
-          {c.sub && (
-            <div className="col-span-12 md:col-start-9 md:col-span-4">
-              <Reveal index={1}>
-                <p className="text-[length:var(--text-xl)] text-fg-body leading-relaxed text-pretty">
-                  {c.sub}
-                </p>
-              </Reveal>
-            </div>
-          )}
-        </header>
+          </header>
 
-        <div className="mt-20 grid-12 gap-y-16">
-          <div className="col-span-12 md:col-span-7">
+          <div className="mt-16 md:mt-20">
             <ContactForm />
-          </div>
-          <div className="col-span-12 md:col-start-9 md:col-span-4">
-            <ContactDetails />
           </div>
         </div>
       </div>

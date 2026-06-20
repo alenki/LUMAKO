@@ -42,8 +42,7 @@ npm run test       # vitest (utils, content invariants, contact validation)
 | `/` | Home - 3D hero, manifesto, services, selected work, process, proof, receipts, CTA |
 | `/work` | Filterable case-study index |
 | `/work/[slug]` | Case study detail (statically generated) |
-| `/services` | Disciplines, process, engagement models |
-| `/studio` | Manifesto, values, team, recognition, clients |
+| `/about` | Studio statement, services index, careers, get in touch |
 | `/contact` | Validated project-inquiry form + studio details |
 
 ## Structure
