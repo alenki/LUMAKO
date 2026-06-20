@@ -23,8 +23,9 @@ const snapServer = () => false;
 // as slowly as it drew in, then redraws - forever. Run from ONE clock below so all
 // three diagrams stay frame-locked.
 const ON = 3200; // entrance (~1.9s) + hold
-const OFF = 1200; // the symmetric retract length - covers the slowest stroke (the 1.2s
-// browser/phone frame un-drawing); redraw starts the instant the last one clears
+const OFF = 700; // blank gap before redraw = the retract length. The slow window/phone
+// frames now un-draw in 0.7s (quicker than they draw in), so the whole gallery clears
+// together by ~0.7s and the redraw fires the instant the last stroke goes - no slow tail
 
 /** Splits "Web - sites & platforms" into a discipline tag + sentence-case heading. */
 function splitTitle(title: string) {

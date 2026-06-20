@@ -344,30 +344,20 @@ export function Cursor() {
         </motion.svg>
       )}
 
-      {/* The gold marker loop wrapping the hovered target. Unlike the reticle
-          above (fixed to the viewport, pinned to the pointer), this layer is
-          ABSOLUTE - it lives in the page, drawn at the target's document coords -
-          so it scrolls glued to the button instead of floating over the viewport. */}
+      {/* The gold marker loop wrapping the hovered target, in two layers that
+          differ only in coordinate space. Most targets live in the page: this
+          ABSOLUTE layer is drawn at document coords so the loop scrolls glued to
+          the button with no per-frame JS. Targets inside a `position: fixed`
+          ancestor (the navbar) don't scroll, so their loop goes in the FIXED layer
+          below, drawn at viewport coords - otherwise it would scroll away from a
+          link that never moves. Only one layer holds the loop at a time; on a move
+          between the two, the old loop un-draws in its layer while the new one
+          draws in the other, each in the right space. */}
       <svg className="absolute inset-0 z-[400] h-full w-full overflow-visible" fill="none" style={fade}>
-        <AnimatePresence>
-          {mode === "link" && loop && (
-            <motion.path
-              key={loopKey}
-              d={loop}
-              stroke="var(--color-lume)"
-              strokeWidth={3}
-              strokeLinecap="round"
-              strokeLinejoin="round"
-              initial={{ pathLength: 0, opacity: 0 }}
-              animate={{ pathLength: 1, opacity: 1 }}
-              exit={{ pathLength: 0, opacity: 0 }}
-              transition={{
-                pathLength: { duration: 0.3, ease: DRAW_EASE },
-                opacity: { duration: 0.12 },
-              }}
-            />
-          )}
-        </AnimatePresence>
+        <AnimatePresence>{!loopFixed && loopPath}</AnimatePresence>
+      </svg>
+      <svg className="fixed inset-0 z-[400] h-full w-full overflow-visible" fill="none" style={fade}>
+        <AnimatePresence>{loopFixed && loopPath}</AnimatePresence>
       </svg>
 
       {/* The "View" disc shown over a project cover (data-cursor="view"). It grows

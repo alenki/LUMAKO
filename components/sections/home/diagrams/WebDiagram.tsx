@@ -77,10 +77,12 @@ const CTA = { x: CONTENT_R - 64, y: HEADLINE[0].y - 10, w: 64, h: 24, r: 6 };
 const ctaCx = CTA.x + CTA.w / 2; // 344
 const ctaCy = CTA.y + CTA.h / 2; // 170
 
-// Symmetric timing: each element retracts over the SAME duration it drew in, so the
-// disappear is exactly as slow as the appear. Only the staggered entrance delays are
-// dropped on the way out, so the schematic dissolves together - the lighter ink first,
-// the long window stroke last - rather than snapping away.
+// Retract timing: most elements un-draw over the SAME duration they drew in, so the
+// dissolve stays as graceful as the entrance. The two slowest strokes (the 1.2s window
+// frame, the 0.9s hero) retract quicker (0.7s) so they don't linger as dead air after
+// the lighter ink has cleared - the whole schematic now clears together by ~0.7s, and the
+// shared OFF gap (= 0.7s) fires the redraw the instant the last stroke goes. Staggered
+// entrance delays are still dropped on the way out, so it dissolves as one.
 
 // `shown` (the draw vs retract boolean) and the cycle clock are owned by
 // ServicesOverview and shared across all three diagrams, so they stay frame-locked.
@@ -132,11 +134,11 @@ export function WebDiagram({ shown, reduce }: { shown: boolean; reduce: boolean 
         fill="none"
         stroke="var(--color-fg)"
         strokeWidth={1.5}
-        strokeLinecap="round"
+        strokeLinecap="butt"
         strokeLinejoin="round"
         initial={false}
         animate={{ pathLength: shown ? 1 : 0 }}
-        transition={reduce ? { duration: 0 } : { duration: 1.2, ease: DRAW, delay: shown ? 0.25 : 0 }}
+        transition={reduce ? { duration: 0 } : { duration: shown ? 1.2 : 0.7, ease: DRAW, delay: shown ? 0.25 : 0 }}
       />
 
       {/* (2) PRIMARY - chrome header divider, draws just after the frame. */}
@@ -145,7 +147,7 @@ export function WebDiagram({ shown, reduce }: { shown: boolean; reduce: boolean 
         fill="none"
         stroke="var(--color-fg)"
         strokeWidth={1.5}
-        strokeLinecap="round"
+        strokeLinecap="butt"
         initial={false}
         animate={{ pathLength: shown ? 1 : 0 }}
         transition={reduce ? { duration: 0 } : { duration: 0.7, ease: DRAW, delay: shown ? 0.85 : 0 }}
@@ -157,7 +159,7 @@ export function WebDiagram({ shown, reduce }: { shown: boolean; reduce: boolean 
         fill="none"
         stroke="var(--color-fg-muted)"
         strokeWidth={1.25}
-        strokeLinecap="round"
+        strokeLinecap="butt"
         strokeLinejoin="round"
         initial={false}
         animate={{ pathLength: shown ? 1 : 0 }}
@@ -172,7 +174,7 @@ export function WebDiagram({ shown, reduce }: { shown: boolean; reduce: boolean 
           fill="none"
           stroke="var(--color-fg-muted)"
           strokeWidth={1.25}
-          strokeLinecap="round"
+          strokeLinecap="butt"
           initial={false}
           animate={{ pathLength: shown ? 1 : 0 }}
           transition={
@@ -187,11 +189,11 @@ export function WebDiagram({ shown, reduce }: { shown: boolean; reduce: boolean 
         fill="none"
         stroke="var(--color-fg-muted)"
         strokeWidth={1.25}
-        strokeLinecap="round"
+        strokeLinecap="butt"
         strokeLinejoin="round"
         initial={false}
         animate={{ pathLength: shown ? 1 : 0 }}
-        transition={reduce ? { duration: 0 } : { duration: 0.9, ease: DRAW, delay: shown ? 1.0 : 0 }}
+        transition={reduce ? { duration: 0 } : { duration: shown ? 0.9 : 0.7, ease: DRAW, delay: shown ? 1.0 : 0 }}
       />
 
       {/* (3) SECONDARY INK - tidy row of three feature cards, wipe in left->right. */}
@@ -202,7 +204,7 @@ export function WebDiagram({ shown, reduce }: { shown: boolean; reduce: boolean 
           fill="none"
           stroke="var(--color-fg-muted)"
           strokeWidth={1.25}
-          strokeLinecap="round"
+          strokeLinecap="butt"
           strokeLinejoin="round"
           initial={false}
           animate={{ pathLength: shown ? 1 : 0 }}

@@ -6,9 +6,11 @@ import { motion } from "motion/react";
 const DRAW = [0.5, 0, 0.3, 1] as const; // pen-ease for every pathLength self-draw
 const EXPO = [0.22, 1, 0.36, 1] as const; // easeOutExpo for pops / the gold settle
 
-// Symmetric timing (shared with WebDiagram): each element retracts over the SAME
-// duration it drew in, so the disappear is exactly as slow as the appear. Only the
-// staggered entrance delays are dropped on the way out.
+// Retract timing (shared rhythm with WebDiagram): most elements un-draw over the SAME
+// duration they drew in. The one slow stroke - the 1.2s phone frame - retracts quicker
+// (0.7s) so it doesn't linger as dead air after the lighter ink clears; the whole device
+// then clears together by ~0.7s, matching the shared OFF gap so the redraw follows at once.
+// Staggered entrance delays are still dropped on the way out.
 
 // Deterministic rounded-rect (one closed sub-path, clockwise from top-left) so each
 // frame self-draws as a single continuous stroke - same grammar as WebDiagram.
@@ -37,7 +39,7 @@ function ink(reduce: boolean, d: string, on: boolean, delay = 0, w = 1.25, key?:
       fill="none"
       stroke="var(--color-fg-muted)"
       strokeWidth={w}
-      strokeLinecap="round"
+      strokeLinecap="butt"
       strokeLinejoin="round"
       initial={false}
       animate={{ pathLength: on ? 1 : 0 }}
@@ -118,11 +120,11 @@ export function AppsDiagram({
         fill="none"
         stroke="var(--color-fg)"
         strokeWidth={1.5}
-        strokeLinecap="round"
+        strokeLinecap="butt"
         strokeLinejoin="round"
         initial={false}
         animate={{ pathLength: shown ? 1 : 0 }}
-        transition={reduce ? { duration: 0 } : { duration: 1.2, ease: DRAW, delay: shown ? 0.2 : 0 }}
+        transition={reduce ? { duration: 0 } : { duration: shown ? 1.2 : 0.7, ease: DRAW, delay: shown ? 0.2 : 0 }}
       />
 
       {/* (3) SHELL - status bar (island, time, battery), header (title, subtitle,

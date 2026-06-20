@@ -7,7 +7,7 @@ export function buttonClasses(variant: ButtonVariant = "primary", className?: st
   const base =
     "inline-flex items-center justify-center gap-2 rounded-[var(--radius)] px-7 py-3 font-medium tracking-tight transition-colors duration-300";
   const map: Record<ButtonVariant, string> = {
-    primary: "bg-ink text-[#fafafa] hover:bg-[#2a2a2a]",
+    primary: "bg-ink text-[#fafafa]",
     lume: "bg-lume text-[#1a1206] hover:bg-[#c08b22]",
     ghost: "border border-line bg-transparent text-fg hover:border-line-strong",
     "outline-dark": "border border-white/20 bg-transparent text-[#fafafa] hover:border-white/40",

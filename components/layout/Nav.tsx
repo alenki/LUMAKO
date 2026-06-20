@@ -9,11 +9,13 @@ import { Logo } from "@/components/ui/Logo";
 import { cn } from "@/lib/utils";
 import { easeOutExpo } from "@/lib/motion";
 import { useScrolled } from "@/lib/mediaHooks";
+import { useFooterInView } from "@/lib/footerInView";
 
 export function Nav() {
   const pathname = usePathname();
   const [open, setOpen] = useState(false);
   const scrolled = useScrolled(24);
+  const atFooter = useFooterInView();
 
   const isActive = (href: string) =>
     href === "/" ? pathname === "/" : pathname.startsWith(href);
@@ -30,12 +32,18 @@ export function Nav() {
         style={{ height: "var(--header-h)" }}
       >
         <div className="container-x grid h-full grid-cols-[minmax(0,1fr)_auto_minmax(0,1fr)] items-center">
-          {/* Left - wordmark */}
-          <div className="col-start-1 flex items-center">
+          {/* Left - wordmark. Retires once the footer's monumental wordmark is on
+             screen, so the two never share a frame. */}
+          <motion.div
+            className="col-start-1 flex items-center"
+            animate={{ opacity: atFooter ? 0 : 1 }}
+            transition={{ duration: 0.4, ease: easeOutExpo }}
+            inert={atFooter}
+          >
             <Link href="/" data-cursor aria-label="Lumako home">
               <Logo />
             </Link>
-          </div>
+          </motion.div>
 
           {/* Center - primary nav, truly centered in the viewport.
              Explicit col-start keeps it in column 2 even when `hidden` on mobile

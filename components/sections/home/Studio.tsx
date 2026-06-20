@@ -12,17 +12,14 @@ import { copy } from "@/lib/content/copy";
  * centred in the viewport. Big type, oceans of air. Minimal by design.
  */
 
-// --- Meridian Gem geometry (viewBox 0 0 48 60) -------------------------------
-// The studio's diamond, resolved into a wireframe bipyramid spun about its Y axis.
-// Centre (24,30); poles at y=8/52 (vertical radius 22); equator half-width R=14.
-// A meridian projects to a vertical ellipse whose horizontal radius is R*cos(angle):
-// it passes through true edge-on (rx->0) and reopens - that pass-through IS the spin.
-const GEM = {
-  cx: 24,
-  cy: 30,
-  R: 14, // equatorial half-width
-  ryM: 22, // meridian vertical radius (pole to equator)
-  ryEq: 3.4, // equator belt vertical radius (perspective-flattened)
+// --- Orbital Sphere geometry (viewBox 0 0 60 60) -----------------------------
+// A clean wireframe sphere turning about its vertical axis: a fixed outline circle,
+// one great-circle meridian that sweeps from edge-on (a vertical line) to face-on
+// (half-width R*cos(angle)) - that sweep IS the spin - and a single lume node
+// orbiting the equator, brightening at the front and dimming as it rounds the back.
+const SPHERE = {
+  c: 30, // centre (cx = cy)
+  R: 24, // radius
   period: 9, // seconds per revolution - quiet, hypnotic
 } as const;
 
@@ -43,27 +40,21 @@ function ellipsePath(cx: number, cy: number, rx: number, ry: number): string {
   );
 }
 
-const SILHOUETTE = "M24 8 L38 30 L24 52 L10 30 Z"; // the constant profile of the Y-spinning diamond
+// Rendered size - a wide, round footprint that sits with the bold type.
+const SIZE = { w: 120, h: 120 } as const;
+// Stroke weights (viewBox units) - heavy, to match the type around it.
+const STROKE = { circle: 4.2, meridian: 3.6 } as const;
+// The single lume node, a small dot of this radius.
+const NODE_R = 3.8;
 
-// Rendered size (the viewBox stays 48x60; this just scales the whole mark up).
-const SIZE = { w: 64, h: 80 } as const;
-// Stroke weights (viewBox units) - heavy, to sit with the bold type around it.
-const STROKE = { frame: 3.4, meridian: 2.8, belt: 2.6 } as const;
-// The single lume node, drawn as a diamond of this half-width.
-const NODE_R = 3.4;
-const nodePath = (cx: number, cy: number) =>
-  `M ${cx} ${cy - NODE_R} L ${cx + NODE_R} ${cy} L ${cx} ${cy + NODE_R} L ${cx - NODE_R} ${cy} Z`;
-
-/** One spinning meridian. `phase` (radians) offsets it around the Y axis; its
- *  projected half-width = R*cos(theta+phase), edge-on twice a turn. Opacity falls
- *  toward edge-on so the wire reads thinner side-on than face-on. */
-function Meridian({ theta, phase }: { theta: MotionValue<number>; phase: number }) {
-  const d = useTransform(theta, (t) => ellipsePath(GEM.cx, GEM.cy, GEM.R * Math.cos(t + phase), GEM.ryM));
-  const opacity = useTransform(theta, (t) => 0.25 + 0.75 * Math.abs(Math.cos(t + phase)));
+/** The lone great-circle meridian. Its projected half-width = R*cos(theta) sweeps
+ *  from edge-on (a vertical line) to face-on (the full circle) and back, which reads
+ *  as the sphere turning. Solid ink, like the outline circle. */
+function Meridian({ theta }: { theta: MotionValue<number> }) {
+  const d = useTransform(theta, (t) => ellipsePath(SPHERE.c, SPHERE.c, SPHERE.R * Math.cos(t), SPHERE.R));
   return (
     <motion.path
       d={d}
-      style={{ opacity }}
       fill="none"
       stroke="var(--color-fg)"
       strokeWidth={STROKE.meridian}
@@ -74,26 +65,25 @@ function Meridian({ theta, phase }: { theta: MotionValue<number>; phase: number 
 }
 
 /**
- * The mark - a Meridian Gem. The studio's diamond, resolved into a thin-ink
- * wireframe that turns perpetually about its vertical axis (the section's single
- * living gesture). Two meridians sweep through true edge-on and reopen while the
- * one lume node - the section's one sanctioned accent - orbits the equator,
- * brightening at the front and dimming as it rounds the back. A single useTime
- * clock drives everything through sin/cos, so the loop is seamless by construction:
- * there is no keyframe restart to flash, and velocity is continuous across turns.
+ * The mark - an Orbital Sphere. A clean thin-ink wireframe that turns perpetually
+ * about its vertical axis (the section's single living gesture): an outline circle,
+ * one great-circle meridian sweeping edge-on to face-on, and the one lume node - the
+ * section's one sanctioned accent - orbiting the equator, brightening at the front
+ * and dimming as it rounds the back. A single useTime clock drives everything through
+ * sin/cos, so the loop is seamless by construction: no keyframe restart to flash.
  */
 function StudioMark({ reduce }: { reduce: boolean }) {
   // One perpetual clock. sin/cos are exactly periodic, so each derived value returns
   // to itself every revolution. Hooks run unconditionally; the reduced branch below
   // simply ignores the live values and paints a composed static frame.
   const time = useTime();
-  const theta = useTransform(time, (ms) => (ms / 1000 / GEM.period) * Math.PI * 2);
+  const theta = useTransform(time, (ms) => (ms / 1000 / SPHERE.period) * Math.PI * 2);
 
   // Faint axial sway for a touch of float - same clock, so still seamless.
-  const tilt = useTransform(theta, (t) => Math.cos(t) * 4);
+  const tilt = useTransform(theta, (t) => Math.cos(t) * 3);
 
   // The lume node orbits the equator: x = R*sin(theta); depth = cos(theta).
-  const nodeX = useTransform(theta, (t) => GEM.R * Math.sin(t));
+  const nodeX = useTransform(theta, (t) => SPHERE.R * Math.sin(t));
   const nodeDepth = useTransform(theta, (t) => Math.cos(t)); // +1 front, -1 behind
   const nodeScale = useTransform(nodeDepth, [-1, 1], [0.55, 1.15]);
   const nodeOpacity = useTransform(nodeDepth, [-1, 0, 1], [0.42, 0.72, 1]);
@@ -101,67 +91,36 @@ function StudioMark({ reduce }: { reduce: boolean }) {
   // ---- Reduced motion: a composed static three-quarter view (no loop) ----
   if (reduce) {
     const ang = (38 * Math.PI) / 180;
-    const nx = GEM.cx + GEM.R * Math.sin(ang); // 32.62, front-right on the equator
+    const nx = SPHERE.c + SPHERE.R * Math.sin(ang); // front-right on the equator
     return (
-      <svg width={SIZE.w} height={SIZE.h} viewBox="0 0 48 60" fill="none" aria-hidden="true" className="overflow-visible">
-        <path d={SILHOUETTE} fill="none" stroke="var(--color-fg)" strokeWidth={STROKE.frame} strokeLinecap="round" strokeLinejoin="round" />
+      <svg width={SIZE.w} height={SIZE.h} viewBox="0 0 60 60" fill="none" aria-hidden="true" className="overflow-visible">
+        <circle cx={SPHERE.c} cy={SPHERE.c} r={SPHERE.R} fill="none" stroke="var(--color-fg)" strokeWidth={STROKE.circle} />
         <path
-          d={ellipsePath(GEM.cx, GEM.cy, GEM.R, GEM.ryEq)}
-          fill="none"
-          stroke="var(--color-fg)"
-          strokeWidth={STROKE.belt}
-          strokeLinecap="round"
-          strokeLinejoin="round"
-          opacity={0.85}
-        />
-        <path
-          d={ellipsePath(GEM.cx, GEM.cy, GEM.R * Math.cos(ang), GEM.ryM)}
+          d={ellipsePath(SPHERE.c, SPHERE.c, SPHERE.R * Math.cos(ang), SPHERE.R)}
           fill="none"
           stroke="var(--color-fg)"
           strokeWidth={STROKE.meridian}
           strokeLinecap="round"
           strokeLinejoin="round"
-          opacity={0.95}
         />
-        <path
-          d={ellipsePath(GEM.cx, GEM.cy, GEM.R * Math.cos(ang + Math.PI / 2), GEM.ryM)}
-          fill="none"
-          stroke="var(--color-fg)"
-          strokeWidth={STROKE.meridian}
-          strokeLinecap="round"
-          strokeLinejoin="round"
-          opacity={0.4}
-        />
-        <path d={nodePath(nx, GEM.cy)} fill="var(--color-lume)" />
+        <circle cx={nx} cy={SPHERE.c} r={NODE_R} fill="var(--color-lume)" />
       </svg>
     );
   }
 
   // ---- Perpetual loop ----
   return (
-    <svg width={SIZE.w} height={SIZE.h} viewBox="0 0 48 60" fill="none" aria-hidden="true" className="overflow-visible">
-      <motion.g style={{ rotate: tilt, transformBox: "view-box", transformOrigin: "24px 30px" }}>
-        {/* fixed silhouette - the constant profile of the Y-spinning diamond */}
-        <path d={SILHOUETTE} fill="none" stroke="var(--color-fg)" strokeWidth={STROKE.frame} strokeLinecap="round" strokeLinejoin="round" />
+    <svg width={SIZE.w} height={SIZE.h} viewBox="0 0 60 60" fill="none" aria-hidden="true" className="overflow-visible">
+      <motion.g style={{ rotate: tilt, transformBox: "view-box", transformOrigin: "30px 30px" }}>
+        {/* fixed outline circle - the sphere's silhouette */}
+        <circle cx={SPHERE.c} cy={SPHERE.c} r={SPHERE.R} fill="none" stroke="var(--color-fg)" strokeWidth={STROKE.circle} />
 
-        {/* equator belt - the perspective ring the node rides */}
-        <path
-          d={ellipsePath(GEM.cx, GEM.cy, GEM.R, GEM.ryEq)}
-          fill="none"
-          stroke="var(--color-fg)"
-          strokeWidth={STROKE.belt}
-          strokeLinecap="round"
-          strokeLinejoin="round"
-          opacity={0.85}
-        />
-
-        {/* two spinning meridians, 90deg apart - one reads clearly while the other goes edge-on */}
-        <Meridian theta={theta} phase={0} />
-        <Meridian theta={theta} phase={Math.PI / 2} />
+        {/* the lone meridian, sweeping edge-on to face-on - the spin read */}
+        <Meridian theta={theta} />
 
         {/* the one lume node, orbiting the equator with honest depth (scale + dim as it rounds the back) */}
-        <motion.g style={{ x: nodeX, scale: nodeScale, opacity: nodeOpacity, transformBox: "view-box", transformOrigin: "24px 30px" }}>
-          <path d={nodePath(GEM.cx, GEM.cy)} fill="var(--color-lume)" />
+        <motion.g style={{ x: nodeX, scale: nodeScale, opacity: nodeOpacity, transformBox: "view-box", transformOrigin: "30px 30px" }}>
+          <circle cx={SPHERE.c} cy={SPHERE.c} r={NODE_R} fill="var(--color-lume)" />
         </motion.g>
       </motion.g>
     </svg>

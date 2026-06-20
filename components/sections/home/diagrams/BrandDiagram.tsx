@@ -101,7 +101,7 @@ export function BrandDiagram({
             fill="none"
             stroke="var(--color-line-strong)"
             strokeWidth={1.1}
-            strokeLinecap="round"
+            strokeLinecap="butt"
             initial={false}
             animate={{ pathLength: drawn ? 1 : 0, opacity: drawn ? 0.9 : 0 }}
             transition={
@@ -122,7 +122,7 @@ export function BrandDiagram({
           fill="none"
           stroke="var(--color-lume-deep)"
           strokeWidth={1.6}
-          strokeLinecap="round"
+          strokeLinecap="butt"
           strokeLinejoin="round"
           initial={false}
           animate={{ pathLength: drawn ? 1 : 0 }}

@@ -1,9 +1,11 @@
 "use client";
 
-import { motion } from "motion/react";
+import { useEffect, useRef } from "react";
+import { motion, useInView } from "motion/react";
 import type { Variants } from "motion/react";
 import { site } from "@/lib/content/site";
 import { useReducedMotion } from "@/lib/useReducedMotion";
+import { setFooterInView } from "@/lib/footerInView";
 import { easeOutExpo } from "@/lib/motion";
 
 /** Monumental closing wordmark settles up from a soft blur as it scrolls in. */
@@ -22,6 +24,17 @@ const linkClass =
 
 export function Footer() {
   const reduce = useReducedMotion() ?? false;
+
+  // Tell the nav when the monumental wordmark is approaching. The positive bottom
+  // margin grows the viewport downward, so this fires a touch before the wordmark
+  // actually reveals - giving the nav time to fade its own wordmark out first.
+  const wordmarkRef = useRef<HTMLSpanElement>(null);
+  const wordmarkInView = useInView(wordmarkRef, { margin: "0px 0px 25% 0px" });
+
+  useEffect(() => {
+    setFooterInView(wordmarkInView);
+    return () => setFooterInView(false);
+  }, [wordmarkInView]);
 
   return (
     <footer className="relative overflow-hidden bg-bg pb-0 pt-[var(--py-section-lg)]">
@@ -47,12 +60,19 @@ export function Footer() {
             wordmark anchored to and bleeding off the bottom edge (footer clips it). */}
         <div className="relative mt-[var(--vw-4)]">
           <div className="mb-[var(--vw-2)] flex justify-end min-[1700px]:absolute min-[1700px]:inset-x-0 min-[1700px]:bottom-[12%] min-[1700px]:z-10 min-[1700px]:mb-0">
-            <a href={`mailto:${site.email}`} data-cursor="quiet" className={linkClass}>
+            <a
+              href={`mailto:${site.email}`}
+              target="_blank"
+              rel="noopener noreferrer"
+              data-cursor="quiet"
+              className={linkClass}
+            >
               {site.email}
             </a>
           </div>
           <div className="ml-[calc(var(--vw-2)*-1)] [transform:translateY(0.1em)]">
             <motion.span
+              ref={wordmarkRef}
               initial={reduce ? false : "hidden"}
               whileInView="show"
               // The wordmark is the last thing on the page, so a negative bottom

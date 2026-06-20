@@ -56,7 +56,7 @@ export function CoverPanel({
           alt={alt ?? ""}
           fill
           sizes="(min-width: 768px) 50vw, 100vw"
-          quality={80}
+          quality={90}
           priority={priority}
           className="object-cover"
           style={{ objectPosition: position ?? "center" }}

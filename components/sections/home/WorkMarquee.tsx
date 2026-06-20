@@ -21,7 +21,7 @@ const HOVER_RATE = 0.4;
  *  promotes each cell to its own pixel-snapped compositor layer (globals.css) so the
  *  gliding track translates clean per-card textures instead of resampling one giant
  *  texture - which is what bled white sub-pixel seams between cards on hover. */
-const CELL = "marquee-cell me-5 shrink-0 md:me-8 w-[clamp(330px,42vw,720px)]";
+const CELL = "marquee-cell me-5 shrink-0 md:me-8 w-[clamp(420px,52vw,920px)]";
 
 /**
  * Full-bleed auto-sliding work rail. The list is rendered twice: the real set

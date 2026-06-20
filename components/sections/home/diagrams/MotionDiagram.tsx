@@ -91,7 +91,7 @@ export function MotionDiagram({
           fill="none"
           stroke="var(--color-fg)"
           strokeWidth={1.5}
-          strokeLinecap="round"
+          strokeLinecap="butt"
           strokeLinejoin="round"
           initial={false}
           animate={{ pathLength: drawn ? 1 : 0 }}

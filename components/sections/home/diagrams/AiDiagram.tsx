@@ -77,7 +77,7 @@ export function AiDiagram({ shown, reduce }: { shown: boolean; reduce: boolean }
           fill="none"
           stroke="var(--color-fg)"
           strokeWidth={1.5}
-          strokeLinecap="round"
+          strokeLinecap="butt"
           initial={false}
           animate={{ pathLength: shown ? 1 : 0 }}
           transition={

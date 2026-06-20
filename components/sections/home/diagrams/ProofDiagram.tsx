@@ -88,7 +88,7 @@ export function ProofDiagram({
           fill="none"
           stroke="var(--color-fg)"
           strokeWidth={1.5}
-          strokeLinecap="round"
+          strokeLinecap="butt"
           initial={false}
           animate={{ pathLength: drawn ? 1 : 0 }}
           transition={reduce ? { duration: 0 } : { duration: 1.1, ease: DRAW, delay: 0.25 + i * 0.03 }}
@@ -118,7 +118,7 @@ export function ProofDiagram({
         fill="none"
         stroke="var(--color-fg-muted)"
         strokeWidth={1.25}
-        strokeLinecap="round"
+        strokeLinecap="butt"
         initial={false}
         animate={{ pathLength: drawn ? 1 : 0 }}
         transition={reduce ? { duration: 0 } : { duration: 0.5, ease: DRAW, delay: 0.9 }}
@@ -130,7 +130,7 @@ export function ProofDiagram({
         fill="none"
         stroke="var(--color-lume-deep)"
         strokeWidth={1.5}
-        strokeLinecap="round"
+        strokeLinecap="butt"
         initial={false}
         animate={{ pathLength: drawn ? 1 : 0 }}
         transition={reduce ? { duration: 0 } : { duration: 0.9, ease: DRAW, delay: 1.2 }}
