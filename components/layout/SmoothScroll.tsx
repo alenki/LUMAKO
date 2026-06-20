@@ -6,6 +6,15 @@ import Lenis from "lenis";
 
 let lenisInstance: Lenis | null = null;
 
+/** Pause/resume momentum scrolling - used by full-screen overlays (the mobile
+ *  menu) so Lenis stops hijacking the wheel while the page sits behind a scroll
+ *  lock. No-ops when Lenis isn't running (reduced motion). */
+export function setSmoothScrollPaused(paused: boolean) {
+  if (!lenisInstance) return;
+  if (paused) lenisInstance.stop();
+  else lenisInstance.start();
+}
+
 /** Momentum smooth-scroll via Lenis. Disabled under reduced motion. */
 export function SmoothScroll({ children }: { children: React.ReactNode }) {
   const pathname = usePathname();
