@@ -13,11 +13,12 @@ export default function ContactPage() {
   return (
     <section className="section-lg pt-[calc(var(--header-h)+var(--vw-8))]">
       <div className="container-x">
-        {/* Full-width on mobile; from lg up the whole column shifts right by a
-            margin that grows with the viewport, so the editorial left void
-            scales the way it does at 2k (the 20% reference) instead of snapping
-            to it at lg and crowding the headline against the gutter. */}
-        <div className="max-w-7xl lg:ml-[10%] xl:ml-[15%] 2xl:ml-[20%]">
+        {/* The locked 2k reference keeps its editorial left-void: ml-[20%] is the
+            base value, so the headline + form column sits left-of-centre on the
+            widest screens. Below ~2261px - where that 20% indent would otherwise
+            shove the column right-of-centre - it recentres with mx-auto. The
+            crossover is seamless: ml-[20%] already equals dead-centre at ~2261px. */}
+        <div className="max-w-7xl ml-[20%] max-[2261px]:mx-auto">
           <header>
             <TextReveal
               as="h1"

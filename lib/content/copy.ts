@@ -14,9 +14,11 @@ export const copy = {
     },
     studio: {
       // One flowing statement, broken by the mark into a lead + a wide "what we make"
-      // line. The craft string carries explicit breaks so it always sets as three
-      // length-balanced lines (TextReveal still exposes the joined sentence to a11y).
-      lead: "Lumako is a full-stack studio",
+      // line. Both strings carry explicit breaks (the lead after "is a", the craft into
+      // three length-balanced lines) so each box shrink-wraps to its widest line - which
+      // is what lets the section centre cleanly (a break-less lead would inflate its box
+      // to the 15ch cap). TextReveal still exposes each joined sentence to a11y.
+      lead: "Lumako is a\nfull-stack studio",
       craft: "We design, build, and\nship web, AI, and apps\nfor real businesses",
     },
   },
@@ -34,6 +36,13 @@ export const copy = {
     // lengths (ragged, never boxy); the lume dot hugs "Lumako".
     statement:
       "Lumako is a full-stack studio\nbuilding web, AI, and apps.\nWe turn sharp ideas into products that\nship and stay live - then lead with the\nwork that proves it, not promises.",
+    // Same statement, re-broken for phone widths so each line still rises from its
+    // own clip mask (the >=768 "lines" reveal) instead of one block. The desktop
+    // breaks run 38-40 chars and overflow the narrow <768 column (no 12vw indent
+    // there), so these are shorter (<=~22 chars) - more lines, but each holds as a
+    // single row down to ~375px and staggers up exactly like desktop.
+    statementMobile:
+      "Lumako is a full-stack\nstudio building web,\nAI, and apps. We turn\nsharp ideas into\nproducts that ship\nand stay live - then\nlead with the work that\nproves it, not promises.",
     servicesEyebrow: "Our services",
     services: [
       "Web",

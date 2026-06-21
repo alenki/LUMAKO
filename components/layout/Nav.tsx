@@ -7,7 +7,6 @@ import { AnimatePresence, motion } from "motion/react";
 import type { Variants } from "motion/react";
 import { site } from "@/lib/content/site";
 import { Logo } from "@/components/ui/Logo";
-import { LocalTime } from "@/components/layout/LocalTime";
 import { cn } from "@/lib/utils";
 import { easeOutExpo } from "@/lib/motion";
 import { useScrolled } from "@/lib/mediaHooks";
@@ -126,9 +125,9 @@ export function Nav() {
              is open, anchoring the panel's top-left. */}
           <motion.div
             className="col-start-1 flex items-center"
-            animate={{ opacity: atFooter && !open ? 0 : 1 }}
+            animate={{ opacity: atFooter || open ? 0 : 1 }}
             transition={{ duration: 0.4, ease: easeOutExpo }}
-            inert={atFooter && !open}
+            inert={atFooter || open}
           >
             <Link
               href="/"
@@ -170,19 +169,24 @@ export function Nav() {
               aria-expanded={open}
               aria-controls="mobile-menu"
               onClick={() => setOpen((v) => !v)}
-              className="relative flex size-10 flex-col items-center justify-center gap-[5px] md:hidden"
+              className={cn(
+                "relative flex size-10 flex-col items-center justify-center gap-[5px] transition-transform duration-300 ease-[cubic-bezier(0.22,1,0.36,1)] md:hidden",
+                open && "translate-y-[18px] -translate-x-[6px]",
+              )}
               data-cursor
             >
               <span
                 className={cn(
-                  "block h-px w-6 origin-center bg-fg transition-transform duration-300 ease-[cubic-bezier(0.22,1,0.36,1)]",
-                  open && "translate-y-[3px] rotate-45",
+                  "block origin-center transition-all duration-300 ease-[cubic-bezier(0.22,1,0.36,1)]",
+                  open ? "h-[3px] w-7 bg-white" : "h-0.5 w-6 bg-fg",
+                  open && "translate-y-[4px] rotate-45",
                 )}
               />
               <span
                 className={cn(
-                  "block h-px w-6 origin-center bg-fg transition-transform duration-300 ease-[cubic-bezier(0.22,1,0.36,1)]",
-                  open && "-translate-y-[3px] -rotate-45",
+                  "block origin-center transition-all duration-300 ease-[cubic-bezier(0.22,1,0.36,1)]",
+                  open ? "h-[3px] w-7 bg-white" : "h-0.5 w-6 bg-fg",
+                  open && "-translate-y-[4px] -rotate-45",
                 )}
               />
             </button>
@@ -211,14 +215,15 @@ type MobileMenuProps = {
   panelRef: React.RefObject<HTMLDivElement | null>;
 };
 
-/** Stagger metronome: each row reveals a beat after the one above it. */
+/** Stagger metronome: each row reveals a beat after the one above it. A small base
+ *  delay lets the card spring open first, so the index wipes in just behind it. */
 const ROW_STAGGER = 0.06;
-const ROW_BASE_DELAY = 0.14;
+const ROW_BASE_DELAY = 0.18;
 
-/** Index-link size. Scales with viewport width AND height (`min`) so long lists
- *  stay whole on short / landscape phones, floored and capped for tiny and large
- *  screens alike. */
-const LABEL_SIZE = "clamp(2.25rem, min(8.6vw, 7vh), 4.25rem)";
+/** Monumental index-word size. Scales with viewport width AND height (`min`) so the
+ *  full stack stays whole on short / landscape phones, floored for tiny screens and
+ *  capped on the largest. */
+const LABEL_SIZE = "clamp(2rem, min(11vw, 7.5vh), 3.25rem)";
 
 function MobileMenu({ open, reduce, isActive, onClose, panelRef }: MobileMenuProps) {
   return (
@@ -231,149 +236,93 @@ function MobileMenu({ open, reduce, isActive, onClose, panelRef }: MobileMenuPro
           aria-modal="true"
           aria-label="Site menu"
           tabIndex={-1}
-          className="fixed inset-0 z-[150] overflow-hidden bg-bg/90 backdrop-blur-2xl outline-none md:hidden"
+          onClick={onClose}
+          className="fixed inset-0 z-[150] bg-black/15 backdrop-blur-[2px] outline-none md:hidden"
           initial={{ opacity: 0 }}
           animate={{ opacity: 1 }}
           exit={{ opacity: 0 }}
-          transition={{ duration: reduce ? 0.2 : 0.45, ease: easeOutExpo }}
+          transition={{ duration: reduce ? 0.2 : 0.4, ease: easeOutExpo }}
         >
           {/* In-dialog dismiss for screen-reader / browse-mode users. The visible
-              close affordance is the header toggle, but with aria-modal the browse
-              cursor is constrained to this subtree, so the modal needs its own
-              reachable close control. */}
+              close affordance is the header toggle (the X over the card's top-right),
+              but with aria-modal the browse cursor is constrained to this subtree, so
+              the modal needs its own reachable close control. */}
           <button type="button" onClick={onClose} className="sr-only">
             Close menu
           </button>
 
-          {/* Decorative bleed, clipped by the panel and kept OUT of the scroll
-              container below so none of it can add to the content's scroll height.
-              Atmosphere = the site's grain veil + one soft top glow; the monumental
-              ghost wordmark bleeding off the bottom quotes the footer at a whisper,
-              so the panel reads as the same book. */}
-          <span className="noise-veil" aria-hidden />
-          <div
-            aria-hidden
-            className="glow-accent pointer-events-none absolute inset-x-0 top-0 h-1/2 opacity-60"
-          />
-          <span
-            aria-hidden
-            className="pointer-events-none absolute -bottom-[0.18em] left-[calc(var(--gutter)-0.04em)] select-none font-display font-semibold leading-[0.8] tracking-[-0.04em] text-fg opacity-[0.04] [font-size:clamp(9rem,42vw,20rem)]"
+          {/* The card - a pure-black top-anchored dropdown. It springs open from the
+              top-right corner (nearest the toggle) and settles, the index wiping in
+              just behind it. Swallows clicks; only the backdrop, the X, or a link
+              closes it. */}
+          <motion.div
+            onClick={(e) => e.stopPropagation()}
+            className="absolute inset-x-[0.75rem] top-[0.75rem] overflow-hidden rounded-[1.1rem] border border-white/10 bg-black shadow-[0_30px_90px_-24px_rgba(0,0,0,0.55)]"
+            style={{ transformOrigin: "top right" }}
+            initial={{ opacity: 0, scale: reduce ? 1 : 0.92, y: reduce ? 0 : -8 }}
+            animate={{ opacity: 1, scale: 1, y: 0 }}
+            exit={{ opacity: 0, scale: reduce ? 1 : 0.96, y: reduce ? 0 : -6 }}
+            transition={{ duration: reduce ? 0.2 : 0.5, ease: easeOutExpo }}
           >
-            Lumako<span className="text-lume">.</span>
-          </span>
-
-          {/* Scrollable content - its own layer so genuinely tall lists (short or
-              landscape screens) scroll inside the panel, while the decorative bleed
-              above never contributes a stray scrollbar. */}
-          <div
-            data-lenis-prevent
-            className="relative h-full overflow-y-auto overflow-x-clip overscroll-contain"
-          >
+            {/* Content layer - the index stacks from the top of the card. It only
+                scrolls inside the card if it ever outgrows the viewport (tiny / short
+                screens); otherwise the card simply hugs it. */}
             <div
-              className="container-x relative flex min-h-full flex-col"
-              style={{
-                paddingTop: "calc(var(--header-h) + var(--vw-3))",
-                paddingBottom: "max(var(--vw-4), env(safe-area-inset-bottom))",
-              }}
+              data-lenis-prevent
+              className="relative max-h-[calc(100dvh-1.5rem)] overflow-y-auto overflow-x-clip overscroll-contain"
             >
-              {/* Top meta row - the studio instrument, framing the index. */}
-              <MenuReveal reduce={reduce} index={0} className="flex items-center justify-between">
-                <span className="label-caps">Index</span>
-                <LocalTime />
-              </MenuReveal>
-
-              {/* The index - a numbered editorial ledger. */}
-              <nav aria-label="Primary" className="flex flex-1 flex-col justify-center py-[clamp(0.5rem,2.5vh,2rem)]">
-                <ul className="flex flex-col">
-                  {site.nav.map((item, i) => {
-                    const active = isActive(item.href);
-                    return (
-                      <li key={item.href} className="border-t border-line last:border-b">
-                        <MenuReveal reduce={reduce} index={i + 1}>
-                          <Link
-                            href={item.href}
-                            onClick={onClose}
-                            data-cursor
-                            aria-current={active ? "page" : undefined}
-                            className="group flex items-baseline gap-[var(--vw-3)] py-[clamp(0.7rem,2.2vh,1.4rem)]"
-                          >
-                            {/* Decorative editorial ordinal - aria-hidden so the
-                                screen reader reads a clean "Home", not "01 Home".
-                                Colour comes from .label-caps (fg-muted), matching
-                                every other label on the site; the active row is
-                                signalled by the lume period + aria-current, not by
-                                recolouring this number. (.label-caps sets colour as
-                                an unlayered rule, so a text-* utility here wouldn't
-                                win anyway.) */}
-                            <span aria-hidden className="label-caps w-[2.5ch] shrink-0 tabular-nums">
-                              {String(i + 1).padStart(2, "0")}
-                            </span>
-                            <span
-                              className="inline-flex font-display font-medium leading-[1.02] tracking-tight text-fg transition-transform duration-500 ease-[cubic-bezier(0.22,1,0.36,1)] group-hover:translate-x-[0.12em]"
-                              style={{ fontSize: LABEL_SIZE }}
-                            >
-                              {item.label}
-                              {/* The lume period - the wordmark's dot, marking the
-                                  page you're on. The one accent in the panel, and
-                                  perfectly on the baseline because it's set on the
-                                  same line as the label. */}
-                              <span
-                                aria-hidden
-                                className={cn(
-                                  "text-lume transition-opacity duration-300",
-                                  active ? "opacity-100" : "opacity-0",
-                                )}
-                              >
-                                .
-                              </span>
-                            </span>
-                            <span
-                              aria-hidden
-                              className="ml-auto self-center text-fg-dim opacity-0 transition-all duration-500 ease-[cubic-bezier(0.22,1,0.36,1)] [font-size:var(--text-2xl)] group-hover:translate-x-1 group-hover:opacity-100"
-                            >
-                              &rarr;
-                            </span>
-                          </Link>
-                        </MenuReveal>
-                      </li>
-                    );
-                  })}
-                </ul>
-              </nav>
-
-              {/* Base block - contact + socials, anchored to the bottom edge. */}
-              <MenuReveal
-                reduce={reduce}
-                index={site.nav.length + 1}
-                className="flex flex-wrap items-end justify-between gap-x-[var(--vw-4)] gap-y-[var(--vw-2)] border-t border-line pt-[var(--vw-3)]"
+              <div
+                className="flex flex-col px-[clamp(2rem,9vw,3.5rem)]"
+                style={{
+                  paddingTop: "calc(var(--header-h) + var(--vw-2))",
+                  paddingBottom: "max(calc(var(--vw) * 7), env(safe-area-inset-bottom))",
+                }}
               >
-                <div className="flex flex-col gap-1">
-                  <span className="label-caps">Get in touch</span>
-                  <a
-                    href={`mailto:${site.email}`}
-                    data-cursor
-                    className="text-[length:var(--text-xl)] font-medium text-fg transition-colors hover:text-fg-body"
-                  >
-                    {site.email}
-                  </a>
-                </div>
-                <nav aria-label="Social" className="flex flex-wrap items-center gap-x-[var(--vw-3)] gap-y-1">
-                  {site.socials.map((s) => (
-                    <a
-                      key={s.href}
-                      href={s.href}
-                      target="_blank"
-                      rel="noopener noreferrer"
-                      data-cursor
-                      className="label-caps transition-colors hover:text-fg"
-                    >
-                      {s.label}
-                    </a>
-                  ))}
+                {/* The index - monumental stacked words. No ordinals, no rules: the
+                    words carry the whole panel, and the current page is marked by the
+                    wordmark's lume period. */}
+                <nav aria-label="Primary">
+                  <ul className="flex flex-col gap-[clamp(0.55rem,2.3vh,1.2rem)]">
+                    {site.nav.map((item, i) => {
+                      const active = isActive(item.href);
+                      return (
+                        <li key={item.href}>
+                          <MenuReveal reduce={reduce} index={i}>
+                            <Link
+                              href={item.href}
+                              onClick={onClose}
+                              data-cursor
+                              aria-current={active ? "page" : undefined}
+                              className="group inline-block py-[0.04em]"
+                            >
+                              <span
+                                className="font-display [font-weight:750] uppercase leading-[0.92] tracking-[-0.02em] text-white transition-colors duration-300 group-hover:text-white/70"
+                                style={{ fontSize: LABEL_SIZE }}
+                              >
+                                {item.label}
+                                {/* The lume period - the wordmark's dot, marking the
+                                    page you're on. The panel's single accent, sat on
+                                    the baseline because it's inline with the word. */}
+                                <span
+                                  aria-hidden
+                                  className={cn(
+                                    "text-lume transition-opacity duration-300",
+                                    active ? "opacity-100" : "opacity-0",
+                                  )}
+                                >
+                                  .
+                                </span>
+                              </span>
+                            </Link>
+                          </MenuReveal>
+                        </li>
+                      );
+                    })}
+                  </ul>
                 </nav>
-              </MenuReveal>
+              </div>
             </div>
-          </div>
+          </motion.div>
         </motion.div>
       )}
     </AnimatePresence>

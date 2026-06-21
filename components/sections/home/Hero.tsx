@@ -29,7 +29,10 @@ export function Hero() {
       <div className="container-x relative z-10 flex flex-1 flex-col">
         {/* headline fills the available height */}
         <div className="flex flex-1 flex-col justify-center">
-          <h1 className="font-display font-extrabold uppercase leading-[0.85] max-[760px]:leading-[0.9] tracking-[-0.05em] text-[length:clamp(46px,10.8vw,210px)]">
+          {/* Type fits one line at >=1964px (the locked 2k reference). Below that the
+              widest line ("MOST WORK GETS") would wrap, so we shrink it a touch and hold
+              it on one line. True mobile (<=760px) keeps the base size and wraps as before. */}
+          <h1 className="font-display font-extrabold uppercase leading-[0.85] max-[760px]:leading-[0.9] tracking-[-0.05em] text-[length:clamp(46px,10.8vw,210px)] max-[1963px]:text-[length:clamp(46px,9.8vw,210px)] max-[1963px]:whitespace-nowrap max-[760px]:text-[length:clamp(46px,10.8vw,210px)] max-[760px]:whitespace-normal">
             {lines.map((line, i) => {
               const isLast = i === lastIdx;
               return (
@@ -71,8 +74,11 @@ export function Hero() {
           </h1>
         </div>
 
-        {/* lower band: descriptor + CTAs (left), scroll cue (right) */}
-        <div className="flex flex-wrap items-end justify-between gap-x-10 gap-y-8 pb-[clamp(22px,3vw,42px)]">
+        {/* lower band: descriptor + CTAs (left), scroll cue (right). At >=481px the cue
+            holds the bottom-right corner on the same row as the CTAs. On small phones
+            (<=480px) the band stacks so the buttons keep their natural row and the cue
+            drops below them, still pinned right (self-end). */}
+        <div className="flex items-end justify-between gap-x-10 pb-[clamp(22px,3vw,42px)] max-[480px]:flex-col max-[480px]:items-start max-[480px]:gap-y-6">
           <motion.div
             className="max-w-[46ch]"
             initial={reduce ? false : { opacity: 0, y: 14 }}
@@ -80,17 +86,29 @@ export function Hero() {
             transition={reduce ? { duration: 0 } : { duration: 0.9, ease: easeOutSoft, delay: 1.1 }}
           >
             <p className="text-[length:var(--text-xl)] text-fg-body leading-relaxed text-pretty">{hero.sub}</p>
-            <div className="mt-6 flex flex-wrap gap-3">
-              <Button href={hero.ctaPrimary.href} variant="primary">
+            {/* Below 360px the two CTAs would wrap onto separate rows, so we shrink
+                them a touch (max-[360px] only - base stays the locked reference) to
+                hold them side by side. */}
+            <div className="mt-6 flex flex-wrap gap-3 max-[360px]:gap-2">
+              <Button
+                href={hero.ctaPrimary.href}
+                variant="primary"
+                className="max-[360px]:px-4 max-[360px]:py-2.5 max-[360px]:text-[13px]"
+              >
                 {hero.ctaPrimary.label}
               </Button>
-              <Button href={hero.ctaSecondary.href} variant="ghost">
+              <Button
+                href={hero.ctaSecondary.href}
+                variant="ghost"
+                className="max-[360px]:px-4 max-[360px]:py-2.5 max-[360px]:text-[13px]"
+              >
                 {hero.ctaSecondary.label} &rarr;
               </Button>
             </div>
           </motion.div>
 
           <motion.div
+            className="shrink-0 max-[480px]:self-end"
             initial={reduce ? false : { opacity: 0, y: 14 }}
             animate={{ opacity: 1, y: 0 }}
             transition={reduce ? { duration: 0 } : { duration: 0.9, ease: easeOutSoft, delay: 1.4 }}

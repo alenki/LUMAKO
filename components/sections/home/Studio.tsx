@@ -48,8 +48,12 @@ function ellipsePath(cx: number, cy: number, rx: number, ry: number): string {
   );
 }
 
-// Rendered size - a wide, round footprint that sits with the bold type.
-const SIZE = { w: 120, h: 120 } as const;
+// Rendered footprint - fluid, so the mark scales with the section's type instead of
+// looming at a fixed 120px once the copy shrinks below the locked 2k reference. The
+// clamp mirrors the "what we make" line's clamp scaled by 1.111x (120px / 108px), the
+// proportion the mark holds against that line at the reference - so it stays exactly
+// 1.111x the craft line at every width and shrinks in lockstep with the type.
+const MARK_SIZE = "size-[clamp(3.333rem,8.333vw,7.5rem)] overflow-visible";
 
 // One ellipse slot's state. Three of these compose a station.
 type Slot = { cx: number; cy: number; rx: number; ry: number };
@@ -132,7 +136,7 @@ function MorphMark() {
   const time = useTime();
   const rotate = useTransform(time, (ms) => (ms / 1000 / ROT_PERIOD) * 360);
   return (
-    <svg width={SIZE.w} height={SIZE.h} viewBox="0 0 60 60" fill="none" aria-hidden="true" className="overflow-visible">
+    <svg viewBox="0 0 60 60" fill="none" aria-hidden="true" className={MARK_SIZE}>
       <motion.g style={{ rotate, transformBox: "view-box", transformOrigin: "30px 30px" }}>
         <Stroke time={time} i={0} />
         <Stroke time={time} i={1} />
@@ -146,7 +150,7 @@ function MorphMark() {
  *  the morph's time=0, rotation=0 first frame, so swapping to it is invisible. Solid black ink. */
 function StaticMark() {
   return (
-    <svg width={SIZE.w} height={SIZE.h} viewBox="0 0 60 60" fill="none" aria-hidden="true" className="overflow-visible">
+    <svg viewBox="0 0 60 60" fill="none" aria-hidden="true" className={MARK_SIZE}>
       <circle cx={C} cy={C} r={24} fill="none" stroke="var(--color-fg)" strokeWidth={STROKE} />
       <path
         d={ellipsePath(C, C, 13, 24)}
@@ -178,18 +182,19 @@ export function Studio() {
   return (
     <section className="relative flex min-h-dvh flex-col justify-center py-[clamp(4rem,12vh,8rem)]">
       <div className="container-x">
-        {/* The editorial left-indent is a wide-screen flourish: at 2K the craft font
-            caps (6.75rem) while the column keeps widening, so the baked craft lines
-            still fit inside the indent. Below ~1900px the growing fluid type would
-            re-wrap those lines into orphans, so the section runs full-width there. */}
-        <div className="min-[1900px]:pl-[18vw]">
+        {/* The editorial left-indent is a wide-screen flourish that holds its full 18vw
+            on desktop, then tapers smoothly to a full-width column as the window narrows -
+            no hard breakpoint, so the block never snaps to the left edge. The taper is fit
+            to a measured envelope (the widest "what we make" line must not orphan); see
+            .studio-indent in globals.css for the full rationale. */}
+        <div className="studio-indent">
           {/* the lead - the main headline, scaled up to carry the now type-only section */}
           <TextReveal
             as="h2"
             text={s.lead}
             dotAfter="Lumako"
             stagger={0.04}
-            className="block max-w-[15ch] font-display text-[length:clamp(2.7rem,9.3vw,8.75rem)] font-medium leading-[1.0] tracking-[-0.03em] text-balance"
+            className="block max-w-[15ch] font-display text-[length:clamp(3rem,9.3vw,8.75rem)] font-medium leading-[1.0] tracking-[-0.03em] text-balance"
           />
 
           {/* the mark - the section's single living gesture, set tight to the lines */}
@@ -197,14 +202,29 @@ export function Studio() {
             <StudioMark reduce={reduce} />
           </div>
 
-          {/* the "what we make" statement - same flowing voice a size down. Breaks are
-              baked into the copy (see copy.ts) so it sets as three length-balanced lines. */}
+          {/* the "what we make" statement - same flowing voice. At >=640px it sets a size
+              down from the lead with the hand-baked, length-balanced breaks (see copy.ts) -
+              the locked reference. On phones (<640px) it grows to match the lead, and the
+              baked breaks are stripped so it auto-wraps with text-pretty - at the bigger
+              type a hard break would orphan a word ("...build, and" / "and"), so we let it
+              flow and never leave a line a single word. Both share one clamp, so the size is
+              continuous across the swap; only the wrapping changes. */}
           <TextReveal
             as="p"
             text={s.craft}
             delay={0.1}
             stagger={0.028}
-            className="mt-2 block max-w-[26ch] font-display text-[length:clamp(2rem,7.5vw,6.75rem)] font-semibold leading-[1.06] tracking-[-0.02em]"
+            className="mt-2 block max-w-[26ch] font-display text-[length:clamp(3rem,7.5vw,6.75rem)] font-semibold leading-[1.06] tracking-[-0.02em] max-[639px]:hidden"
+          />
+          {/* On phones the craft matches the lead's size, so it also takes the lead's
+              font-medium weight (not the desktop sub-heading semibold) and its tracking,
+              so the two blocks read as one weight - no "thicker" mismatch at equal size. */}
+          <TextReveal
+            as="p"
+            text={s.craft.replace(/\n/g, " ")}
+            delay={0.1}
+            stagger={0.028}
+            className="mt-2 hidden max-w-[26ch] font-display text-[length:clamp(3rem,7.5vw,6.75rem)] font-medium leading-[1.06] tracking-[-0.03em] text-pretty max-[639px]:block"
           />
         </div>
       </div>

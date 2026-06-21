@@ -185,6 +185,29 @@ body {
     padding-left: var(--stmt-pl, 0);
   }
 }
+
+/* Home studio (Studio.tsx) horizontal placement. The column is GENUINELY centred:
+   width:fit-content shrink-wraps it to its widest rendered line and auto margins centre
+   it, so the browser measures the real type width at every canvas - no vw-formula
+   estimate to drift off. (This needs each text box to shrink to its widest line, which is
+   why the lead carries an explicit break in copy.ts, like the craft; without it the
+   break-less lead inflates its box to the 15ch cap and the block stops centring.) Because
+   the "what we make" line is wide, centred already lands near the old editorial indent
+   (~287px at ~1837px, ~351px at the 2k reference) - so centring everywhere preserves that
+   look. When the type fills the canvas the margins collapse to 0 and it runs full-width
+   (the type's own mobile reflow).
+   Above 1560px the block sits a very small bit left of centre (translateX) - a light
+   editorial bias on the wide canvases, layout-neutral so it never disturbs the centring. */
+.studio-indent {
+  width: fit-content;
+  max-width: 100%;
+  margin-inline: auto;
+}
+@media (min-width: 1560px) {
+  .studio-indent {
+    transform: translateX(-16px);
+  }
+}
 .surface-card {
   background: var(--color-surface);
   border-radius: var(--radius);

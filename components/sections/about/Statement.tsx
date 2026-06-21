@@ -26,15 +26,18 @@ export function Statement() {
             stagger={0.09}
             className="hidden font-display text-[length:clamp(2rem,4.2vw,6.5rem)] font-medium leading-[1.32] tracking-[-0.03em] md:block"
           />
-          {/* <768: the hand-tuned breaks can't hold at phone widths, so the same
-              statement reflows naturally at a comfortable size, letters cascading in. */}
+          {/* <768: same statement, phone-tuned hard breaks (statementMobile) so each
+              line rises from its own clip mask, staggered - the same "lines" reveal as
+              >=768. The desktop breaks are too long for the narrow column, so there are
+              more (shorter) lines here; the cascade reads identically. */}
           <TextReveal
             as="h1"
-            text={a.statement.replace(/\n/g, " ")}
+            text={a.statementMobile}
             dotAfter="Lumako"
-            delay={0.05}
-            stagger={0.012}
-            className="block font-display text-[length:clamp(1.75rem,7vw,2.2rem)] font-medium leading-[1.25] tracking-[-0.02em] md:hidden"
+            reveal="lines"
+            delay={0.06}
+            stagger={0.08}
+            className="mx-auto block w-fit text-left font-display text-[length:clamp(1.75rem,7vw,2.2rem)] font-medium leading-[1.25] tracking-[-0.02em] md:hidden"
           />
         </div>
       </div>
