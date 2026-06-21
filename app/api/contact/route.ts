@@ -2,8 +2,30 @@ import { getCloudflareContext } from "@opennextjs/cloudflare";
 import { validateContact } from "@/components/sections/contact/validation";
 import { formatContactEmail } from "@/components/sections/contact/email";
 
-/** Env vars set as Worker secrets (and `.dev.vars` locally), not in source. */
-type ContactEnv = CloudflareEnv & {
+type EmailAddress = { name: string; email: string };
+
+/**
+ * Minimal shape of the Cloudflare Email Routing `send_email` binding that this
+ * route uses. Declared locally so the build does not depend on the generated
+ * (git-ignored) `cloudflare-env.d.ts` for the `EMAIL` / `SendEmail` types.
+ */
+type EmailSender = {
+  send(message: {
+    from: string | EmailAddress;
+    to: string | EmailAddress | (string | EmailAddress)[];
+    replyTo?: string | EmailAddress;
+    subject: string;
+    text?: string;
+    html?: string;
+  }): Promise<unknown>;
+};
+
+/**
+ * The `EMAIL` binding plus the two address vars, which are set as Worker
+ * secrets (and in `.dev.vars` locally), not committed to source.
+ */
+type ContactEnv = {
+  EMAIL?: EmailSender;
   CONTACT_TO_EMAIL?: string;
   CONTACT_FROM_EMAIL?: string;
 };
@@ -51,7 +73,7 @@ export async function POST(request: Request) {
   // getCloudflareContext() is only available inside the Workers runtime.
   let env: ContactEnv | undefined;
   try {
-    env = getCloudflareContext().env as ContactEnv;
+    env = getCloudflareContext().env as unknown as ContactEnv;
   } catch {
     env = undefined;
   }

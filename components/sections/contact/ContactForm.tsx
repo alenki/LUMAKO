@@ -1,6 +1,7 @@
 "use client";
 
 import { useState } from "react";
+import Link from "next/link";
 import { AnimatePresence, motion } from "motion/react";
 import { Field } from "@/components/ui/Field";
 import { Tag } from "@/components/ui/Tag";
@@ -11,14 +12,19 @@ import {
 } from "@/components/sections/contact/validation";
 import { copy } from "@/lib/content/copy";
 import { site } from "@/lib/content/site";
-import { easeOutExpo } from "@/lib/motion";
+import { easeOutExpo, fadeUp, stagger } from "@/lib/motion";
 
 type Status = "idle" | "submitting" | "success" | "error";
 
 const budgets = copy.contact.budgets;
 const serviceOptions = copy.contact.serviceOptions;
 
-export function ContactForm() {
+type ContactFormProps = {
+  /** Lets the parent hide the page headline once the message is sent. */
+  onSentChange?: (sent: boolean) => void;
+};
+
+export function ContactForm({ onSentChange }: ContactFormProps = {}) {
   const [name, setName] = useState("");
   const [email, setEmail] = useState("");
   const [company, setCompany] = useState("");
@@ -37,6 +43,20 @@ export function ContactForm() {
         ? prev.filter((s) => s !== option)
         : [...prev, option],
     );
+  }
+
+  // "Send another message" - clear the slate and return to a fresh form.
+  function reset() {
+    setName("");
+    setEmail("");
+    setCompany("");
+    setMessage("");
+    setBudget("");
+    setSelectedServices([]);
+    setErrors({});
+    setSendFailed(false);
+    setStatus("idle");
+    onSentChange?.(false);
   }
 
   async function handleSubmit(e: React.FormEvent) {
@@ -77,6 +97,7 @@ export function ContactForm() {
         return;
       }
       setStatus("success");
+      onSentChange?.(true);
     } catch {
       setSendFailed(true);
       setStatus("error");
@@ -86,32 +107,46 @@ export function ContactForm() {
   if (status === "success") {
     const s = copy.contact.success;
     return (
-      <motion.div
-        initial={{ opacity: 0, y: 24 }}
-        animate={{ opacity: 1, y: 0 }}
-        transition={{ duration: 0.9, ease: easeOutExpo }}
-        className="flex min-h-[24rem] flex-col justify-center border-t border-line pt-12"
-      >
-        <span className="inline-flex items-center gap-2 label-caps text-lume-deep">
-          <span aria-hidden>✓</span> Sent
-        </span>
-        <h2 className="mt-6 font-display text-[length:var(--text-4xl)] font-medium leading-tight tracking-tight text-balance">
+      <motion.div initial="hidden" animate="show" variants={stagger}>
+        <motion.h2
+          variants={fadeUp}
+          className="font-display text-[length:var(--text-6xl)] font-medium leading-[1.02] tracking-tight text-balance"
+        >
           {s.title}
-        </h2>
-        <p className="mt-4 max-w-[44ch] text-[length:var(--text-lg)] text-fg-body leading-relaxed text-pretty">
+        </motion.h2>
+
+        <motion.p
+          variants={fadeUp}
+          className="mt-7 max-w-[44ch] text-[length:var(--text-2xl)] text-fg-body leading-relaxed text-pretty"
+        >
           {s.body}
-        </p>
-        <p className="mt-8 text-[length:var(--text-base)] text-fg-dim">
-          In the meantime, reach us directly at{" "}
-          <a
-            href={`mailto:${site.email}`}
-            data-cursor
-            className="text-fg underline decoration-line underline-offset-4 transition-colors hover:text-fg-muted hover:decoration-fg-muted"
+        </motion.p>
+
+        <motion.div
+          variants={fadeUp}
+          className="mt-12 flex flex-wrap items-center gap-x-9 gap-y-5"
+        >
+          <Button
+            variant="ghost"
+            onClick={reset}
+            className="px-9 py-4 text-[length:var(--text-lg)]"
           >
-            {site.email}
-          </a>
-          .
-        </p>
+            Send another message
+          </Button>
+          <Link
+            href="/work"
+            data-cursor
+            className="group inline-flex items-center gap-2 text-[length:var(--text-lg)] font-medium text-fg-muted transition-colors hover:text-fg"
+          >
+            See the work
+            <span
+              aria-hidden
+              className="transition-transform duration-300 group-hover:translate-x-1"
+            >
+              →
+            </span>
+          </Link>
+        </motion.div>
       </motion.div>
     );
   }

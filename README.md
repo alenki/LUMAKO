@@ -2,7 +2,8 @@
 
 The official website for **Lumako**, a full-stack studio that ships web, AI, and
 app products. A high-end, proof-led marketing site: light monochrome + a single lume-gold
-accent, Inter typography (weighted headings, dark body), a cinematic (light-graded) Three.js hero, and orchestrated motion.
+accent, Inter typography (weighted headings, dark body), a self-drawing gold SVG marker in the
+home hero, and orchestrated motion.
 
 **Live concept:** "The demo is the pitch."
 
@@ -17,6 +18,7 @@ accent, Inter typography (weighted headings, dark body), a cinematic (light-grad
 - **Lenis** smooth scroll
 - Fonts: **Inter** (one variable family - display + body) · **Geist Mono** (code only)
 - **Vitest** for unit tests
+- **OpenNext + Cloudflare Workers** for deploy (`opennextjs-cloudflare` + `wrangler`)
 
 ## Getting started
 
@@ -28,52 +30,67 @@ npm run dev        # http://localhost:3000
 Other scripts:
 
 ```bash
-npm run build      # production build (Turbopack)
+npm run build      # production build (next build)
 npm run start      # serve the production build
 npm run typecheck  # tsc --noEmit
 npm run lint       # eslint
-npm run test       # vitest (utils, content invariants, contact validation)
+npm run test       # vitest (utils, content invariants, contact validation, hero, marquee…)
+```
+
+Deploy targets Cloudflare Workers (via OpenNext), not Vercel:
+
+```bash
+npm run preview    # opennextjs-cloudflare build + local Workers preview
+npm run deploy     # opennextjs-cloudflare build + deploy to Cloudflare Workers
+npm run cf-typegen # regenerate CloudflareEnv types from wrangler.jsonc
 ```
 
 ## Routes
 
 | Route | Description |
 |---|---|
-| `/` | Home - 3D hero, manifesto, services, selected work, process, proof, receipts, CTA |
-| `/work` | Filterable case-study index |
-| `/work/[slug]` | Case study detail (statically generated) |
-| `/about` | Studio statement, services index, careers, get in touch |
+| `/` | Home - SVG marker hero, selected work, studio statement, services overview |
+| `/work` | Case-study index - a static grid; each card links out to the live project site (new tab) |
+| `/about` | Studio statement + get in touch |
 | `/contact` | Validated project-inquiry form + studio details |
+
+Case studies link out to the live external sites (`lib/content/work.ts` `href`), so there is no
+internal `/work/<slug>` page. Alongside the pages, the app exposes the usual Next.js file-convention
+routes: `app/api/contact` (POST inquiry handler), `app/sitemap.ts`, `app/robots.ts`, and the
+`app/opengraph-image.tsx` / `app/twitter-image.tsx` social-image generators.
 
 ## Structure
 
 ```
-app/          # routes, layout, api/contact, sitemap, robots
+app/          # routes, layout, api/contact, sitemap, robots, opengraph-image, twitter-image
 components/
-  layout/     # Nav, Footer, Cursor, SmoothScroll, PageTransition, LocalTime
+  layout/     # Nav, Footer, Cursor, SmoothScroll, PageTransition, Providers, LocalTime
   ui/         # primitives: Button, MagneticButton, Reveal, TextReveal, Counter, Marquee, Field, CoverPanel…
   hero/       # HeroMarker - the self-drawing gold marker circle (SVG)
-  sections/   # page-specific composed sections (home, work, services, studio, contact)
+  sections/   # page-specific composed sections (home, work, about, contact)
+  seo/        # JsonLd - structured-data injector
 lib/
-  content/    # typed content: services, work, studio, copy, site
+  content/    # typed content: services, work, clients, copy, site (types.ts)
+  seo/        # SEO layer: config, metadata (socialMeta), jsonld graphs, og image renderer
   motion.ts   # shared variants + easings
   mediaHooks.ts, utils.ts
 styles/
   globals.css # design tokens (@theme), fluid scale, helpers
-docs/superpowers/  # design spec + implementation plan
+docs/superpowers/  # design specs + implementation plans
 ```
 
 ## Design notes
 
 - **Accessibility:** semantic landmarks + skip link, keyboard focus rings, `aria-pressed`
-  toggles, full `prefers-reduced-motion` support (3D, smooth scroll, transitions, and
-  reveals all degrade gracefully). The WebGL hero falls back to a static luminous
-  gradient on low-power / touch devices.
-- **Performance:** the 3D canvas is client-only (`ssr: false`), DPR-capped, and light-graded
-  (no postprocessing bloom); all routes are statically prerendered.
+  toggles, full `prefers-reduced-motion` support (smooth scroll, transitions, and reveals all
+  degrade gracefully; the SVG hero marker renders pre-drawn).
+- **Performance:** the home hero is a lightweight self-drawing SVG marker
+  (`components/hero/HeroMarker.tsx`) animated with Motion - no WebGL/Three.js, no canvas. All
+  routes are statically prerendered; images are served as AVIF/WebP.
 - **Color discipline:** lume gold (`#D49A2E`) is the only accent - wordmark dot, focus rings,
-  key rules, and the single dark footer glow. No second accent, no drop shadows, no gradients
-  except that one footer glow. Ink primary buttons; one lume button per view.
+  key rules, one lume button per view. No second accent and no drop shadows. The few gradients are
+  atmosphere only: the white `.glow-accent` radial behind the hero / CTA, the nav's
+  fade-to-transparent wash, and the neutral CoverPanel placeholder fills.
 - **Typography:** one family - **Inter** (variable), exposed as `--font-grotesk` and mapped to
   both `--font-display` and `--font-sans`; Geist Mono is reserved for code / the ledger marks.
   The reading is set by the home "Let's build something" disciplines section
@@ -90,6 +107,17 @@ docs/superpowers/  # design spec + implementation plan
 
 ---
 
-## Frontend aesthetics (project north star)
+## Aesthetic discipline (project north star)
 
-You tend to converge toward generic, "on distribution" outputs. In frontend design, this creates what users call the "AI slop" aesthetic. Avoid this: make creative, distinctive frontends that surprise and delight. Focus on: Typography: Choose fonts that are beautiful, unique, and interesting. Avoid generic fonts like Arial and Inter; opt instead for distinctive choices that elevate the frontend's aesthetics. Color & Theme: Commit to a cohesive aesthetic. Use CSS variables for consistency. Dominant colors with sharp accents outperform timid, evenly-distributed palettes. Draw from IDE themes and cultural aesthetics for inspiration. Motion: Use animations for effects and micro-interactions. Prioritize CSS-only solutions for HTML. Use Motion library for React when available. Focus on high-impact moments: one well-orchestrated page load with staggered reveals (animation-delay) creates more delight than scattered micro-interactions. Backgrounds: Create atmosphere and depth rather than defaulting to solid colors. Layer CSS gradients, use geometric patterns, or add contextual effects that match the overall aesthetic. Avoid generic AI-generated aesthetics:- Overused font families (Inter, Roboto, Arial, system fonts)- Clichéd color schemes (particularly purple gradients on white backgrounds)- Predictable layouts and component patterns- Cookie-cutter design that lacks context-specific character Interpret creatively and make unexpected choices that feel genuinely designed for the context. Vary between light and dark themes, different fonts, different aesthetics. You still tend to converge on common choices (Space Grotesk, for example) across generations. Avoid this: it is critical that you think outside the box!
+The brand system is the source of truth - see `AGENTS.md` for the full type & color spec. The
+short version, so the site never drifts toward generic "AI slop":
+
+- **One deliberate type family** - Inter (variable), weighted not thin, wired as `--font-grotesk`
+  → `--font-display` / `--font-sans`. Inter is the intentional Lumako brand font, not a default to
+  avoid; Geist Mono is code / ledger only.
+- **One accent, used minimally** - lume gold (`#D49A2E`). No second accent, no purple-gradient or
+  cookie-cutter defaults, no timid evenly-distributed palettes.
+- **Motion as signature** - favour one well-orchestrated, staggered page load over scattered
+  micro-interactions, and keep every motion `prefers-reduced-motion` aware.
+- **Atmosphere over flat fills** - the light monochrome surface plus the single self-drawing gold
+  marker carry the design; reach for depth and craft, not stock effects.
