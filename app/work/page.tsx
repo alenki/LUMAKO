@@ -2,16 +2,25 @@ import type { Metadata } from "next";
 import { TextReveal } from "@/components/ui/TextReveal";
 import { WorkGrid } from "@/components/sections/work/WorkGrid";
 import { copy } from "@/lib/content/copy";
+import { JsonLd } from "@/components/seo/JsonLd";
+import { workGraph } from "@/lib/seo/jsonld";
+import { socialMeta } from "@/lib/seo/metadata";
 
 export const metadata: Metadata = {
   title: copy.meta.work.title,
   description: copy.meta.work.description,
+  ...socialMeta({
+    ogTitle: "Work | Lumako",
+    description: copy.meta.work.description,
+    path: "/work",
+  }),
 };
 
 export default function WorkPage() {
   const w = copy.work;
   return (
     <>
+      <JsonLd data={workGraph()} />
       {/* Explicit padding (not .section-lg) so the headline-to-grid gap is tight:
           top keeps the section-lg offset that clears the header, bottom is small. */}
       <section className="pt-[var(--py-section-lg)] pb-[var(--vw-5)]">

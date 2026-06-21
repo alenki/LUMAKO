@@ -140,6 +140,9 @@ dist
 .wrangler/
 cloudflare-env.d.ts
 
+# Cloudflare local dev vars / secrets (never commit real addresses or keys)
+.dev.vars
+
 # Local scratch / tooling artifacts
 .playwright-mcp/
 ref-hero.jpeg

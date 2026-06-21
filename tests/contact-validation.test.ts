@@ -31,4 +31,9 @@ describe("validateContact", () => {
     expect(validateContact({ ...valid, message: "too short" }).ok).toBe(false);
     expect(validateContact({ ...valid, message: "this is long enough" }).ok).toBe(true);
   });
+
+  it("rejects oversized fields", () => {
+    expect(validateContact({ ...valid, name: "a".repeat(121) }).errors.name).toBeTruthy();
+    expect(validateContact({ ...valid, message: "m".repeat(5001) }).errors.message).toBeTruthy();
+  });
 });

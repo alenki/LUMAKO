@@ -2,16 +2,25 @@ import type { Metadata } from "next";
 import { TextReveal } from "@/components/ui/TextReveal";
 import { ContactForm } from "@/components/sections/contact/ContactForm";
 import { copy } from "@/lib/content/copy";
+import { JsonLd } from "@/components/seo/JsonLd";
+import { contactGraph } from "@/lib/seo/jsonld";
+import { socialMeta } from "@/lib/seo/metadata";
 
 export const metadata: Metadata = {
   title: copy.meta.contact.title,
   description: copy.meta.contact.description,
+  ...socialMeta({
+    ogTitle: "Contact | Lumako",
+    description: copy.meta.contact.description,
+    path: "/contact",
+  }),
 };
 
 export default function ContactPage() {
   const c = copy.contact;
   return (
     <section className="section-lg pt-[calc(var(--header-h)+var(--vw-8))]">
+      <JsonLd data={contactGraph()} />
       <div className="container-x">
         {/* The locked 2k reference keeps its editorial left-void: ml-[20%] is the
             base value, so the headline + form column sits left-of-centre on the

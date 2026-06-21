@@ -25,8 +25,11 @@ export function ContactForm() {
   const [message, setMessage] = useState("");
   const [budget, setBudget] = useState<string>("");
   const [selectedServices, setSelectedServices] = useState<string[]>([]);
+  // Honeypot - hidden from people, irresistible to bots. Stays empty for humans.
+  const [website, setWebsite] = useState("");
   const [errors, setErrors] = useState<ContactErrors>({});
   const [status, setStatus] = useState<Status>("idle");
+  const [sendFailed, setSendFailed] = useState(false);
 
   function toggleService(option: string) {
     setSelectedServices((prev) =>
@@ -45,6 +48,7 @@ export function ContactForm() {
       return;
     }
     setErrors({});
+    setSendFailed(false);
     setStatus("submitting");
     try {
       const res = await fetch("/api/contact", {
@@ -57,16 +61,24 @@ export function ContactForm() {
           message,
           budget,
           services: selectedServices,
+          website,
         }),
       });
       if (!res.ok) {
-        const data: { errors?: ContactErrors } = await res.json();
-        setErrors(data.errors ?? {});
+        const data = (await res.json().catch(() => ({}))) as {
+          errors?: ContactErrors;
+        };
+        const fieldErrors = data.errors ?? {};
+        setErrors(fieldErrors);
+        // A validation rejection comes back with field errors; anything else
+        // (the email failed to send, server error) is a delivery failure.
+        setSendFailed(Object.keys(fieldErrors).length === 0);
         setStatus("error");
         return;
       }
       setStatus("success");
     } catch {
+      setSendFailed(true);
       setStatus("error");
     }
   }
@@ -106,6 +118,29 @@ export function ContactForm() {
 
   return (
     <form onSubmit={handleSubmit} noValidate className="flex flex-col gap-10">
+      {/* Honeypot - positioned off-screen, skipped by tab and assistive tech. */}
+      <div
+        aria-hidden="true"
+        style={{
+          position: "absolute",
+          left: "-9999px",
+          width: 1,
+          height: 1,
+          overflow: "hidden",
+        }}
+      >
+        <label htmlFor="contact-website">Leave this field empty</label>
+        <input
+          type="text"
+          id="contact-website"
+          name="website"
+          tabIndex={-1}
+          autoComplete="off"
+          value={website}
+          onChange={(e) => setWebsite(e.target.value)}
+        />
+      </div>
+
       <div className="flex flex-col gap-8 sm:flex-row">
         <Field
           label="Your name"
@@ -203,15 +238,33 @@ export function ContactForm() {
       </div>
 
       <AnimatePresence>
-        {status === "error" && Object.keys(errors).length > 0 ? (
+        {status === "error" && (sendFailed || Object.keys(errors).length > 0) ? (
           <motion.p
             initial={{ opacity: 0, y: 8 }}
             animate={{ opacity: 1, y: 0 }}
             exit={{ opacity: 0 }}
             transition={{ duration: 0.4, ease: easeOutExpo }}
-            className="label-caps !text-error"
+            className={
+              sendFailed
+                ? "text-[length:var(--text-base)] text-error"
+                : "label-caps !text-error"
+            }
           >
-            Please fix the highlighted fields and try again.
+            {sendFailed ? (
+              <>
+                Something went wrong on our end. Please email us at{" "}
+                <a
+                  href={`mailto:${site.email}`}
+                  data-cursor
+                  className="underline decoration-error/50 underline-offset-4"
+                >
+                  {site.email}
+                </a>{" "}
+                or try again in a moment.
+              </>
+            ) : (
+              "Please fix the highlighted fields and try again."
+            )}
           </motion.p>
         ) : null}
       </AnimatePresence>

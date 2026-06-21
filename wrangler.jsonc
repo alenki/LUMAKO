@@ -7,5 +7,10 @@
   "assets": {
     "binding": "ASSETS",
     "directory": ".open-next/assets"
-  }
+  },
+  // Cloudflare Email Routing "send" binding. Lets the /api/contact route
+  // deliver submissions to a verified destination address. The recipient
+  // (CONTACT_TO_EMAIL) must be a verified Email Routing destination and the
+  // sender (CONTACT_FROM_EMAIL) a custom address on the lumako.net zone.
+  "send_email": [{ "name": "EMAIL" }]
 }
