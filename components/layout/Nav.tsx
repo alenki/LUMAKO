@@ -110,7 +110,13 @@ export function Nav() {
     <>
       <header
         className={cn(
-          "fixed inset-x-0 top-0 z-[200] transition-colors duration-500",
+          "fixed inset-x-0 top-0 z-[200]",
+          // The header (z-200) paints above the panel (z-150). Fade its scroll
+          // background only when the menu is closed - on open we need it gone
+          // instantly, or the 500ms colour fade leaves the white scrolled
+          // background lingering over the dark menu for that beat. Closing keeps
+          // the fade, so the header eases back in behind the dismissing panel.
+          !open && "transition-colors duration-500",
           open
             ? "bg-transparent"
             : scrolled
