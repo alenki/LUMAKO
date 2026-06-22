@@ -1,16 +1,16 @@
 import type { NextConfig } from "next";
-import { initOpenNextCloudflareForDev } from "@opennextjs/cloudflare";
 
 const nextConfig: NextConfig = {
+  // Static export: `next build` emits a fully static site to `out/` for upload
+  // to reg.ru shared hosting (there is no Node/Workers runtime there).
+  output: "export",
+  // Each route exports as `route/index.html`, which Apache serves via its
+  // default DirectoryIndex with no rewrites needed.
+  trailingSlash: true,
   images: {
-    // Next 16 requires explicit qualities; we keep a small set.
-    qualities: [70, 80, 90],
-    formats: ["image/avif", "image/webp"],
+    // No Image Optimization server on a static host - serve the originals as-is.
+    unoptimized: true,
   },
 };
-
-// Lets `next dev` read the Cloudflare context (bindings/env) via
-// getCloudflareContext(). No-op in production builds.
-initOpenNextCloudflareForDev();
 
 export default nextConfig;

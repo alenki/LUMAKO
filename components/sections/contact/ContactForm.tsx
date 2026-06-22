@@ -16,6 +16,14 @@ import { easeOutExpo, fadeUp, stagger } from "@/lib/motion";
 
 type Status = "idle" | "submitting" | "success" | "error";
 
+// Web3Forms relays the contact form without a backend (the static export has no
+// server route). The access key is public by design - it only routes mail to
+// the address registered at https://web3forms.com. Set it at build time via
+// NEXT_PUBLIC_WEB3FORMS_ACCESS_KEY, or replace the placeholder below.
+const WEB3FORMS_ENDPOINT = "https://api.web3forms.com/submit";
+const WEB3FORMS_ACCESS_KEY =
+  process.env.NEXT_PUBLIC_WEB3FORMS_ACCESS_KEY ?? "YOUR_WEB3FORMS_ACCESS_KEY";
+
 const budgets = copy.contact.budgets;
 const serviceOptions = copy.contact.serviceOptions;
 
@@ -61,6 +69,20 @@ export function ContactForm({ onSentChange }: ContactFormProps = {}) {
 
   async function handleSubmit(e: React.FormEvent) {
     e.preventDefault();
+    // Guard against double-submits: a second click while a POST is in flight
+    // would fire a duplicate Web3Forms send (there's no server to dedupe now).
+    if (status === "submitting") return;
+
+    // Honeypot: a hidden field real users never see. If a bot filled it, report
+    // success without sending so it can't tell it was caught. Checked before the
+    // validation gate to mirror the old server route exactly - the static export
+    // has no server, so this silent-drop now runs client-side.
+    if (website.trim() !== "") {
+      setStatus("success");
+      onSentChange?.(true);
+      return;
+    }
+
     const result = validateContact({ name, email, message });
     if (!result.ok) {
       setErrors(result.errors);
@@ -69,30 +91,42 @@ export function ContactForm({ onSentChange }: ContactFormProps = {}) {
     }
     setErrors({});
     setSendFailed(false);
+    if (
+      process.env.NODE_ENV !== "production" &&
+      WEB3FORMS_ACCESS_KEY === "YOUR_WEB3FORMS_ACCESS_KEY"
+    ) {
+      console.warn(
+        "[contact] NEXT_PUBLIC_WEB3FORMS_ACCESS_KEY is not set - Web3Forms will reject this submission. See .env.example.",
+      );
+    }
     setStatus("submitting");
     try {
-      const res = await fetch("/api/contact", {
+      const res = await fetch(WEB3FORMS_ENDPOINT, {
         method: "POST",
-        headers: { "Content-Type": "application/json" },
+        headers: {
+          "Content-Type": "application/json",
+          Accept: "application/json",
+        },
         body: JSON.stringify({
+          access_key: WEB3FORMS_ACCESS_KEY,
+          subject: `Новая заявка с сайта - ${name.trim() || email.trim()}`,
+          from_name: "Форма обратной связи Lumako",
           name,
           email,
           company,
           message,
           budget,
-          services: selectedServices,
-          website,
+          // The old route took an array; Web3Forms wants flat fields, so join.
+          services: selectedServices.join(", "),
         }),
       });
-      if (!res.ok) {
-        const data = (await res.json().catch(() => ({}))) as {
-          errors?: ContactErrors;
-        };
-        const fieldErrors = data.errors ?? {};
-        setErrors(fieldErrors);
-        // A validation rejection comes back with field errors; anything else
-        // (the email failed to send, server error) is a delivery failure.
-        setSendFailed(Object.keys(fieldErrors).length === 0);
+      const data = (await res.json().catch(() => ({}))) as {
+        success?: boolean;
+      };
+      // Fields are already validated client-side above, so any failure here is
+      // a delivery problem, not a validation one.
+      if (!res.ok || !data.success) {
+        setSendFailed(true);
         setStatus("error");
         return;
       }

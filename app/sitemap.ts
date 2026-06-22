@@ -1,6 +1,9 @@
 import type { MetadataRoute } from "next";
 import { SITE_URL } from "@/lib/seo/config";
 
+// Emit a static sitemap.xml at build time (required under `output: export`).
+export const dynamic = "force-static";
+
 /**
  * Only the four real routes are listed. Case studies are NOT included: each one
  * links out to an external live site (lib/content/work.ts `href`), so there is no
@@ -13,7 +16,9 @@ const lastModified = new Date("2026-06-21");
 // property: never points at the separate lumako.net build. URLs are already absolute
 // (built from SITE_URL), which sitemap hreflang requires.
 function route(path: string, priority: number): MetadataRoute.Sitemap[number] {
-  const url = `${SITE_URL}${path}`;
+  // Trailing slash to match the trailingSlash:true canonicals (e.g. /work/), so
+  // sitemap <loc> and the in-<head> canonical/hreflang agree exactly.
+  const url = `${SITE_URL}${path}/`;
   return {
     url,
     lastModified,

@@ -1,6 +1,9 @@
 import type { MetadataRoute } from "next";
 import { SITE_URL } from "@/lib/seo/config";
 
+// Emit a static robots.txt at build time (required under `output: export`).
+export const dynamic = "force-static";
+
 export default function robots(): MetadataRoute.Robots {
   return {
     // Allow everything crawlable; keep the contact API route out of the index - it
