@@ -11,7 +11,7 @@ import { SITE_DESCRIPTION } from "@/lib/seo/config";
 // No `title` here: the home page keeps the root layout's default <title>. Only the
 // invisible canonical + OG/Twitter tags are added.
 export const metadata: Metadata = socialMeta({
-  ogTitle: "Lumako - Web · AI · Apps",
+  ogTitle: "Lumako - Веб · ИИ · Приложения",
   description: SITE_DESCRIPTION,
   path: "/",
 });

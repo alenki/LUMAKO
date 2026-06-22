@@ -2,96 +2,102 @@
 export const copy = {
   home: {
     hero: {
-      lines: ["Most work gets", "scrolled past.", "Yours won't."],
-      mark: "won't",
-      sub: "Lumako is a full-stack studio - web, AI, and apps that ship and stay live. Built to be remembered, not scrolled past.",
-      ctaPrimary: { label: "Start a project", href: "/contact" },
-      ctaSecondary: { label: "See the work", href: "/work" },
+      lines: ["Большинство", "пролистывают.", "Вашу - нет."],
+      mark: "нет",
+      sub: "Lumako - студия полного цикла: веб, ИИ и приложения, которые запускаем и поддерживаем. Их запоминают, а не пролистывают.",
+      ctaPrimary: { label: "Начать проект", href: "/contact" },
+      ctaSecondary: { label: "Смотреть работы", href: "/work" },
     },
     work: {
-      headline: "Work that went live.",
-      link: { label: "View all work", href: "/work" },
+      headline: "Работы, которые мы запустили.",
+      link: { label: "Смотреть все работы", href: "/work" },
     },
     studio: {
       // One flowing statement, broken by the mark into a lead + a wide "what we make"
-      // line. Both strings carry explicit breaks (the lead after "is a", the craft into
-      // three length-balanced lines) so each box shrink-wraps to its widest line - which
-      // is what lets the section centre cleanly (a break-less lead would inflate its box
-      // to the 15ch cap). TextReveal still exposes each joined sentence to a11y.
-      lead: "Lumako is a\nfull-stack studio",
-      craft: "We design, build, and\nship web, AI, and apps\nfor real businesses",
+      // line. Both strings carry explicit breaks (the lead after the wordmark, the craft
+      // into three length-balanced lines) so each box shrink-wraps to its widest line -
+      // which is what lets the section centre cleanly. TextReveal still exposes each
+      // joined sentence to a11y. The dot hugs the Latin "Lumako" token.
+      lead: "Lumako это студия\nполного цикла",
+      craft: "Проектируем, создаём,\nзапускаем веб, ИИ\nи приложения для бизнеса",
     },
   },
 
   work: {
-    eyebrow: "Work",
-    headline: "Selected works",
-    highlight: "works",
-    sub: "A selection of live sites, built for real businesses - coffee, dining, auto, and more. Each one shipped and in the wild; open any to see it live.",
+    eyebrow: "Работы",
+    headline: "Избранные работы",
+    highlight: "работы",
+    sub: "Подборка живых сайтов для реального бизнеса - кофе, рестораны, авто и не только. Каждый запущен и работает - откройте любой и посмотрите в деле.",
   },
 
   about: {
     // The studio statement - team voice, leads with the work that proves it.
     // Hard breaks (\n) are baked in so the lines set at deliberately uneven
-    // lengths (ragged, never boxy); the lume dot hugs "Lumako".
+    // lengths (ragged, never boxy); the lume dot hugs the Latin "Lumako" token.
     statement:
-      "Lumako is a full-stack studio\nbuilding web, AI, and apps.\nWe turn sharp ideas into products that\nship and stay live - then lead with the\nwork that proves it, not promises.",
+      "Lumako - студия полного цикла,\nсоздаём веб, ИИ и приложения.\nПревращаем точные идеи в продукты,\nкоторые запускаются и живут, -\nа потом доказываем делом,\nне обещаниями.",
     // Same statement, re-broken for phone widths so each line still rises from its
     // own clip mask (the >=768 "lines" reveal) instead of one block. The desktop
-    // breaks run 38-40 chars and overflow the narrow <768 column (no 12vw indent
-    // there), so these are shorter (<=~22 chars) - more lines, but each holds as a
-    // single row down to ~375px and staggers up exactly like desktop.
+    // breaks overflow the narrow <768 column (no 12vw indent there), so these are
+    // shorter (<=~22 chars) - more lines, but each holds as a single row down to
+    // ~375px and staggers up exactly like desktop.
     statementMobile:
-      "Lumako is a full-stack\nstudio building web,\nAI, and apps. We turn\nsharp ideas into\nproducts that ship\nand stay live - then\nlead with the work that\nproves it, not promises.",
-    servicesEyebrow: "Our services",
+      "Lumako - студия\nполного цикла. Создаём\nвеб, ИИ и приложения.\nПревращаем точные\nидеи в продукты,\nкоторые запускаются\nи живут, - а потом\nдоказываем делом,\nне обещаниями.",
+    servicesEyebrow: "Наши услуги",
     services: [
-      "Web",
-      "AI",
-      "Apps",
-      "Brand & identity",
-      "Positioning & proof",
-      "Motion & cinematic AI",
+      "Веб",
+      "ИИ",
+      "Приложения",
+      "Бренд и айдентика",
+      "Позиционирование и доказательства",
+      "Моушн и кинематографичный ИИ",
     ],
-    careersEyebrow: "Careers",
-    careers: "We're always glad to meet people who build.",
+    careersEyebrow: "Вакансии",
+    careers: "Мы всегда рады тем, кто умеет создавать.",
     getInTouch: {
-      heading: "Get in touch",
-      emailLabel: "Send us an email",
-      projectLabel: "Have a project?",
-      projectCta: "Start a brief",
+      heading: "Свяжитесь с нами",
+      emailLabel: "Напишите нам",
+      projectLabel: "Есть проект?",
+      projectCta: "Оставить заявку",
     },
   },
 
   contact: {
-    headline: "Let's start a conversation.",
-    budgets: ["< $5k", "$5k-$10k", "$10k-$20k", "$20k+", "Not sure yet"],
-    serviceOptions: ["Web", "AI", "Apps"],
+    headline: "Давайте начнём разговор.",
+    budgets: [
+      "до 300 000 ₽",
+      "300-700 тыс. ₽",
+      "700 тыс.-1,5 млн ₽",
+      "от 1,5 млн ₽",
+      "Пока не знаю",
+    ],
+    serviceOptions: ["Веб", "ИИ", "Приложения"],
     success: {
-      title: "Got it.",
-      body: "Message received. Expect a working, specific reply - not a templated pitch.",
+      title: "Принято.",
+      body: "Сообщение получено. Ответим по делу и конкретно - без шаблонных презентаций.",
     },
   },
 
   meta: {
     home: {
-      title: "Lumako - Web · AI · Apps",
+      title: "Lumako - Веб · ИИ · Приложения",
       description:
-        "Lumako is a full-stack studio that ships web, AI, and app products - judged on a track record of shipped work, not promises.",
+        "Lumako - студия полного цикла: запускаем веб, ИИ и приложения. Судите по запущенным проектам, а не по обещаниям.",
     },
     work: {
-      title: "Work",
+      title: "Работы",
       description:
-        "Live sites built by Lumako for real businesses - coffee, dining, auto, and more. Each one shipped and in the wild.",
+        "Живые сайты, созданные Lumako для реального бизнеса - кофе, рестораны, авто и не только. Каждый запущен и работает.",
     },
     about: {
-      title: "About",
+      title: "О студии",
       description:
-        "Lumako is a full-stack studio building web, AI, and apps for real businesses - judged on a track record of shipped work, not promises.",
+        "Lumako - студия полного цикла: создаём веб, ИИ и приложения для реального бизнеса. Судите по запущенным проектам, а не по обещаниям.",
     },
     contact: {
-      title: "Contact",
+      title: "Контакты",
       description:
-        "Start a project with Lumako. Tell us what you're building and you'll get a working direction back.",
+        "Начните проект с Lumako. Расскажите, что вы создаёте, - и получите конкретное рабочее направление в ответ.",
     },
   },
 } as const;

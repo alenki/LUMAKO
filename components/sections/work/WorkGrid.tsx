@@ -44,7 +44,7 @@ export function WorkGrid() {
 
   return (
     <div>
-      <h2 className="sr-only">All projects</h2>
+      <h2 className="sr-only">Все проекты</h2>
 
       {/* Grid of every project, each card sliding up into place as it scrolls in.
 

@@ -1,14 +1,14 @@
 export const site = {
   name: "Lumako",
-  tagline: "Web · AI · Apps - shipped & proven",
+  tagline: "Веб · ИИ · Приложения - запускаем и поддерживаем",
   email: "hello@lumako.net",
-  locale: "Global",
+  locale: "Россия",
   timezone: "Europe/Moscow",
   nav: [
-    { label: "Home", href: "/" },
-    { label: "About", href: "/about" },
-    { label: "Work", href: "/work" },
-    { label: "Contact", href: "/contact" },
+    { label: "Главная", href: "/" },
+    { label: "О студии", href: "/about" },
+    { label: "Работы", href: "/work" },
+    { label: "Контакты", href: "/contact" },
   ],
   socials: [
     { label: "Instagram", href: "https://instagram.com" },

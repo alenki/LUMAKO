@@ -18,13 +18,13 @@ describe("Hero", () => {
     const { container, getByRole } = render(<Hero />);
 
     const h1 = container.querySelector("h1");
-    expect(h1?.textContent).toContain("Most work gets");
-    expect(h1?.textContent).toContain("scrolled past.");
-    expect(h1?.textContent).toContain("won't");
+    expect(h1?.textContent).toContain("Большинство");
+    expect(h1?.textContent).toContain("пролистывают.");
+    expect(h1?.textContent).toContain("нет");
 
-    const start = getByRole("link", { name: /start a project/i });
+    const start = getByRole("link", { name: /начать проект/i });
     expect(start.getAttribute("href")).toBe("/contact");
-    const work = getByRole("link", { name: /see the work/i });
+    const work = getByRole("link", { name: /смотреть работы/i });
     expect(work.getAttribute("href")).toBe("/work");
 
     const svg = container.querySelector("h1 svg");

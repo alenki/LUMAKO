@@ -32,27 +32,27 @@ export function validateContact(data: ContactData): ContactValidation {
 
   const name = data.name.trim();
   if (!name) {
-    errors.name = "Tell us who you are.";
+    errors.name = "Представьтесь, пожалуйста.";
   } else if (name.length > NAME_MAX) {
-    errors.name = "That name is a little too long.";
+    errors.name = "Имя слишком длинное.";
   }
 
   const email = data.email.trim();
   if (!email) {
-    errors.email = "We need an email to reply.";
+    errors.email = "Нужен email, чтобы ответить.";
   } else if (!EMAIL_RE.test(email)) {
-    errors.email = "That email doesn't look right.";
+    errors.email = "Похоже, email указан неверно.";
   } else if (email.length > EMAIL_MAX) {
-    errors.email = "That email is too long.";
+    errors.email = "Email слишком длинный.";
   }
 
   const message = data.message.trim();
   if (!message) {
-    errors.message = "A few words about the project, please.";
+    errors.message = "Пара слов о проекте, пожалуйста.";
   } else if (message.length < MESSAGE_MIN) {
-    errors.message = "A little more detail would help.";
+    errors.message = "Чуть больше деталей - и будет понятнее.";
   } else if (message.length > MESSAGE_MAX) {
-    errors.message = "That's a lot - mind trimming it a little?";
+    errors.message = "Многовато - сократите немного?";
   }
 
   return { ok: Object.keys(errors).length === 0, errors };

@@ -7,7 +7,7 @@ const DRAW = [0.5, 0, 0.3, 1] as const; // HeroMarker pen-ease for every pathLen
 const EXPO = [0.22, 1, 0.36, 1] as const; // easeOutExpo for the gold settle / pop
 
 const C = 240; // shared center of the 480 box
-const R_IN = 56; // inner ranging ring — sightlines stop here
+const R_IN = 56; // inner ranging ring - sightlines stop here
 const R_OUT = 104; // outer ranging ring
 
 // Construction ring, drawn with the placeholder's ring() helper.
@@ -58,7 +58,7 @@ export function ProofDiagram({
       preserveAspectRatio="xMidYMid meet"
       style={{ overflow: "visible", pointerEvents: "none" }}
     >
-      {/* (1) CONSTRUCTION GUIDES — fade in via opacity only, never pathLength. */}
+      {/* (1) CONSTRUCTION GUIDES - fade in via opacity only, never pathLength. */}
       <motion.g
         initial={false}
         animate={{ opacity: drawn ? 0.5 : 0 }}
@@ -80,7 +80,7 @@ export function ProofDiagram({
         <path d={`M ${C},78 V 402`} stroke="var(--color-line)" strokeWidth={1} strokeDasharray="1 5" strokeLinecap="round" />
       </motion.g>
 
-      {/* (2) PRIMARY INK — 11 sightlines self-draw inward in a converging sweep, stopping at R_IN. */}
+      {/* (2) PRIMARY INK - 11 sightlines self-draw inward in a converging sweep, stopping at R_IN. */}
       {SIGHTLINES.map((s, i) => (
         <motion.path
           key={i}
@@ -95,7 +95,7 @@ export function ProofDiagram({
         />
       ))}
 
-      {/* (4) NODES — hollow origin marks fire as each sightline lands. */}
+      {/* (4) NODES - hollow origin marks fire as each sightline lands. */}
       {SIGHTLINES.map((s, i) => (
         <motion.circle
           key={`n${i}`}
@@ -112,7 +112,7 @@ export function ProofDiagram({
         />
       ))}
 
-      {/* (3) SECONDARY INK — small open reticle at C (two 10px ticks), draws after the swarm. */}
+      {/* (3) SECONDARY INK - small open reticle at C (two 10px ticks), draws after the swarm. */}
       <motion.path
         d={`M ${C - 10},${C} H ${C - 3} M ${C + 3},${C} H ${C + 10} M ${C},${C - 10} V ${C - 3} M ${C},${C + 3} V ${C + 10}`}
         fill="none"
@@ -124,7 +124,7 @@ export function ProofDiagram({
         transition={reduce ? { duration: 0 } : { duration: 0.5, ease: DRAW, delay: 0.9 }}
       />
 
-      {/* GOLD — the ONE ray drives the whole way to C (lume-deep, thin line for legibility). */}
+      {/* GOLD - the ONE ray drives the whole way to C (lume-deep, thin line for legibility). */}
       <motion.path
         d={`M ${GOLD_OX.toFixed(2)},${GOLD_OY.toFixed(2)} L ${C},${C}`}
         fill="none"
@@ -136,7 +136,7 @@ export function ProofDiagram({
         transition={reduce ? { duration: 0 } : { duration: 0.9, ease: DRAW, delay: 1.2 }}
       />
 
-      {/* GOLD lock-ring (lume-deep, thin) — idle breathe is the ONLY motion at rest. */}
+      {/* GOLD lock-ring (lume-deep, thin) - idle breathe is the ONLY motion at rest. */}
       <motion.circle
         cx={C}
         cy={C}
@@ -163,7 +163,7 @@ export function ProofDiagram({
         }
       />
 
-      {/* GOLD bullseye disc — full lume chroma, scales in last with a tiny overshoot, breathes in sync. */}
+      {/* GOLD bullseye disc - full lume chroma, scales in last with a tiny overshoot, breathes in sync. */}
       <motion.circle
         cx={C}
         cy={C}

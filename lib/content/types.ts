@@ -1,12 +1,12 @@
 export type Discipline =
-  | "Web"
-  | "AI"
-  | "Apps"
-  | "Brand"
-  | "Strategy"
-  | "Motion"
-  | "Concept"
-  | "Portfolio";
+  | "Веб"
+  | "ИИ"
+  | "Приложения"
+  | "Бренд"
+  | "Стратегия"
+  | "Моушн"
+  | "Концепт"
+  | "Портфолио";
 
 export interface Service {
   id: string;

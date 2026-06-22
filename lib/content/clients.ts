@@ -1,8 +1,8 @@
 export const clients = [
-  "Government bodies",
-  "Universities",
-  "Clinics & dental",
-  "Medspa & salons",
-  "Real-estate teams",
-  "Founders & operators",
+  "Государственные структуры",
+  "Университеты",
+  "Клиники и стоматологии",
+  "Медспа и салоны",
+  "Команды в недвижимости",
+  "Фаундеры и операторы",
 ];

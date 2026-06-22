@@ -90,7 +90,7 @@ function DisciplineColumn({
         data-cursor
         className="mt-7 inline-flex w-fit self-start items-center gap-2 label-caps transition-colors hover:text-fg"
       >
-        See the work
+        Смотреть работы
         <span className="transition-transform duration-300 group-hover:translate-x-1">→</span>
       </Link>
     </div>
@@ -155,7 +155,7 @@ export function ServicesOverview() {
         {/* one big line */}
         <TextReveal
           as="h2"
-          text="Let's build something."
+          text="Создадим что-то стоящее."
           className="max-w-[16ch] font-[family-name:var(--font-grotesk)] text-[length:clamp(2.75rem,6.5vw,6rem)] font-medium leading-[0.95] tracking-[-0.025em] text-balance"
         />
 

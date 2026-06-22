@@ -34,20 +34,24 @@ function organization(): Json {
       contentUrl: `${SITE_URL}/icon.png`,
     },
     image: { "@id": LOGO_ID },
-    areaServed: "Worldwide",
+    areaServed: "Россия",
+    // Country-level address (no street/city - the target is Russia-wide): a
+    // machine-readable ISO country signal that corroborates the Yandex.Webmaster
+    // region assignment, which moderators cross-check against on-site structured data.
+    address: { "@type": "PostalAddress", addressCountry: "RU" },
     knowsAbout: [
-      "Web development",
-      "AI assistants and automation",
-      "App development",
-      "Brand and identity",
-      "Positioning and proof",
-      "Motion and cinematic AI",
+      "Разработка сайтов",
+      "ИИ-ассистенты и автоматизация",
+      "Разработка приложений",
+      "Бренд и айдентика",
+      "Позиционирование и доказательства",
+      "Моушн и кинематографичный ИИ",
     ],
     contactPoint: {
       "@type": "ContactPoint",
       email: site.email,
       contactType: "customer support",
-      availableLanguage: ["English"],
+      availableLanguage: ["Russian"],
     },
     // sameAs is intentionally omitted: the social links in content are placeholders
     // (generic homepages), not verified Lumako profiles. Add them here once real.
@@ -61,7 +65,7 @@ function website(): Json {
     url: `${SITE_URL}/`,
     name: SITE_NAME,
     description: SITE_DESCRIPTION,
-    inLanguage: "en",
+    inLanguage: "ru",
     publisher: { "@id": ORG_ID },
   };
 }
@@ -76,7 +80,7 @@ function breadcrumb(path: string, name: string): Json {
     "@type": "BreadcrumbList",
     "@id": `${SITE_URL}${path}#breadcrumb`,
     itemListElement: [
-      { "@type": "ListItem", position: 1, name: "Home", item: `${SITE_URL}/` },
+      { "@type": "ListItem", position: 1, name: "Главная", item: `${SITE_URL}/` },
       { "@type": "ListItem", position: 2, name, item: `${SITE_URL}${path}` },
     ],
   };
@@ -100,7 +104,7 @@ function webPage(opts: {
     description: opts.description,
     isPartOf: { "@id": WEBSITE_ID },
     about: { "@id": ORG_ID },
-    inLanguage: "en",
+    inLanguage: "ru",
     ...(opts.hasBreadcrumb
       ? { breadcrumb: { "@id": `${SITE_URL}${opts.path}#breadcrumb` } }
       : {}),
@@ -115,7 +119,7 @@ export function homeGraph(): Json {
       webPage({
         path: "/",
         type: "WebPage",
-        name: `${SITE_NAME} - Web · AI · Apps`,
+        name: `${SITE_NAME} - Веб · ИИ · Приложения`,
         description: SITE_DESCRIPTION,
         mainEntity: { "@id": ORG_ID },
       }),
@@ -130,12 +134,12 @@ export function aboutGraph(): Json {
       webPage({
         path: "/about",
         type: "AboutPage",
-        name: `About | ${SITE_NAME}`,
+        name: `О студии | ${SITE_NAME}`,
         description: copy.meta.about.description,
         hasBreadcrumb: true,
         mainEntity: { "@id": ORG_ID },
       }),
-      breadcrumb("/about", "About"),
+      breadcrumb("/about", "О студии"),
     ],
   };
 }
@@ -147,12 +151,12 @@ export function contactGraph(): Json {
       webPage({
         path: "/contact",
         type: "ContactPage",
-        name: `Contact | ${SITE_NAME}`,
+        name: `Контакты | ${SITE_NAME}`,
         description: copy.meta.contact.description,
         hasBreadcrumb: true,
         mainEntity: { "@id": ORG_ID },
       }),
-      breadcrumb("/contact", "Contact"),
+      breadcrumb("/contact", "Контакты"),
     ],
   };
 }
@@ -161,7 +165,7 @@ export function workGraph(): Json {
   const itemList: Json = {
     "@type": "ItemList",
     "@id": `${SITE_URL}/work#worklist`,
-    name: "Selected work by Lumako",
+    name: "Избранные работы Lumako",
     numberOfItems: work.length,
     itemListElement: work.map((c, i) => ({
       "@type": "ListItem",
@@ -187,12 +191,12 @@ export function workGraph(): Json {
       webPage({
         path: "/work",
         type: "CollectionPage",
-        name: `Work | ${SITE_NAME}`,
+        name: `Работы | ${SITE_NAME}`,
         description: copy.meta.work.description,
         hasBreadcrumb: true,
         mainEntity: { "@id": `${SITE_URL}/work#worklist` },
       }),
-      breadcrumb("/work", "Work"),
+      breadcrumb("/work", "Работы"),
       itemList,
     ],
   };

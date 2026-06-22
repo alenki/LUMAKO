@@ -16,7 +16,7 @@ export function WorkSlide({ item }: { item: CaseStudy }) {
       target="_blank"
       rel="noopener noreferrer"
       data-cursor="view"
-      aria-label={`${item.title} - ${item.client} (opens the live site in a new tab)`}
+      aria-label={`${item.title} - ${item.client} (откроет сайт в новой вкладке)`}
       className="block"
     >
       <div className="surface-card relative overflow-hidden">

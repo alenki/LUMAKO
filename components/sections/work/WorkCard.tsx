@@ -20,7 +20,7 @@ export function WorkCard({ item, priority, className }: Props) {
       target="_blank"
       rel="noopener noreferrer"
       data-cursor="view"
-      aria-label={`${item.title} - ${item.client} (opens the live site in a new tab)`}
+      aria-label={`${item.title} - ${item.client} (откроет сайт в новой вкладке)`}
       className={cn("group block", className)}
     >
       <div className="surface-card relative overflow-hidden">

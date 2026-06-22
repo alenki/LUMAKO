@@ -10,7 +10,11 @@ import { Footer } from "@/components/layout/Footer";
 import { PageTransition, RouteCurtain } from "@/components/layout/PageTransition";
 import { JsonLd } from "@/components/seo/JsonLd";
 import { siteGraph } from "@/lib/seo/jsonld";
-import { SITE_URL } from "@/lib/seo/config";
+import {
+  SITE_URL,
+  GOOGLE_SITE_VERIFICATION,
+  YANDEX_VERIFICATION,
+} from "@/lib/seo/config";
 
 // Site-wide type: Inter (standard-width grotesk). Loaded as a variable font so the
 // full weight range (light -> extrabold) is available across the site.
@@ -20,24 +24,35 @@ const inter = Inter({
   variable: "--font-grotesk",
 });
 
+// Ownership-verification meta, emitted site-wide only for whichever tokens are present
+// in the build env: google -> <meta name="google-site-verification">, yandex -> <meta
+// name="yandex-verification">. Kept here (not in socialMeta) because verification isn't
+// subject to OG's replace-not-merge rule and only needs to appear once, on the homepage.
+const verification: Metadata["verification"] = {
+  ...(GOOGLE_SITE_VERIFICATION ? { google: GOOGLE_SITE_VERIFICATION } : {}),
+  ...(YANDEX_VERIFICATION ? { yandex: YANDEX_VERIFICATION } : {}),
+};
+
 export const metadata: Metadata = {
   metadataBase: new URL(SITE_URL),
+  // Omit the key entirely when no tokens are set, so no empty <meta> is emitted.
+  ...(Object.keys(verification).length ? { verification } : {}),
   title: {
-    default: "Lumako | Web · AI · Apps",
+    default: "Lumako | Веб · ИИ · Приложения",
     template: "%s | Lumako",
   },
   description:
-    "Lumako is a full-stack studio that ships web, AI, and app products - judged on a track record of shipped work, not promises.",
+    "Lumako - студия полного цикла: запускаем веб, ИИ и приложения. Судите по запущенным проектам, а не по обещаниям.",
   applicationName: "Lumako",
   category: "technology",
   authors: [{ name: "Lumako", url: SITE_URL }],
   creator: "Lumako",
   publisher: "Lumako",
   keywords: [
-    "web development",
-    "AI products",
-    "app development",
-    "product studio",
+    "разработка сайтов",
+    "ИИ-продукты",
+    "разработка приложений",
+    "продуктовая студия",
     "Lumako",
   ],
   // Default OG/Twitter for any route that doesn't set its own (every page does, via
@@ -45,17 +60,17 @@ export const metadata: Metadata = {
   openGraph: {
     type: "website",
     siteName: "Lumako",
-    locale: "en_US",
+    locale: "ru_RU",
     url: "/",
-    title: "Lumako - Web · AI · Apps",
+    title: "Lumako - Веб · ИИ · Приложения",
     description:
-      "Lumako is a full-stack studio that ships web, AI, and app products - judged on a track record of shipped work, not promises.",
+      "Lumako - студия полного цикла: запускаем веб, ИИ и приложения. Судите по запущенным проектам, а не по обещаниям.",
   },
   twitter: {
     card: "summary_large_image",
-    title: "Lumako - Web · AI · Apps",
+    title: "Lumako - Веб · ИИ · Приложения",
     description:
-      "Lumako is a full-stack studio that ships web, AI, and app products - judged on a track record of shipped work, not promises.",
+      "Lumako - студия полного цикла: запускаем веб, ИИ и приложения. Судите по запущенным проектам, а не по обещаниям.",
   },
   // robots is set per page in socialMeta() - not here - so the built-in not-found
   // page keeps Next's noindex rather than inheriting index,follow from the layout.
@@ -66,7 +81,7 @@ export default function RootLayout({
 }: Readonly<{ children: React.ReactNode }>) {
   return (
     <html
-      lang="en"
+      lang="ru"
       className={`${inter.variable} ${GeistMono.variable}`}
     >
       <body className="min-h-dvh">
@@ -75,7 +90,7 @@ export default function RootLayout({
           href="#main"
           className="sr-only focus:not-sr-only focus:fixed focus:left-4 focus:top-4 focus:z-[500] focus:rounded-full focus:bg-ink focus:px-5 focus:py-2.5 focus:text-[#fafafa]"
         >
-          Skip to content
+          Перейти к содержимому
         </a>
         <Providers>
           <SmoothScroll>

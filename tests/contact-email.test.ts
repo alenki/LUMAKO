@@ -13,23 +13,23 @@ const full = {
 describe("formatContactEmail", () => {
   it("puts the sender name in the subject", () => {
     expect(formatContactEmail(full).subject).toBe(
-      "New project inquiry - Jane Doe",
+      "Новая заявка - Jane Doe",
     );
   });
 
   it("falls back to a generic subject when the name is empty", () => {
     expect(formatContactEmail({ ...full, name: "" }).subject).toBe(
-      "New project inquiry",
+      "Новая заявка",
     );
   });
 
   it("includes every field in the text body", () => {
     const { text } = formatContactEmail(full);
-    expect(text).toContain("Name: Jane Doe");
+    expect(text).toContain("Имя: Jane Doe");
     expect(text).toContain("Email: jane@company.com");
-    expect(text).toContain("Company: Acme Inc");
-    expect(text).toContain("Budget: $10k-$20k");
-    expect(text).toContain("Services: Web, AI");
+    expect(text).toContain("Компания: Acme Inc");
+    expect(text).toContain("Бюджет: $10k-$20k");
+    expect(text).toContain("Услуги: Web, AI");
     expect(text).toContain("We are building a fintech product");
   });
 
@@ -39,9 +39,9 @@ describe("formatContactEmail", () => {
       email: "jane@company.com",
       message: "A short but valid project description here.",
     });
-    expect(text).toContain("Company: -");
-    expect(text).toContain("Budget: -");
-    expect(text).toContain("Services: -");
+    expect(text).toContain("Компания: -");
+    expect(text).toContain("Бюджет: -");
+    expect(text).toContain("Услуги: -");
   });
 
   it("escapes HTML in user input to prevent injection in the email client", () => {
@@ -69,6 +69,6 @@ describe("formatContactEmail", () => {
       ...full,
       services: ["  Web  ", "", "Apps"],
     });
-    expect(text).toContain("Services: Web, Apps");
+    expect(text).toContain("Услуги: Web, Apps");
   });
 });

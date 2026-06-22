@@ -10,7 +10,7 @@ export const metadata: Metadata = {
   title: copy.meta.about.title,
   description: copy.meta.about.description,
   ...socialMeta({
-    ogTitle: "About | Lumako",
+    ogTitle: "О студии | Lumako",
     description: copy.meta.about.description,
     path: "/about",
   }),

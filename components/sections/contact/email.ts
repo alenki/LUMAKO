@@ -53,31 +53,31 @@ export function formatContactEmail(data: ContactSubmission): FormattedEmail {
   const message = cap((data.message ?? "").trim(), LIMITS.message);
 
   const subject = name
-    ? `New project inquiry - ${name}`
-    : "New project inquiry";
+    ? `Новая заявка - ${name}`
+    : "Новая заявка";
 
   const rows: [string, string][] = [
-    ["Name", name || "-"],
+    ["Имя", name || "-"],
     ["Email", email || "-"],
-    ["Company", company || "-"],
-    ["Budget", budget || "-"],
-    ["Services", services.length ? services.join(", ") : "-"],
+    ["Компания", company || "-"],
+    ["Бюджет", budget || "-"],
+    ["Услуги", services.length ? services.join(", ") : "-"],
   ];
 
   const text = [
-    "New contact form submission - lumako.net",
+    "Новая заявка с сайта - lumako.ru",
     "",
     ...rows.map(([key, value]) => `${key}: ${value}`),
     "",
-    "Message:",
+    "Сообщение:",
     message || "-",
     "",
-    `Reply to this email to respond directly to ${name || email}.`,
+    `Ответьте на это письмо, чтобы написать напрямую: ${name || email}.`,
   ].join("\n");
 
   const html = `
 <div style="font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;color:#1a1a1a;line-height:1.6;max-width:560px;">
-  <p style="margin:0 0 18px;font-size:13px;letter-spacing:.04em;text-transform:uppercase;color:#9a9a9a;">New contact form submission &middot; lumako.net</p>
+  <p style="margin:0 0 18px;font-size:13px;letter-spacing:.04em;text-transform:uppercase;color:#9a9a9a;">Новая заявка с сайта &middot; lumako.ru</p>
   <table style="border-collapse:collapse;font-size:14px;">
     ${rows
       .map(
@@ -88,11 +88,11 @@ export function formatContactEmail(data: ContactSubmission): FormattedEmail {
       )
       .join("\n    ")}
   </table>
-  <p style="margin:22px 0 4px;font-size:13px;letter-spacing:.04em;text-transform:uppercase;color:#8a8a8a;">Message</p>
+  <p style="margin:22px 0 4px;font-size:13px;letter-spacing:.04em;text-transform:uppercase;color:#8a8a8a;">Сообщение</p>
   <div style="white-space:pre-wrap;font-size:15px;color:#1a1a1a;">${escapeHtml(
     message || "-",
   )}</div>
-  <p style="margin:26px 0 0;font-size:13px;color:#9a9a9a;">Reply to this email to respond directly to ${escapeHtml(
+  <p style="margin:26px 0 0;font-size:13px;color:#9a9a9a;">Ответьте на это письмо, чтобы написать напрямую: ${escapeHtml(
     name || email,
   )}.</p>
 </div>`.trim();

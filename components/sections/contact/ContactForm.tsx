@@ -131,14 +131,14 @@ export function ContactForm({ onSentChange }: ContactFormProps = {}) {
             onClick={reset}
             className="px-9 py-4 text-[length:var(--text-lg)]"
           >
-            Send another message
+            Отправить ещё одно сообщение
           </Button>
           <Link
             href="/work"
             data-cursor
             className="group inline-flex items-center gap-2 text-[length:var(--text-lg)] font-medium text-fg-muted transition-colors hover:text-fg"
           >
-            See the work
+            Смотреть работы
             <span
               aria-hidden
               className="transition-transform duration-300 group-hover:translate-x-1"
@@ -164,7 +164,7 @@ export function ContactForm({ onSentChange }: ContactFormProps = {}) {
           overflow: "hidden",
         }}
       >
-        <label htmlFor="contact-website">Leave this field empty</label>
+        <label htmlFor="contact-website">Оставьте это поле пустым</label>
         <input
           type="text"
           id="contact-website"
@@ -178,11 +178,11 @@ export function ContactForm({ onSentChange }: ContactFormProps = {}) {
 
       <div className="flex flex-col gap-8 sm:flex-row">
         <Field
-          label="Your name"
+          label="Ваше имя"
           name="name"
           value={name}
           onChange={setName}
-          placeholder="Jane Doe"
+          placeholder="Иван Иванов"
           required
           error={errors.name}
           className="flex-1"
@@ -193,7 +193,7 @@ export function ContactForm({ onSentChange }: ContactFormProps = {}) {
           type="email"
           value={email}
           onChange={setEmail}
-          placeholder="jane@company.com"
+          placeholder="ivan@company.ru"
           required
           error={errors.email}
           className="flex-1"
@@ -201,16 +201,16 @@ export function ContactForm({ onSentChange }: ContactFormProps = {}) {
       </div>
 
       <Field
-        label="Company"
+        label="Компания"
         name="company"
         value={company}
         onChange={setCompany}
-        placeholder="Optional"
+        placeholder="Необязательно"
       />
 
       <fieldset className="flex flex-col">
         <legend className="label-caps">
-          Budget
+          Бюджет
         </legend>
         <div className="mt-4 flex flex-wrap gap-3">
           {budgets.map((option) => (
@@ -227,8 +227,8 @@ export function ContactForm({ onSentChange }: ContactFormProps = {}) {
 
       <fieldset className="flex flex-col">
         <legend className="label-caps">
-          What you need{" "}
-          <span className="text-fg-dim">- pick any</span>
+          Что нужно{" "}
+          <span className="text-fg-dim">- любое</span>
         </legend>
         <div className="mt-4 flex flex-wrap gap-3">
           {serviceOptions.map((option) => (
@@ -244,22 +244,22 @@ export function ContactForm({ onSentChange }: ContactFormProps = {}) {
       </fieldset>
 
       <Field
-        label="The project"
+        label="О проекте"
         name="message"
         as="textarea"
         value={message}
         onChange={setMessage}
-        placeholder="What are you building, and where are you in the process?"
+        placeholder="Что вы создаёте и на каком этапе находитесь?"
         required
         error={errors.message}
       />
 
       <div className="flex flex-wrap items-center gap-x-8 gap-y-4">
         <Button type="submit">
-          {status === "submitting" ? "Sending…" : "Send message"}
+          {status === "submitting" ? "Отправляем…" : "Отправить"}
         </Button>
         <span className="text-[length:var(--text-base)] text-fg-dim">
-          Or email{" "}
+          Или напишите на{" "}
           <a
             href={`mailto:${site.email}`}
             target="_blank"
@@ -287,7 +287,7 @@ export function ContactForm({ onSentChange }: ContactFormProps = {}) {
           >
             {sendFailed ? (
               <>
-                Something went wrong on our end. Please email us at{" "}
+                Что-то пошло не так на нашей стороне. Напишите нам на{" "}
                 <a
                   href={`mailto:${site.email}`}
                   data-cursor
@@ -295,10 +295,10 @@ export function ContactForm({ onSentChange }: ContactFormProps = {}) {
                 >
                   {site.email}
                 </a>{" "}
-                or try again in a moment.
+                или попробуйте ещё раз через минуту.
               </>
             ) : (
-              "Please fix the highlighted fields and try again."
+              "Исправьте выделенные поля и попробуйте снова."
             )}
           </motion.p>
         ) : null}

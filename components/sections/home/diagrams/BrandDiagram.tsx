@@ -14,7 +14,7 @@ const r2 = (n: number) => Math.round(n * 100) / 100;
 const circlePath = (cx: number, cy: number, r: number) =>
   `M ${r2(cx - r)},${r2(cy)} a ${r},${r} 0 1,0 ${r * 2},0 a ${r},${r} 0 1,0 ${-r * 2},0`;
 
-// (1) FLOWER OF LIFE — 19 circles on a hex lattice (spacing S; adjacent circles
+// (1) FLOWER OF LIFE - 19 circles on a hex lattice (spacing S; adjacent circles
 // pass through each other's centers). Kept where a^2+ab+b^2 <= 4, then sorted by
 // distance so the lattice blooms from the center outward.
 const S = 54;
@@ -35,7 +35,7 @@ FLOWER.sort((p, q) => p.d - q.d);
 
 const BOUND = circlePath(C, C, 160);
 
-// (2) PRIMARY = GOLD — a true logarithmic golden spiral: radius grows by PHI every
+// (2) PRIMARY = GOLD - a true logarithmic golden spiral: radius grows by PHI every
 // quarter turn (r = a*e^(K*theta)), sampled as a smooth polyline from the eye out.
 const K = Math.log(PHI) / (Math.PI / 2);
 function goldenSpiral() {
@@ -74,7 +74,7 @@ export function BrandDiagram({
       preserveAspectRatio="xMidYMid meet"
       style={{ overflow: "visible", pointerEvents: "none" }}
     >
-      {/* The whole mandala turns once every 90s while live — the single calm motion. */}
+      {/* The whole mandala turns once every 90s while live - the single calm motion. */}
       <motion.g
         animate={reduce ? undefined : idle ? { rotate: 360 } : { rotate: 0 }}
         transition={idle ? { duration: 90, ease: "linear", repeat: Infinity } : { duration: 0 }}
@@ -130,7 +130,7 @@ export function BrandDiagram({
         />
       </motion.g>
 
-      {/* GOLD EYE: the spiral's fixed origin at center — pops last, holds while the
+      {/* GOLD EYE: the spiral's fixed origin at center - pops last, holds while the
           mandala turns. Reads as one gold subject with the spiral. */}
       <motion.circle
         cx={C}

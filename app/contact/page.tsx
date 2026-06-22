@@ -9,7 +9,7 @@ export const metadata: Metadata = {
   title: copy.meta.contact.title,
   description: copy.meta.contact.description,
   ...socialMeta({
-    ogTitle: "Contact | Lumako",
+    ogTitle: "Контакты | Lumako",
     description: copy.meta.contact.description,
     path: "/contact",
   }),

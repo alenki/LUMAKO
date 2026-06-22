@@ -41,7 +41,15 @@ export function socialMeta(opts: {
   const isHome = path === "/";
 
   return {
-    alternates: { canonical: path },
+    alternates: {
+      canonical: path,
+      // Self-referencing hreflang for the standalone RU property: declares "Russian
+      // content for the RU region" without coupling to the separate lumako.net build.
+      // Both keys resolve against metadataBase -> absolute lumako.ru hrefs. Yandex
+      // requires hreflang in <head> (it dropped sitemap-hreflang support); Google reads
+      // either - the sitemap (app/sitemap.ts) declares the same pair for consistency.
+      languages: { "ru-RU": path, "x-default": path },
+    },
     robots: ROBOTS,
     openGraph: {
       type: "website",

@@ -25,7 +25,7 @@ describe("work content invariants", () => {
   it("the filter list contains only disciplines present in the work", () => {
     const present = new Set(work.flatMap((w) => w.disciplines));
     disciplines.forEach((d) => expect(present.has(d)).toBe(true));
-    expect(disciplines).toContain("Web");
+    expect(disciplines).toContain("Веб");
   });
 });
 

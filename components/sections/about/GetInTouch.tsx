@@ -22,9 +22,9 @@ export function GetInTouch() {
           <TextReveal
             as="h2"
             text={g.heading}
-            dotAfter="touch"
+            dotAfter="нами"
             stagger={0.04}
-            className="block font-display text-[length:clamp(3rem,9vw,8.5rem)] font-medium leading-[0.95] tracking-[-0.02em]"
+            className="block font-display text-[length:clamp(3rem,9vw,8.5rem)] max-[1699px]:text-[length:clamp(2.6rem,6.5vw,7rem)] font-medium leading-[0.95] tracking-[-0.02em]"
           />
 
           <div className="mt-12 flex flex-col gap-10 sm:flex-row sm:gap-[var(--vw-8)] md:mt-16">

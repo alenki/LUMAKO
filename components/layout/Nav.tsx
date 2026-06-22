@@ -138,7 +138,7 @@ export function Nav() {
             <Link
               href="/"
               data-cursor
-              aria-label="Lumako home"
+              aria-label="Lumako - на главную"
               onClick={() => setOpen(false)}
             >
               <Logo />
@@ -171,7 +171,7 @@ export function Nav() {
             <button
               ref={toggleRef}
               type="button"
-              aria-label={open ? "Close menu" : "Open menu"}
+              aria-label={open ? "Закрыть меню" : "Открыть меню"}
               aria-expanded={open}
               aria-controls="mobile-menu"
               onClick={() => setOpen((v) => !v)}
@@ -240,7 +240,7 @@ function MobileMenu({ open, reduce, isActive, onClose, panelRef }: MobileMenuPro
           ref={panelRef}
           role="dialog"
           aria-modal="true"
-          aria-label="Site menu"
+          aria-label="Меню сайта"
           tabIndex={-1}
           onClick={onClose}
           className="fixed inset-0 z-[150] bg-black/15 backdrop-blur-[2px] outline-none md:hidden"
@@ -254,7 +254,7 @@ function MobileMenu({ open, reduce, isActive, onClose, panelRef }: MobileMenuPro
               but with aria-modal the browse cursor is constrained to this subtree, so
               the modal needs its own reachable close control. */}
           <button type="button" onClick={onClose} className="sr-only">
-            Close menu
+            Закрыть меню
           </button>
 
           {/* The card - a pure-black top-anchored dropdown. It springs open from the
@@ -287,7 +287,7 @@ function MobileMenu({ open, reduce, isActive, onClose, panelRef }: MobileMenuPro
                 {/* The index - monumental stacked words. No ordinals, no rules: the
                     words carry the whole panel, and the current page is marked by the
                     wordmark's lume period. */}
-                <nav aria-label="Primary">
+                <nav aria-label="Основная навигация">
                   <ul className="flex flex-col gap-[clamp(0.55rem,2.3vh,1.2rem)]">
                     {site.nav.map((item, i) => {
                       const active = isActive(item.href);

@@ -53,7 +53,11 @@ function ellipsePath(cx: number, cy: number, rx: number, ry: number): string {
 // clamp mirrors the "what we make" line's clamp scaled by 1.111x (120px / 108px), the
 // proportion the mark holds against that line at the reference - so it stays exactly
 // 1.111x the craft line at every width and shrinks in lockstep with the type.
-const MARK_SIZE = "size-[clamp(3.333rem,8.333vw,7.5rem)] overflow-visible";
+// Base is the locked >=1700 reference; below it the mark scales down in lockstep with
+// the craft line (it mirrors that clamp x1.111), so on a MacBook-class canvas it shrinks
+// with the type instead of looming at near-max.
+const MARK_SIZE =
+  "size-[clamp(3.333rem,8.333vw,7.5rem)] max-[1699px]:size-[clamp(3.333rem,5.9vw,6.94rem)] overflow-visible";
 
 // One ellipse slot's state. Three of these compose a station.
 type Slot = { cx: number; cy: number; rx: number; ry: number };
@@ -194,7 +198,7 @@ export function Studio() {
             text={s.lead}
             dotAfter="Lumako"
             stagger={0.04}
-            className="block max-w-[15ch] font-display text-[length:clamp(3rem,9.3vw,8.75rem)] font-medium leading-[1.0] tracking-[-0.03em] text-balance"
+            className="block max-w-[18ch] font-display text-[length:clamp(3rem,9.3vw,8.75rem)] max-[1699px]:text-[length:clamp(3rem,6.9vw,8rem)] font-medium leading-[1.0] tracking-[-0.03em] text-balance"
           />
 
           {/* the mark - the section's single living gesture, set tight to the lines */}
@@ -214,7 +218,7 @@ export function Studio() {
             text={s.craft}
             delay={0.1}
             stagger={0.028}
-            className="mt-2 block max-w-[26ch] font-display text-[length:clamp(3rem,7.5vw,6.75rem)] font-semibold leading-[1.06] tracking-[-0.02em] max-[639px]:hidden"
+            className="mt-2 block max-w-[26ch] font-display text-[length:clamp(3rem,7.5vw,6.75rem)] max-[1699px]:text-[length:clamp(3rem,5.3vw,6.25rem)] font-semibold leading-[1.06] tracking-[-0.02em] max-[639px]:hidden"
           />
           {/* On phones the craft matches the lead's size, so it also takes the lead's
               font-medium weight (not the desktop sub-heading semibold) and its tracking,

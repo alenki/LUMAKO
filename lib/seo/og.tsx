@@ -1,3 +1,5 @@
+import { readFileSync } from "node:fs";
+import { join } from "node:path";
 import { ImageResponse } from "next/og";
 import { OG_IMAGE_ALT } from "./config";
 
@@ -6,7 +8,11 @@ import { OG_IMAGE_ALT } from "./config";
  * `app/twitter-image.tsx`. It is statically optimized (no request-time data), so
  * Next renders it to a PNG at build time - no edge/runtime font fetch needed, which
  * keeps the OpenNext/Cloudflare build robust. Pure flexbox (satori has no grid),
- * default font, brand tokens copied from styles/globals.css.
+ * brand tokens copied from styles/globals.css.
+ *
+ * The default satori font is Latin-only, so the Russian copy would render as tofu.
+ * We bundle two static Geist Sans weights (Cyrillic-covering, plus the ₽/-/· glyphs
+ * used below) from the repo and read them at build time - no runtime fetch.
  */
 
 export const ogAlt = OG_IMAGE_ALT;
@@ -18,6 +24,11 @@ const INK = "#0a0a0a"; // --color-fg
 const BODY = "#3f3f3f"; // --color-fg-body
 const MUTED = "#737373"; // --color-fg-muted
 const LUME = "#d49a2e"; // --color-lume (the single accent - wordmark dot + one rule)
+
+// Read at module load → executed during the static build, never at request time.
+const fontDir = join(process.cwd(), "lib/seo/fonts");
+const geistMedium = readFileSync(join(fontDir, "Geist-Medium.ttf"));
+const geistBlack = readFileSync(join(fontDir, "Geist-Black.ttf"));
 
 export function ogImageResponse() {
   return new ImageResponse(
@@ -32,7 +43,7 @@ export function ogImageResponse() {
           backgroundColor: BG,
           color: INK,
           padding: "96px",
-          fontFamily: "sans-serif",
+          fontFamily: "Geist",
         }}
       >
         <div style={{ display: "flex", flexDirection: "column" }}>
@@ -40,13 +51,14 @@ export function ogImageResponse() {
             style={{
               display: "flex",
               fontSize: 30,
+              fontWeight: 500,
               letterSpacing: "0.18em",
               textTransform: "uppercase",
               color: MUTED,
               marginBottom: 36,
             }}
           >
-            Web · AI · Apps
+            Веб · ИИ · Приложения
           </div>
 
           <div
@@ -78,12 +90,13 @@ export function ogImageResponse() {
             style={{
               display: "flex",
               fontSize: 42,
+              fontWeight: 500,
               color: BODY,
-              maxWidth: 860,
+              maxWidth: 920,
               lineHeight: 1.3,
             }}
           >
-            A full-stack studio shipping web, AI, and apps that stay live.
+            Студия полного цикла: веб, ИИ и приложения, которые остаются в работе.
           </div>
         </div>
 
@@ -93,10 +106,11 @@ export function ogImageResponse() {
             justifyContent: "space-between",
             alignItems: "center",
             fontSize: 30,
+            fontWeight: 500,
             color: MUTED,
           }}
         >
-          <span style={{ display: "flex" }}>lumako.net</span>
+          <span style={{ display: "flex" }}>lumako.ru</span>
           <span
             style={{
               display: "flex",
@@ -104,11 +118,17 @@ export function ogImageResponse() {
               textTransform: "uppercase",
             }}
           >
-            Shipped &amp; proven
+            Запускаем и поддерживаем
           </span>
         </div>
       </div>
     ),
-    { ...ogSize },
+    {
+      ...ogSize,
+      fonts: [
+        { name: "Geist", data: geistMedium, weight: 500, style: "normal" },
+        { name: "Geist", data: geistBlack, weight: 800, style: "normal" },
+      ],
+    },
   );
 }

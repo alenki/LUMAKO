@@ -72,11 +72,11 @@ describe("Cursor", () => {
       </>,
     );
     // The disc only exists once the pointer reaches a project.
-    expect(queryByText("View")).toBeNull();
+    expect(queryByText("Открыть")).toBeNull();
 
     fireEvent.mouseMove(container.querySelector("[data-testid='view']")!);
 
-    expect(queryByText("View")).not.toBeNull(); // the disc label
+    expect(queryByText("Открыть")).not.toBeNull(); // the disc label
     expect(container.querySelector("path")).toBeNull(); // not the gold loop
   });
 
@@ -95,13 +95,13 @@ describe("Cursor", () => {
 
     // Pointer comes to rest over empty space - no disc yet.
     fireEvent.mouseMove(blank, { clientX: 20, clientY: 20 });
-    expect(queryByText("View")).toBeNull();
+    expect(queryByText("Открыть")).toBeNull();
 
     // The page scrolls a project under the (unmoved) pointer.
     document.elementFromPoint = (() => link) as typeof document.elementFromPoint;
     fireEvent.scroll(window);
 
-    expect(await findByText("View")).not.toBeNull();
+    expect(await findByText("Открыть")).not.toBeNull();
   });
 
   it("drops the View disc when the project scrolls out from under a still pointer", async () => {
@@ -115,13 +115,13 @@ describe("Cursor", () => {
 
     // Pointer rests over the project - the disc shows.
     fireEvent.mouseMove(link, { clientX: 20, clientY: 20 });
-    expect(await findByText("View")).not.toBeNull();
+    expect(await findByText("Открыть")).not.toBeNull();
 
     // Without moving the pointer, the project scrolls away (empty space beneath now).
     document.elementFromPoint = (() => document.body) as typeof document.elementFromPoint;
     fireEvent.scroll(window);
 
-    await waitFor(() => expect(queryByText("View")).toBeNull(), { timeout: 2000 });
+    await waitFor(() => expect(queryByText("Открыть")).toBeNull(), { timeout: 2000 });
   });
 
   it("catches the View disc when a project glides under a still pointer (hover-recheck)", async () => {
@@ -140,13 +140,13 @@ describe("Cursor", () => {
 
     // Pointer rests over empty space - no disc yet.
     fireEvent.mouseMove(blank, { clientX: 20, clientY: 20 });
-    expect(queryByText("View")).toBeNull();
+    expect(queryByText("Открыть")).toBeNull();
 
     // A project glides under the (unmoved) pointer; the rail pokes the cursor.
     document.elementFromPoint = (() => link) as typeof document.elementFromPoint;
     window.dispatchEvent(new Event("lumako:hover-recheck"));
 
-    expect(await findByText("View")).not.toBeNull();
+    expect(await findByText("Открыть")).not.toBeNull();
   });
 
   it("keeps the plain reticle - no gold loop - over a data-cursor='quiet' target", () => {

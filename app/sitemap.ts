@@ -8,11 +8,21 @@ import { SITE_URL } from "@/lib/seo/config";
  */
 const lastModified = new Date("2026-06-21");
 
+// Each entry self-references its own URL as the ru-RU alternate plus x-default, mirroring
+// the in-<head> hreflang (lib/seo/metadata.ts) so the two declarations agree. Standalone
+// property: never points at the separate lumako.net build. URLs are already absolute
+// (built from SITE_URL), which sitemap hreflang requires.
+function route(path: string, priority: number): MetadataRoute.Sitemap[number] {
+  const url = `${SITE_URL}${path}`;
+  return {
+    url,
+    lastModified,
+    changeFrequency: "monthly",
+    priority,
+    alternates: { languages: { "ru-RU": url, "x-default": url } },
+  };
+}
+
 export default function sitemap(): MetadataRoute.Sitemap {
-  return [
-    { url: `${SITE_URL}`, lastModified, changeFrequency: "monthly", priority: 1 },
-    { url: `${SITE_URL}/work`, lastModified, changeFrequency: "monthly", priority: 0.9 },
-    { url: `${SITE_URL}/about`, lastModified, changeFrequency: "monthly", priority: 0.8 },
-    { url: `${SITE_URL}/contact`, lastModified, changeFrequency: "monthly", priority: 0.8 },
-  ];
+  return [route("", 1), route("/work", 0.9), route("/about", 0.8), route("/contact", 0.8)];
 }

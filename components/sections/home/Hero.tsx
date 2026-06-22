@@ -32,7 +32,7 @@ export function Hero() {
           {/* Type fits one line at >=1964px (the locked 2k reference). Below that the
               widest line ("MOST WORK GETS") would wrap, so we shrink it a touch and hold
               it on one line. True mobile (<=760px) keeps the base size and wraps as before. */}
-          <h1 className="font-display font-extrabold uppercase leading-[0.85] max-[760px]:leading-[0.9] tracking-[-0.05em] text-[length:clamp(46px,10.8vw,210px)] max-[1963px]:text-[length:clamp(46px,9.8vw,210px)] max-[1963px]:whitespace-nowrap max-[760px]:text-[length:clamp(46px,10.8vw,210px)] max-[760px]:whitespace-normal">
+          <h1 className="font-display font-extrabold uppercase leading-[0.85] max-[760px]:leading-[0.9] tracking-[-0.05em] text-[length:clamp(46px,10.8vw,210px)] max-[1963px]:text-[length:clamp(46px,9.8vw,210px)] max-[1963px]:whitespace-nowrap max-[760px]:text-[length:clamp(30px,9vw,210px)] max-[760px]:whitespace-normal">
             {lines.map((line, i) => {
               const isLast = i === lastIdx;
               return (
@@ -114,7 +114,7 @@ export function Hero() {
             transition={reduce ? { duration: 0 } : { duration: 0.9, ease: easeOutSoft, delay: 1.4 }}
           >
             <span className="label-caps flex items-center gap-3">
-              Scroll
+              Вниз
               <span aria-hidden="true" className="relative h-9 w-px overflow-hidden bg-line">
                 <span className="absolute inset-x-0 top-0 h-3 animate-[scrollcue_1.8s_ease-in-out_infinite] bg-fg" />
               </span>

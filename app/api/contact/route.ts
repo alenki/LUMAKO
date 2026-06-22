@@ -38,7 +38,7 @@ export async function POST(request: Request) {
     body = await request.json();
   } catch {
     return Response.json(
-      { ok: false, errors: { message: "Invalid request." } },
+      { ok: false, errors: { message: "Некорректный запрос." } },
       { status: 400 },
     );
   }
@@ -94,7 +94,7 @@ export async function POST(request: Request) {
 
   try {
     await mailer.send({
-      from: { name: "Lumako Contact Form", email: from },
+      from: { name: "Форма обратной связи Lumako", email: from },
       to,
       replyTo: {
         name: submission.name.trim() || submission.email.trim(),

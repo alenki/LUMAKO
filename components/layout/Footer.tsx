@@ -46,7 +46,7 @@ export function Footer() {
             footer recomposes into a centered stack (socials row, email, wordmark), so
             here they become a centered wrapping row, dropped down (mt) and bolded so they
             anchor the lower composition rather than float at the top. */}
-        <nav aria-label="Social" className="flex flex-col items-end gap-2 max-[801px]:mt-[calc(var(--vw)*10)] max-[801px]:flex-row max-[801px]:flex-wrap max-[801px]:items-center max-[801px]:justify-center max-[801px]:gap-x-8 max-[801px]:gap-y-2">
+        <nav aria-label="Социальные сети" className="flex flex-col items-end gap-2 max-[801px]:mt-[calc(var(--vw)*10)] max-[801px]:flex-row max-[801px]:flex-wrap max-[801px]:items-center max-[801px]:justify-center max-[801px]:gap-x-8 max-[801px]:gap-y-2">
           {site.socials.map((s) => (
             <a
               key={s.href}

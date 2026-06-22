@@ -20,7 +20,7 @@ const ITEM: CaseStudy = {
   client: "Specialty coffee & roaster",
   sector: "Concept site",
   year: "2025",
-  disciplines: ["Web", "Brand"],
+  disciplines: ["Веб", "Бренд"],
   accent: "#a1957e",
   cover: "/work/balance-coffee.webp",
   coverPosition: "center",
@@ -37,15 +37,15 @@ describe("WorkSlide", () => {
     expect(a.getAttribute("target")).toBe("_blank");
     expect(a.getAttribute("rel")).toContain("noopener");
     expect(a.getAttribute("data-cursor")).toBe("view");
-    expect(a.getAttribute("aria-label")).toContain("opens the live site");
+    expect(a.getAttribute("aria-label")).toContain("откроет сайт");
   });
 
   it("shows the project name and a chip per discipline (no client/sector or year)", () => {
     const { container } = render(<WorkSlide item={ITEM} />);
     expect(container.querySelector("h3")?.textContent).toBe("Balance Coffee");
     const chips = [...container.querySelectorAll("span")].map((s) => s.textContent);
-    expect(chips).toContain("Web");
-    expect(chips).toContain("Brand");
+    expect(chips).toContain("Веб");
+    expect(chips).toContain("Бренд");
     // sparse: the rich card's metadata must not appear
     expect(container.textContent).not.toContain("Concept site");
     expect(container.textContent).not.toContain("2025");

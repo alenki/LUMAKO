@@ -4,85 +4,85 @@ export const services: Service[] = [
   {
     id: "web",
     index: "01",
-    title: "Web - sites & platforms",
+    title: "Веб - сайты и платформы",
     blurb:
-      "Marketing sites, booking systems, and dashboards that load fast and do a job. Typed, accessible, and built the way we'd want to maintain it.",
+      "Маркетинговые сайты, системы бронирования и дашборды, которые быстро грузятся и решают задачу. Типизированные, доступные и собранные так, как мы хотели бы их поддерживать.",
     deliverables: [
-      "Marketing & campaign sites",
-      "Booking & scheduling systems",
-      "Dashboards & internal tools",
+      "Маркетинговые и промосайты",
+      "Системы бронирования и записи",
+      "Дашборды и внутренние инструменты",
       "Headless CMS",
-      "Performance & accessibility",
+      "Производительность и доступность",
     ],
   },
   {
     id: "ai",
     index: "02",
-    title: "AI - assistants & automation",
+    title: "ИИ - ассистенты и автоматизация",
     blurb:
-      "Assistants that answer on WhatsApp or Telegram, book the appointment, and send the reminder - plus LLM features and retrieval wired into real workflows.",
+      "Ассистенты, которые отвечают в WhatsApp и Telegram, записывают на приём и присылают напоминания, - плюс LLM-функции и поиск по данным, встроенные в реальные процессы.",
     deliverables: [
-      "WhatsApp & Telegram booking assistants",
-      "LLM features in product",
-      "Retrieval over your own data",
-      "Internal automation tools",
-      "Integration with existing systems",
+      "Ассистенты записи в WhatsApp и Telegram",
+      "LLM-функции в продукте",
+      "Поиск по вашим данным",
+      "Инструменты внутренней автоматизации",
+      "Интеграция с существующими системами",
     ],
   },
   {
     id: "apps",
     index: "03",
-    title: "Apps - product builds",
+    title: "Приложения - разработка продуктов",
     blurb:
-      "End-to-end product, from the data model to the screen. Web apps, mobile-web, and internal apps - built whole and handed over working.",
+      "Продукт под ключ - от модели данных до экрана. Веб-приложения, мобильный веб и внутренние приложения: собираем целиком и передаём работающими.",
     deliverables: [
-      "Web & mobile-web apps",
-      "Internal & operations apps",
-      "End-to-end product builds",
-      "Auth, data, and API work",
-      "Maintenance & iteration",
+      "Веб- и мобильные веб-приложения",
+      "Внутренние и операционные приложения",
+      "Разработка продуктов под ключ",
+      "Авторизация, данные и API",
+      "Поддержка и развитие",
     ],
   },
   {
     id: "brand",
     index: "04",
-    title: "Brand & identity",
+    title: "Бренд и айдентика",
     blurb:
-      "A wordmark, a type and color system, and the rules to use them - enough identity to make the product feel like one thing, held by the team that builds it.",
+      "Логотип, система шрифтов и цвета и правила их использования - достаточно айдентики, чтобы продукт ощущался единым целым, в руках команды, которая его создаёт.",
     deliverables: [
-      "Wordmark & identity",
-      "Type & color systems",
-      "Art direction",
-      "Brand guidelines",
-      "Asset & template kit",
+      "Логотип и айдентика",
+      "Системы шрифтов и цвета",
+      "Арт-дирекшн",
+      "Гайдлайны бренда",
+      "Набор ассетов и шаблонов",
     ],
   },
   {
     id: "strategy",
     index: "05",
-    title: "Positioning & proof",
+    title: "Позиционирование и доказательства",
     blurb:
-      "Finding the sharpest version of the idea, then leading with the proof. Clarity is the cheapest performance gain you'll ever buy.",
+      "Находим самую точную версию идеи и выносим доказательства на первый план. Ясность - самый дешёвый способ повысить эффективность.",
     deliverables: [
-      "Positioning & messaging",
-      "Proof & receipts framing",
-      "Naming",
-      "Scope & roadmap",
-      "Proof-led launch plan",
+      "Позиционирование и месседжинг",
+      "Подача доказательств и результатов",
+      "Нейминг",
+      "Скоуп и роадмап",
+      "План запуска через доказательства",
     ],
   },
   {
     id: "motion",
     index: "06",
-    title: "Motion & cinematic AI",
+    title: "Моушн и кинематографичный ИИ",
     blurb:
-      "Three.js hero work and composed AI brand frames - one deliberate motion choice per view, golden-hour light, never gimmicky.",
+      "Hero-сцены на Three.js и собранные ИИ-кадры для бренда - по одному выверенному движению на экран, свет золотого часа, без трюкачества.",
     deliverables: [
-      "Three.js / WebGL hero work",
-      "Interaction & UI motion",
-      "Cinematic AI brand frames",
-      "Real-time 3D",
-      "Prototyped animation",
+      "Hero-сцены на Three.js / WebGL",
+      "Интерфейсная анимация и моушн",
+      "Кинематографичные ИИ-кадры бренда",
+      "3D в реальном времени",
+      "Прототипы анимации",
     ],
   },
 ];
@@ -90,68 +90,68 @@ export const services: Service[] = [
 export const processPhases: ProcessPhase[] = [
   {
     index: "01",
-    name: "Proof",
+    name: "Доказательства",
     detail:
-      "We start with the receipts: shipped builds for government and university teams, a won AI competition, live products you can click. You judge us on work, not promises.",
+      "Начинаем с фактов: запущенные проекты для государственных и университетских команд, победа в ИИ-конкурсе, живые продукты, которые можно открыть. Судите по запущенным проектам, а не по обещаниям.",
   },
   {
     index: "02",
-    name: "Scope",
+    name: "Объём работ",
     detail:
-      "We agree on the problem and what done looks like. One outcome the build has to deliver - written down before anything is made.",
+      "Договариваемся о задаче и о том, как выглядит результат. Один итог, который должна дать разработка, - зафиксированный до начала работ.",
   },
   {
     index: "03",
-    name: "Price",
+    name: "Цена",
     detail:
-      "With the scope set, we name the price upfront - clear and fixed before any code is written. No surprise invoice at the end.",
+      "Когда объём работ определён, называем цену сразу - ясно и фиксированно, до первой строки кода. Никаких неожиданных счетов в конце.",
   },
   {
     index: "04",
-    name: "Build",
+    name: "Разработка",
     detail:
-      "We build the working thing across the stack - web, AI, app. No handoff, no telephone game: the people planning it write the code.",
+      "Собираем работающий продукт по всему стеку - веб, ИИ, приложение. Без передачи из рук в руки: те, кто планирует, пишут код.",
   },
   {
     index: "05",
-    name: "Ship",
+    name: "Запуск",
     detail:
-      "We put it live: performance budget, QA across the matrix, and a handover that leaves the product yours and running.",
+      "Выпускаем в продакшн: бюджет производительности, QA по всей матрице и передача, после которой продукт остаётся вашим и работает.",
   },
   {
     index: "06",
-    name: "Support",
+    name: "Поддержка",
     detail:
-      "Shipped isn't finished. We stay on to measure, sharpen, and keep the system healthy long after go-live.",
+      "Запуск - это не финал. Остаёмся, чтобы измерять, улучшать и поддерживать систему здоровой ещё долго после релиза.",
   },
 ];
 
 export const engagements: Engagement[] = [
   {
-    name: "Project",
-    blurb: "A defined outcome, start to finish.",
+    name: "Проект",
+    blurb: "Чёткий результат от начала до конца.",
     detail: [
-      "Fixed scope & timeline",
-      "Web, AI, or app build - shipped",
-      "Fixed price, agreed upfront",
+      "Фиксированный объём и сроки",
+      "Веб, ИИ или приложение - запущенное",
+      "Фиксированная цена, согласованная заранее",
     ],
   },
   {
-    name: "Retainer",
-    blurb: "Our team on call, every month.",
+    name: "Ретейнер",
+    blurb: "Наша команда на связи каждый месяц.",
     detail: [
-      "Monthly build & iteration capacity",
-      "Roadmap and ongoing work",
-      "Best for products in motion",
+      "Ежемесячный объём разработки и итераций",
+      "Роадмап и постоянная работа",
+      "Лучшее для продуктов в движении",
     ],
   },
   {
-    name: "Embedded",
-    blurb: "Our builders in your room, full-time.",
+    name: "В команде",
+    blurb: "Наши разработчики в вашей команде на фулл-тайм.",
     detail: [
-      "Dedicated, full-stack capacity",
-      "Your tools, your standups",
-      "For deep, long-haul work",
+      "Выделенная команда полного цикла",
+      "Ваши инструменты, ваши стендапы",
+      "Для глубокой и долгой работы",
     ],
   },
 ];

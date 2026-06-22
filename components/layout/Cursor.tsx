@@ -390,7 +390,7 @@ export function Cursor() {
               exit={{ opacity: 0 }}
               transition={{ duration: 0.2, ease: SETTLE, delay: 0.34 }}
             >
-              View
+              Открыть
             </motion.span>
           </motion.div>
         )}
