@@ -11,7 +11,7 @@ export const work: CaseStudy[] = [
     accent: "#a1957e",
     cover: "/work/balance-coffee.webp",
     coverPosition: "center",
-    href: "https://balancecoffee.netlify.app/",
+    href: "https://balance-coffee.ru/",
     featured: true,
     summary:
       "Тёплый редакционный сайт для спешелти-кофейни и обжарщика - меню, дейли и вакансии, с двуязычным переключателем RU/EN.",
@@ -26,7 +26,7 @@ export const work: CaseStudy[] = [
     accent: "#e8261f",
     cover: "/work/master-auto.webp",
     coverPosition: "top",
-    href: "https://masterauto.netlify.app/",
+    href: "https://masterauto-07.ru/",
     featured: true,
     summary:
       "Смелый одностраничный сайт для студии тюнинга и детейлинга - оклейка, тонировка, PPF, керамика и тюнинг, в один тап от контакта.",
@@ -41,7 +41,7 @@ export const work: CaseStudy[] = [
     accent: "#4a3026",
     cover: "/work/melty.webp",
     coverPosition: "center",
-    href: "https://melty-cafe.netlify.app/",
+    href: "https://melty-cafe.ru/",
     featured: true,
     summary:
       "Элегантный сайт для десерт-кафе в Нальчике - создан, чтобы показать шоколадное меню и довести гостя до двери.",
@@ -56,7 +56,7 @@ export const work: CaseStudy[] = [
     accent: "#e8a868",
     cover: "/work/history.webp",
     coverPosition: "center top",
-    href: "https://history-rest.netlify.app/",
+    href: "https://history-nalchik.ru/",
     featured: true,
     summary:
       "Атмосферный одностраничный сайт для ресторана высокой кухни в Нальчике - задать настроение и превратить гостя в бронь столика.",
