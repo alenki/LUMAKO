@@ -4,8 +4,10 @@ import { useEffect, useRef } from "react";
 import { WorkSlide } from "@/components/sections/work/WorkSlide";
 import type { CaseStudy } from "@/lib/content/types";
 
-/** One full -100% pass. Slow + linear reads as premium. Tunable in one place. */
-const DURATION = "45s";
+/** One full -100% pass. Slow + linear reads as premium. Tunable in one place;
+ *  the drag/wheel scrubbing below converts pointer pixels into this timeline. */
+const DURATION_MS = 45_000;
+const DURATION = `${DURATION_MS}ms`;
 /** On hover the rail keeps gliding, slower so you can read it - not a dead stop.
  *  Why not slower: the render pipeline is smooth at any speed (steady fps, sub-pixel
  *  AA verified), but a near-stop crawl (<~10px/s) moves the detail-rich cover
@@ -15,6 +17,22 @@ const DURATION = "45s";
  *  read" cue while moving fast enough to glide smoothly. Speed is the only real lever
  *  here - tune this one number to trade slowness against smoothness. */
 const HOVER_RATE = 0.4;
+
+/** A press becomes a drag only past this travel; under it, it stays a click. */
+const DRAG_THRESHOLD_PX = 8;
+/** Release velocity (px/ms) above which a flick keeps the rail coasting. */
+const FLICK_MIN_VELOCITY = 0.15;
+/** A flick must release within this of the last move - a pointer held still keeps
+ *  stale velocity from its earlier travel and must not launch a coast. */
+const FLICK_MAX_STALL_MS = 90;
+/** Coast decay time constant (ms): velocity falls to 1/e each half-second, so a
+ *  moderate flick carries about one card and a hard one clears a couple. */
+const COAST_TAU_MS = 500;
+/** Near-stop floor (px/ms): a backward flick (against the glide) eases to here
+ *  before the ambient advance resumes, and it backstops the forward hand-off too.
+ *  A forward flick hands back earlier - the moment it slows to the auto-slide speed
+ *  (see coastFrame), so the rail never crawls below its own ambient pace. */
+const COAST_MIN_VELOCITY = 0.01;
 
 /** Card cell: fixed responsive width + uniform right margin so the two duplicated
  *  tracks are perfectly periodic and the -100% loop has zero jump. `marquee-cell`
@@ -34,11 +52,26 @@ const CELL = "marquee-cell me-5 shrink-0 md:me-8 w-[clamp(380px,46vw,920px)]";
  * when the first scrolls fully off, the identical clone has taken its place, so
  * the reset is seamless.
  *
+ * The rail is also directly drivable - people instinctively try to swipe it, so
+ * every such gesture works (.is-draggable in globals.css owns the touch-action /
+ * cursor side). All of it scrubs the SAME keyframe animation via the Web
+ * Animations API (seeking currentTime on both tracks), so the seamless -100%
+ * loop, the compositor pipeline and the hover spotlight stay untouched:
+ * - Drag (mouse or touch) past a small threshold grabs the rail 1:1; the press
+ *   freezes the auto-advance, and a real drag swallows the card click on
+ *   release so browsing never opens a project by accident.
+ * - A flick keeps it coasting with exponential decay, then hands back to the
+ *   ambient glide.
+ * - Horizontal wheel / trackpad deltas scrub it like a native scroller;
+ *   vertical wheel (and vertical touch pans, via touch-action) stay with the
+ *   page.
+ *
  * Hover slows the rail to a drift (instead of the CSS :hover pause, which stays
  * as a no-JS fallback): the live animation's playback rate is eased down with no
  * position jump, and the inline play-state override keeps it running past the
  * stylesheet's pause. Keyboard focus still pauses outright (globals.css), and
- * reduced-motion disables the animation entirely - both left untouched here.
+ * reduced-motion swaps the whole thing for a native scroll row - the JS layer
+ * (glide AND drag) stays off there.
  *
  * Because the rail keeps gliding under a possibly-still pointer, the hover
  * spotlight cannot ride CSS :hover (which the browser only re-evaluates on pointer
@@ -63,20 +96,45 @@ export function WorkMarquee({ items }: { items: CaseStudy[] }) {
         a.tabIndex = -1;
       });
 
-    // Glide-on-hover: fine pointers only; reduced motion drops the animation.
     if (typeof window.matchMedia !== "function") return;
-    if (!window.matchMedia("(hover: hover)").matches) return;
+    // Reduced motion swaps the marquee for a native hand-scrollable row
+    // (globals.css) - no animation to glide or scrub, so the JS layer stays off.
     if (window.matchMedia("(prefers-reduced-motion: reduce)").matches) return;
+    const finePointer = window.matchMedia("(hover: hover)").matches;
 
     const tracks = Array.from(
       root.querySelectorAll<HTMLElement>(".marquee-track"),
     );
 
-    const setSpeed = (rate: number, gliding: boolean) => {
+    // ---------------------------------------------------------------------
+    // Playback control, shared by the hover glide and the drag/coast layer.
+    // ---------------------------------------------------------------------
+    let hovering = false; // fine pointer inside the rail
+    let dragging = false; // pointer down and past the drag threshold
+    let coasting = false; // still travelling from a flick after release
+    type DragSession = {
+      id: number;
+      startX: number;
+      lastX: number;
+      lastTs: number;
+      velocity: number; // px/ms, EMA-smoothed; sign = pointer direction
+      downAnchor: Element | null; // the card pressed - the only focus we may release
+    };
+    let session: DragSession | null = null;
+    let suppressClick = false;
+
+    /** One place decides the rail's speed. While the user drives it (press, drag
+     *  or coast) the automatic advance is frozen at rate 0 so it cannot fight the
+     *  gesture - the motion comes from seeking currentTime instead. The inline
+     *  play-state override keeps the stylesheet's :hover pause from stacking its
+     *  own state on top; rate alone expresses everything. */
+    const applyRate = () => {
+      const scrubbed = session !== null || coasting;
+      const glide = !scrubbed && hovering;
+      const rate = scrubbed ? 0 : glide ? HOVER_RATE : 1;
       for (const track of tracks) {
-        // Override the stylesheet's :hover pause so the rail keeps moving...
-        track.style.animationPlayState = gliding ? "running" : "";
-        // ...just much slower. updatePlaybackRate retimes in place (no jump).
+        track.style.animationPlayState = scrubbed || glide ? "running" : "";
+        // updatePlaybackRate retimes in place (no jump); older engines fall back.
         if (typeof track.getAnimations !== "function") continue;
         for (const anim of track.getAnimations()) {
           if (typeof anim.updatePlaybackRate === "function") {
@@ -88,21 +146,222 @@ export function WorkMarquee({ items }: { items: CaseStudy[] }) {
       }
     };
 
-    const slow = () => setSpeed(HOVER_RATE, true);
-    const full = () => setSpeed(1, false);
+    /** Seek every track animation by a content displacement in px (positive =
+     *  forward, cards moving left), wrapped into one iteration so the infinite
+     *  loop never sees a negative or out-of-range time. Seeking both tracks to
+     *  the SAME time also re-locks the clone to the real set on every gesture. */
+    const scrubBy = (dxPx: number) => {
+      const width = tracks[0]?.offsetWidth ?? 0;
+      if (!width) return;
+      const anims = tracks.flatMap((t) =>
+        typeof t.getAnimations === "function" ? t.getAnimations() : [],
+      );
+      if (!anims.length) return;
+      const base = Number(anims[0].currentTime ?? 0) || 0;
+      const next =
+        (((base + (dxPx / width) * DURATION_MS) % DURATION_MS) + DURATION_MS) %
+        DURATION_MS;
+      for (const anim of anims) anim.currentTime = next;
+    };
 
-    // Hand the hover spotlight over to JS. The stylesheet's :hover spotlight (dim
-    // every card, keep the hovered one lit) reads the right card only while the
-    // rail is paused - the no-JS / reduced-motion / coarse-pointer fallback. Here
-    // the rail keeps GLIDING under a possibly-still pointer, and CSS :hover does
-    // not re-evaluate when content moves under a motionless cursor: it sticks to
-    // whatever card was under the cursor when it stopped, so that card stays lit
-    // long after it has glided away. With .js-hover-active set, globals.css ignores
-    // :hover and follows the .is-hovered card we re-resolve below every frame.
-    root.classList.add("js-hover-active");
+    // ---- Coast: momentum after a flick ----
+    let coastRaf = 0;
+    let coastVelocity = 0;
+    let lastCoastTs = 0;
 
+    const stopCoast = () => {
+      coasting = false;
+      if (coastRaf) cancelAnimationFrame(coastRaf);
+      coastRaf = 0;
+    };
+
+    const coastFrame = (ts: number) => {
+      // Clamp the step so a background-tab stall cannot teleport the rail.
+      // Floor at 0 so a rAF timestamp that predates startCoast's clock read can
+      // never back-scrub, and cap the step so a background-tab stall can't teleport.
+      const dt = Math.min(Math.max(ts - lastCoastTs, 0), 64);
+      lastCoastTs = ts;
+      scrubBy(-coastVelocity * dt);
+      coastVelocity *= Math.exp(-dt / COAST_TAU_MS);
+      // Hand the rail back to the ambient advance the moment the coast has decayed
+      // TO it - not once it has crawled to a near-stop far below it. A forward flick
+      // (coastVelocity < 0, moving WITH the -100% timeline) shares the auto-advance's
+      // direction, so once its forward speed falls to the speed the rail will resume
+      // at, the two are indistinguishable: switch there and the motion is continuous
+      // (no sub-auto-speed crawl, no snap back up to speed). Match that threshold to
+      // what applyRate() will pick next - the hover glide runs slower than full speed.
+      // A backward flick opposes the advance, so it still eases to the near-stop floor.
+      const width = tracks[0]?.offsetWidth ?? 0;
+      const resumeVelocity = width
+        ? (width / DURATION_MS) * (hovering ? HOVER_RATE : 1)
+        : 0;
+      const settled =
+        Math.abs(coastVelocity) < COAST_MIN_VELOCITY ||
+        (coastVelocity < 0 && -coastVelocity <= resumeVelocity);
+      if (settled) {
+        stopCoast();
+        applyRate();
+        return;
+      }
+      coastRaf = requestAnimationFrame(coastFrame);
+    };
+
+    const startCoast = (velocity: number) => {
+      coastVelocity = velocity;
+      coasting = true;
+      lastCoastTs = performance.now();
+      applyRate();
+      coastRaf = requestAnimationFrame(coastFrame);
+    };
+
+    // ---- Drag-to-slide (mouse and touch; touch-action: pan-y leaves vertical
+    //      pans to the browser, which then cancels the pointer stream) ----
+    const onDown = (e: PointerEvent) => {
+      if (e.isPrimary === false || e.button > 0) return;
+      // One drag pointer at a time: a second finger (or button) never hijacks a
+      // live session, so the `dragging` flag can't leak from one pointer to another.
+      if (session) return;
+      // Re-arm the one-shot click guard on every fresh press - a click-less touch
+      // drag leaves it set, and it must not swallow an unrelated later click.
+      suppressClick = false;
+      stopCoast(); // grabbing the rail catches it mid-coast
+      session = {
+        id: e.pointerId ?? -1,
+        startX: e.clientX,
+        lastX: e.clientX,
+        lastTs: performance.now(),
+        velocity: 0,
+        downAnchor: e.target instanceof Element ? e.target.closest("a") : null,
+      };
+      applyRate(); // a press freezes the rail - it is being held
+    };
+
+    const onDragMove = (e: PointerEvent) => {
+      if (!session || (e.pointerId ?? -1) !== session.id) return;
+      if (!dragging) {
+        if (Math.abs(e.clientX - session.startX) < DRAG_THRESHOLD_PX) return;
+        dragging = true;
+        root.classList.add("is-dragging");
+        // From here the gesture owns the pointer: moves keep arriving outside
+        // the rail, and the release click is swallowed below.
+        try {
+          root.setPointerCapture?.(session.id);
+        } catch {
+          // jsdom / a pointer that already left - dragging still works inside.
+        }
+      }
+      // The rail follows the finger: pointer left = timeline forward. lastX only
+      // advances past the threshold, so the first scrub snaps the rail to the
+      // finger's full travel and nothing is lost to the dead zone.
+      const dx = e.clientX - session.lastX;
+      scrubBy(-dx);
+      const now = performance.now();
+      const dt = now - session.lastTs;
+      if (dt > 0) {
+        const instant = dx / dt;
+        // EMA smooths jittery per-event deltas into the gesture's velocity; the
+        // first sample seeds it so short flicks are not underestimated.
+        session.velocity =
+          session.velocity === 0
+            ? instant
+            : session.velocity * 0.8 + instant * 0.2;
+      }
+      session.lastX = e.clientX;
+      session.lastTs = now;
+    };
+
+    const endDrag = (e: PointerEvent, canceled: boolean) => {
+      if (!session || (e.pointerId ?? -1) !== session.id) return;
+      const wasDragging = dragging;
+      const downAnchor = session.downAnchor;
+      // Only a release still in motion is a flick - a pointer that stalled and
+      // lifted wants the rail exactly where it was left.
+      const flick =
+        !canceled && performance.now() - session.lastTs < FLICK_MAX_STALL_MS
+          ? session.velocity
+          : 0;
+      session = null;
+      dragging = false;
+      root.classList.remove("is-dragging");
+      if (wasDragging && !canceled) {
+        // A real drag must not open the card under the pointer on release.
+        suppressClick = true;
+        // Chromium focuses the pressed card on pointerdown, and focus-within pauses
+        // the rail (globals.css, for keyboard users) - left alone, one drag would
+        // look like it killed the marquee. Release ONLY that press-focus, so a
+        // keyboard user's own focus elsewhere in the rail is never stolen (Firefox
+        // and Safari don't focus links on press, so activeElement stays theirs).
+        if (downAnchor && document.activeElement === downAnchor) {
+          (downAnchor as HTMLElement).blur();
+        }
+        if (Math.abs(flick) >= FLICK_MIN_VELOCITY) startCoast(flick);
+      }
+      applyRate();
+    };
+    const onUp = (e: PointerEvent) => endDrag(e, false);
+    const onCancel = (e: PointerEvent) => endDrag(e, true);
+
+    /** Swallow exactly one click after a real drag (capture phase, so the card's
+     *  navigation never sees it). Re-armed press-by-press in onDown. */
+    const onClickCapture = (e: MouseEvent) => {
+      if (!suppressClick) return;
+      // Keyboard / programmatic activations arrive with detail 0 and are never a
+      // drag artifact; only a real pointer click (detail > 0) is the one to eat. A
+      // click-less touch drag can leave the guard armed, and this keeps it from
+      // swallowing a later keyboard Enter/Space on a card.
+      if (e.detail === 0) return;
+      suppressClick = false;
+      e.preventDefault();
+      e.stopPropagation();
+    };
+
+    /** Links and images would start a native HTML5 drag a few px into the
+     *  gesture, stealing the pointer stream mid-drag. While a press is live the
+     *  gesture wins; selection is likewise a caret concern, not a grab. */
+    const onNativeDragStart = (e: Event) => {
+      if (session) e.preventDefault();
+    };
+    const onSelectStart = (e: Event) => {
+      if (session) e.preventDefault();
+    };
+
+    /** Trackpads emit the horizontal swipe people already aim at the rail. Only a
+     *  clearly horizontal gesture is claimed (and scrubs like a native scroller);
+     *  vertical wheel keeps scrolling the page. */
+    const onWheel = (e: WheelEvent) => {
+      const unit = e.deltaMode === 1 ? 16 : e.deltaMode === 2 ? root.clientWidth : 1;
+      if (Math.abs(e.deltaX) <= Math.abs(e.deltaY)) return;
+      e.preventDefault();
+      stopCoast();
+      applyRate();
+      scrubBy(e.deltaX * unit);
+    };
+
+    root.classList.add("is-draggable");
+    root.addEventListener("pointerdown", onDown, { passive: true });
+    root.addEventListener("pointermove", onDragMove, { passive: true });
+    // Release handling lives on window: if pointer capture is unavailable the
+    // pointer can be let go outside the rail, and the session must still close.
+    window.addEventListener("pointerup", onUp, { passive: true });
+    window.addEventListener("pointercancel", onCancel, { passive: true });
+    root.addEventListener("click", onClickCapture, true);
+    root.addEventListener("dragstart", onNativeDragStart);
+    root.addEventListener("selectstart", onSelectStart);
+    root.addEventListener("wheel", onWheel, { passive: false });
+
+    // ---------------------------------------------------------------------
+    // Glide-on-hover + JS spotlight: fine pointers only.
+    // ---------------------------------------------------------------------
+    //
+    // The stylesheet's :hover spotlight (dim every card, keep the hovered one
+    // lit) reads the right card only while the rail is paused - the no-JS /
+    // coarse-pointer fallback. Here the rail keeps GLIDING under a possibly-
+    // still pointer, and CSS :hover does not re-evaluate when content moves
+    // under a motionless cursor: it sticks to whatever card was under the
+    // cursor when it stopped, so that card stays lit long after it has glided
+    // away. With .js-hover-active set, globals.css ignores :hover and follows
+    // the .is-hovered card we re-resolve below every frame.
     const pointer = { x: -1, y: -1 };
-    let inside = false;
     let raf = 0;
     let lit: Element | null = null;
 
@@ -117,8 +376,8 @@ export function WorkMarquee({ items }: { items: CaseStudy[] }) {
     // the lit card is always the one ACTUALLY under the cursor - tracking cards as
     // they slide beneath a still pointer, and dropping the highlight in the gaps.
     const sample = () => {
-      raf = inside ? requestAnimationFrame(sample) : 0;
-      if (!inside) return;
+      raf = hovering ? requestAnimationFrame(sample) : 0;
+      if (!hovering) return;
       const el = document.elementFromPoint(pointer.x, pointer.y);
       const card = el?.closest("a");
       setLit(card && root.contains(card) ? card : null);
@@ -128,34 +387,51 @@ export function WorkMarquee({ items }: { items: CaseStudy[] }) {
       window.dispatchEvent(new Event("lumako:hover-recheck"));
     };
 
-    const onMove = (e: PointerEvent) => {
+    const onHoverMove = (e: PointerEvent) => {
       pointer.x = e.clientX;
       pointer.y = e.clientY;
     };
     const enter = (e: PointerEvent) => {
-      onMove(e);
-      inside = true;
-      slow();
+      onHoverMove(e);
+      hovering = true;
+      applyRate();
       if (!raf) raf = requestAnimationFrame(sample);
     };
     const leave = () => {
-      inside = false;
-      full();
+      hovering = false;
+      applyRate();
       setLit(null);
       window.dispatchEvent(new Event("lumako:hover-recheck"));
     };
 
-    root.addEventListener("pointerenter", enter);
-    root.addEventListener("pointermove", onMove, { passive: true });
-    root.addEventListener("pointerleave", leave);
+    if (finePointer) {
+      root.classList.add("js-hover-active");
+      root.addEventListener("pointerenter", enter);
+      root.addEventListener("pointermove", onHoverMove, { passive: true });
+      root.addEventListener("pointerleave", leave);
+    }
+
     return () => {
-      root.removeEventListener("pointerenter", enter);
-      root.removeEventListener("pointermove", onMove);
-      root.removeEventListener("pointerleave", leave);
-      inside = false; // a frame already queued before teardown bails, never re-queues
-      if (raf) cancelAnimationFrame(raf);
-      setLit(null);
-      root.classList.remove("js-hover-active");
+      if (finePointer) {
+        root.removeEventListener("pointerenter", enter);
+        root.removeEventListener("pointermove", onHoverMove);
+        root.removeEventListener("pointerleave", leave);
+        hovering = false; // a frame already queued before teardown bails, never re-queues
+        if (raf) cancelAnimationFrame(raf);
+        setLit(null);
+        root.classList.remove("js-hover-active");
+      }
+      root.removeEventListener("pointerdown", onDown);
+      root.removeEventListener("pointermove", onDragMove);
+      window.removeEventListener("pointerup", onUp);
+      window.removeEventListener("pointercancel", onCancel);
+      root.removeEventListener("click", onClickCapture, true);
+      root.removeEventListener("dragstart", onNativeDragStart);
+      root.removeEventListener("selectstart", onSelectStart);
+      root.removeEventListener("wheel", onWheel);
+      stopCoast();
+      session = null;
+      root.classList.remove("is-draggable", "is-dragging");
     };
   }, []);
 

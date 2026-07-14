@@ -36,13 +36,17 @@ export function Hero() {
             {lines.map((line, i) => {
               const isLast = i === lastIdx;
               return (
-                // Each line slides up from beneath a clipping mask. The py/-my pair
-                // gives the tight leading-[0.85] caps clip headroom without changing
-                // the line rhythm. The marked last line overflows its box (the drawn
-                // circle), so once it settles into place we stop clipping it.
+                // Each line slides up from beneath a clipping mask. The pt/-mt and
+                // pb/-mb pairs give the tight leading-[0.85] caps clip headroom
+                // without changing the line rhythm (each pad + equal negative margin
+                // cancels). The top gets extra room (0.3em) because Cyrillic uppercase
+                // accents - the Ё diaeresis, the Й breve - rise ~0.22em above cap
+                // height and would otherwise be sliced by overflow-hidden. The marked
+                // last line overflows its box (the drawn circle), so once it settles
+                // into place we stop clipping it.
                 <span
                   key={line}
-                  className="block overflow-hidden py-[0.1em] -my-[0.1em]"
+                  className="block overflow-hidden pt-[0.3em] -mt-[0.3em] pb-[0.1em] -mb-[0.1em]"
                   style={isLast && revealed ? { overflow: "visible" } : undefined}
                 >
                   <motion.span
