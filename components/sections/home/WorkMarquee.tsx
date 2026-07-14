@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useRef } from "react";
+import { useEffect, useRef, useSyncExternalStore } from "react";
 import { WorkSlide } from "@/components/sections/work/WorkSlide";
 import type { CaseStudy } from "@/lib/content/types";
 
@@ -8,6 +8,31 @@ import type { CaseStudy } from "@/lib/content/types";
  *  the drag/wheel scrubbing below converts pointer pixels into this timeline. */
 const DURATION_MS = 45_000;
 const DURATION = `${DURATION_MS}ms`;
+/** Touch-primary devices (coarse pointer) opt out of the drag/scrub layer below - a
+ *  finger swipe should pan the page, not grab the rail. With no hand-scrubbing to
+ *  jump ahead, the ambient pass runs a bit quicker there so the full set of projects
+ *  comes round sooner. React owns this: `coarse` (below) drives the tracks' duration
+ *  reactively, so a re-render can never reset it back to DURATION. */
+const TOUCH_DURATION_MS = 30_000;
+const TOUCH_DURATION = `${TOUCH_DURATION_MS}ms`;
+
+/** SSR-safe `(pointer: coarse)` read, mirroring lib/useReducedMotion: `false` on the
+ *  server and the first client render so hydration matches, then the real value after
+ *  mount (one post-hydration re-render). matchMedia can be absent (jsdom), so every
+ *  read is guarded; the subscription also picks up a live pointer-type change. */
+const subscribeCoarse = (onChange: () => void) => {
+  if (typeof window === "undefined" || typeof window.matchMedia !== "function") {
+    return () => {};
+  }
+  const mql = window.matchMedia("(pointer: coarse)");
+  mql.addEventListener?.("change", onChange);
+  return () => mql.removeEventListener?.("change", onChange);
+};
+const getCoarse = () =>
+  typeof window !== "undefined" &&
+  typeof window.matchMedia === "function" &&
+  window.matchMedia("(pointer: coarse)").matches;
+const getServerCoarse = () => false;
 /** On hover the rail keeps gliding, slower so you can read it - not a dead stop.
  *  Why not slower: the render pipeline is smooth at any speed (steady fps, sub-pixel
  *  AA verified), but a near-stop crawl (<~10px/s) moves the detail-rich cover
@@ -52,9 +77,12 @@ const CELL = "marquee-cell me-5 shrink-0 md:me-8 w-[clamp(380px,46vw,920px)]";
  * when the first scrolls fully off, the identical clone has taken its place, so
  * the reset is seamless.
  *
- * The rail is also directly drivable - people instinctively try to swipe it, so
- * every such gesture works (.is-draggable in globals.css owns the touch-action /
- * cursor side). All of it scrubs the SAME keyframe animation via the Web
+ * On precise-pointer devices the rail is also directly drivable - people
+ * instinctively try to grab it, so every such gesture works (.is-draggable in
+ * globals.css owns the touch-action / cursor side). Touch-primary devices (coarse
+ * pointer) opt out of this scrub layer entirely - a finger swipe should pan the
+ * page, not fight the rail - and instead run the ambient pass a bit quicker
+ * (TOUCH_DURATION). Everything below scrubs the SAME keyframe animation via the Web
  * Animations API (seeking currentTime on both tracks), so the seamless -100%
  * loop, the compositor pipeline and the hover spotlight stay untouched:
  * - Drag (mouse or touch) past a small threshold grabs the rail 1:1; the press
@@ -81,6 +109,10 @@ const CELL = "marquee-cell me-5 shrink-0 md:me-8 w-[clamp(380px,46vw,920px)]";
  */
 export function WorkMarquee({ items }: { items: CaseStudy[] }) {
   const rootRef = useRef<HTMLDivElement>(null);
+  // Touch-primary devices render the quicker TOUCH_DURATION instead of DURATION.
+  // `false` on the server and the first client render (hydration-safe), then the real
+  // value after mount - the effect below reads the same query directly to gate drag.
+  const coarse = useSyncExternalStore(subscribeCoarse, getCoarse, getServerCoarse);
 
   useEffect(() => {
     const root = rootRef.current;
@@ -101,10 +133,22 @@ export function WorkMarquee({ items }: { items: CaseStudy[] }) {
     // (globals.css) - no animation to glide or scrub, so the JS layer stays off.
     if (window.matchMedia("(prefers-reduced-motion: reduce)").matches) return;
     const finePointer = window.matchMedia("(hover: hover)").matches;
+    // A coarse primary pointer means a touch-first device (phone / tablet). The
+    // drag/flick/wheel scrub below is for precise pointers only; hybrids that keep a
+    // fine primary pointer (touch laptops) still report `fine` and keep the gesture.
+    const coarsePointer = window.matchMedia("(pointer: coarse)").matches;
 
     const tracks = Array.from(
       root.querySelectorAll<HTMLElement>(".marquee-track"),
     );
+
+    // Touch devices: skip the entire scrub layer. Without `.is-draggable` the rail
+    // keeps its default touch-action, so a finger swipe pans the page instead of
+    // fighting the rail, and a horizontal swipe does nothing (there's no scrub to
+    // drive). The quicker TOUCH_DURATION is applied in render via `coarse`; here we
+    // just bail before wiring any listeners, so there's nothing to tear down and the
+    // bare return leaves no cleanup for this path.
+    if (coarsePointer) return;
 
     // ---------------------------------------------------------------------
     // Playback control, shared by the hover glide and the drag/coast layer.
@@ -440,7 +484,7 @@ export function WorkMarquee({ items }: { items: CaseStudy[] }) {
       <div className="flex w-max">
         <div
           className="marquee-track flex shrink-0"
-          style={{ animationDuration: DURATION }}
+          style={{ animationDuration: coarse ? TOUCH_DURATION : DURATION }}
         >
           {items.map((item) => (
             <div key={item.slug} className={CELL}>
@@ -450,7 +494,7 @@ export function WorkMarquee({ items }: { items: CaseStudy[] }) {
         </div>
         <div
           className="marquee-track flex shrink-0"
-          style={{ animationDuration: DURATION }}
+          style={{ animationDuration: coarse ? TOUCH_DURATION : DURATION }}
           data-marquee-clone="true"
           aria-hidden="true"
         >

@@ -292,8 +292,15 @@ body {
   animation-iteration-count: infinite;
   will-change: transform;
 }
-.group:hover .marquee-track {
-  animation-play-state: paused;
+/* Pause the rail on hover - hover-capable (fine pointer) devices only. On touch
+   (hover: none) a tap leaves a sticky :hover with no pointer-move to clear it, so
+   the rail would freeze on the tapped card until the next tap elsewhere; touch
+   devices keep the ambient scroll running instead. JS overrides this with an inline
+   play-state on fine pointers (WorkMarquee); this is the no-JS fallback. */
+@media (hover: hover) {
+  .group:hover .marquee-track {
+    animation-play-state: paused;
+  }
 }
 
 /* Pause the rail when a keyboard user focuses a card inside it */
@@ -313,34 +320,41 @@ body {
   transition: opacity 0.4s var(--ease-out-expo);
 }
 
-/* Hover spotlight: while the pointer is anywhere inside the rail, every card
-   recedes to 0.4 and only the card actually under the pointer stays full-colour -
-   no lift, no shadow. The dim rides the rail's OWN :hover, not "is a card lit":
-   the rail box is stationary (only the track translates beneath it), so its :hover
-   is an honest "pointer is in the section" flag with none of the sticky-:hover the
-   per-card hit-testing exists to fix. That keeps the rest dimmed over the gaps
-   between cards too - cursor in the white space lights nothing but holds the dim.
-   Dim and re-light are separate rules; the lit one wins on specificity (its :has()
-   argument adds a type, 0-4-1 vs 0-3-0), not source order.
+/* Hover spotlight (hover-capable / fine pointers only - see the @media wrapper):
+   while the pointer is anywhere inside the rail, every card recedes to 0.4 and only
+   the card actually under the pointer stays full-colour - no lift, no shadow. The
+   dim rides the rail's OWN :hover, not "is a card lit": the rail box is stationary
+   (only the track translates beneath it), so its :hover is an honest "pointer is in
+   the section" flag with none of the sticky-:hover the per-card hit-testing exists
+   to fix. That keeps the rest dimmed over the gaps between cards too - cursor in the
+   white space lights nothing but holds the dim. Dim and re-light are separate rules;
+   the lit one wins on specificity (its :has() argument adds a type, 0-4-1 vs 0-3-0),
+   not source order.
+
+   Touch devices (hover: none) opt out entirely: a tap leaves a sticky :hover that
+   would dim every card but the tapped one - and reveal its glyph - with no
+   pointer-move to clear it, so the spotlight only ever runs where a real hover exists.
 
    Two detection paths for WHICH card is live, because CSS :hover names the right
-   card only while the rail is still. No JS / reduced-motion / coarse pointer (no
-   .js-hover-active): the rail pauses on hover, so a card's own :hover is accurate.
-   Glide-on-hover (.js-hover-active, set by WorkMarquee): the rail keeps moving
-   under the pointer, where a card's :hover sticks to the card that WAS under the
-   cursor; JS re-hit-tests each frame and marks the live card .is-hovered instead. */
-.work-marquee:hover .marquee-cell {
-  opacity: 0.4;
-}
-.work-marquee:not(.js-hover-active) .marquee-cell:has(a:hover),
-.work-marquee.js-hover-active .marquee-cell:has(a.is-hovered) {
-  opacity: 1;
-}
+   card only while the rail is still. No-JS fine pointer (no .js-hover-active): the
+   rail pauses on hover, so a card's own :hover is accurate. Glide-on-hover
+   (.js-hover-active, set by WorkMarquee): the rail keeps moving under the pointer,
+   where a card's :hover sticks to the card that WAS under the cursor; JS re-hit-tests
+   each frame and marks the live card .is-hovered instead. */
+@media (hover: hover) {
+  .work-marquee:hover .marquee-cell {
+    opacity: 0.4;
+  }
+  .work-marquee:not(.js-hover-active) .marquee-cell:has(a:hover),
+  .work-marquee.js-hover-active .marquee-cell:has(a.is-hovered) {
+    opacity: 1;
+  }
 
-/* The corner "open" glyph rides the same spotlight - shown only on the live card. */
-.work-marquee:not(.js-hover-active) .marquee-cell:has(a:hover) .slide-cta,
-.work-marquee.js-hover-active .marquee-cell:has(a.is-hovered) .slide-cta {
-  opacity: 1;
+  /* The corner "open" glyph rides the same spotlight - shown only on the live card. */
+  .work-marquee:not(.js-hover-active) .marquee-cell:has(a:hover) .slide-cta,
+  .work-marquee.js-hover-active .marquee-cell:has(a.is-hovered) .slide-cta {
+    opacity: 1;
+  }
 }
 
 /* Work marquee: full-bleed auto-scroller. Clip the off-screen tracks on the X axis
