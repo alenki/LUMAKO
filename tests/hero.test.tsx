@@ -1,6 +1,7 @@
 import { describe, it, expect, beforeAll, vi } from "vitest";
 import { render } from "@testing-library/react";
 import { Hero } from "@/components/sections/home/Hero";
+import { copy } from "@/lib/content/copy";
 
 // jsdom lacks matchMedia (motion's useReducedMotion needs it).
 beforeAll(() => {
@@ -17,10 +18,13 @@ describe("Hero", () => {
   it("renders the full statement, the marked word, and both CTAs", () => {
     const { container, getByRole } = render(<Hero />);
 
+    // Data-driven: the statement lives in lib/content/copy.ts, so copy edits
+    // must not strand this test on stale strings.
     const h1 = container.querySelector("h1");
-    expect(h1?.textContent).toContain("Большинство");
-    expect(h1?.textContent).toContain("пролистывают.");
-    expect(h1?.textContent).toContain("нет");
+    copy.home.hero.lines.forEach((line) =>
+      expect(h1?.textContent).toContain(line),
+    );
+    expect(h1?.textContent).toContain(copy.home.hero.mark);
 
     const start = getByRole("link", { name: /начать проект/i });
     expect(start.getAttribute("href")).toBe("/contact");

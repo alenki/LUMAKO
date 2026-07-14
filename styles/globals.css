@@ -349,6 +349,29 @@ body {
   overflow-x: clip;
 }
 
+/* Direct manipulation (JS + motion allowed): the rail can be dragged, flicked and
+   horizontally wheel-scrolled - WorkMarquee sets .is-draggable when it wires this
+   up, so a JS-less page never advertises a gesture it cannot honor. pan-y keeps
+   vertical touch scrolling with the browser and hands horizontal swipes to the
+   drag code. The grab cursor only ever shows where the custom cursor is off (it
+   hides the native cursor on fine pointers). */
+.work-marquee.is-draggable {
+  /* pan-y keeps vertical touch scrolling with the browser and hands horizontal
+     swipes to the drag code; pinch-zoom keeps two-finger zoom (WCAG 1.4.4) working
+     over this full-bleed section instead of trapping it. */
+  touch-action: pan-y pinch-zoom;
+  cursor: grab;
+}
+.work-marquee.is-dragging,
+.work-marquee.is-dragging a {
+  cursor: grabbing;
+}
+/* Mid-gesture the press is a grab, not a caret - no text selection. */
+.work-marquee.is-dragging {
+  user-select: none;
+  -webkit-user-select: none;
+}
+
 /* Reduced motion: stop the scroll, drop the visual clone, and let the row be
    scrolled by hand so every project stays reachable. animation: none wins over
    the global reduced-motion duration override because it clears animation-name. */
