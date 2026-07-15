@@ -4,8 +4,8 @@ import { copy } from "@/lib/content/copy";
 describe("home hero copy", () => {
   const { hero } = copy.home;
 
-  it("has three non-empty statement lines", () => {
-    expect(hero.lines).toHaveLength(3);
+  it("has two non-empty statement lines", () => {
+    expect(hero.lines).toHaveLength(2);
     hero.lines.forEach((line) => expect(line.length).toBeGreaterThan(0));
   });
 

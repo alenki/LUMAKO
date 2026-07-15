@@ -8,6 +8,9 @@ export type ContactErrors = {
   name?: string;
   email?: string;
   message?: string;
+  // Legal consent (152-ФЗ) is a client-side submit gate, not part of the shared
+  // data validation - the form sets this, `validateContact` never does.
+  consent?: string;
 };
 
 export type ContactValidation = {

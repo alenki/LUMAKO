@@ -6,6 +6,7 @@ import { AnimatePresence, motion } from "motion/react";
 import { Field } from "@/components/ui/Field";
 import { Tag } from "@/components/ui/Tag";
 import { Button } from "@/components/ui/Button";
+import { Checkbox } from "@/components/ui/Checkbox";
 import {
   validateContact,
   type ContactErrors,
@@ -26,6 +27,7 @@ const WEB3FORMS_ACCESS_KEY =
 
 const budgets = copy.contact.budgets;
 const serviceOptions = copy.contact.serviceOptions;
+const consentCopy = copy.contact.consent;
 
 type ContactFormProps = {
   /** Lets the parent hide the page headline once the message is sent. */
@@ -41,6 +43,9 @@ export function ContactForm({ onSentChange }: ContactFormProps = {}) {
   const [selectedServices, setSelectedServices] = useState<string[]>([]);
   // Honeypot - hidden from people, irresistible to bots. Stays empty for humans.
   const [website, setWebsite] = useState("");
+  // 152-ФЗ consent gate - starts unchecked (Roskomnadzor requires an active
+  // affirmative action, never a pre-ticked box) and blocks submit until ticked.
+  const [consent, setConsent] = useState(false);
   const [errors, setErrors] = useState<ContactErrors>({});
   const [status, setStatus] = useState<Status>("idle");
   const [sendFailed, setSendFailed] = useState(false);
@@ -61,6 +66,7 @@ export function ContactForm({ onSentChange }: ContactFormProps = {}) {
     setMessage("");
     setBudget("");
     setSelectedServices([]);
+    setConsent(false);
     setErrors({});
     setSendFailed(false);
     setStatus("idle");
@@ -84,8 +90,14 @@ export function ContactForm({ onSentChange }: ContactFormProps = {}) {
     }
 
     const result = validateContact({ name, email, message });
-    if (!result.ok) {
-      setErrors(result.errors);
+    // Field validation + the legal consent gate share one error object so the
+    // summary message and inline markers surface either failure together.
+    const nextErrors: ContactErrors = { ...result.errors };
+    if (!consent) {
+      nextErrors.consent = copy.contact.consent.error;
+    }
+    if (Object.keys(nextErrors).length > 0) {
+      setErrors(nextErrors);
       setStatus("error");
       return;
     }
@@ -118,6 +130,8 @@ export function ContactForm({ onSentChange }: ContactFormProps = {}) {
           budget,
           // The old route took an array; Web3Forms wants flat fields, so join.
           services: selectedServices.join(", "),
+          // Record the 152-ФЗ consent alongside the submission for our own audit trail.
+          consent: "Согласие на обработку персональных данных получено",
         }),
       });
       const data = (await res.json().catch(() => ({}))) as {
@@ -287,6 +301,27 @@ export function ContactForm({ onSentChange }: ContactFormProps = {}) {
         required
         error={errors.message}
       />
+
+      <Checkbox
+        name="consent"
+        checked={consent}
+        onChange={setConsent}
+        error={errors.consent}
+      >
+        {consentCopy.lead}{" "}
+        <a
+          href={consentCopy.policyHref}
+          target="_blank"
+          rel="noopener noreferrer"
+          data-cursor
+          // Opening the policy must not toggle the checkbox this label wraps.
+          onClick={(e) => e.stopPropagation()}
+          className="font-medium text-fg underline decoration-line-strong underline-offset-4 transition-colors hover:decoration-fg"
+        >
+          {consentCopy.policyText}
+        </a>
+        .
+      </Checkbox>
 
       <div className="flex flex-wrap items-center gap-x-8 gap-y-4">
         <Button type="submit">

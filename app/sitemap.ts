@@ -29,5 +29,11 @@ function route(path: string, priority: number): MetadataRoute.Sitemap[number] {
 }
 
 export default function sitemap(): MetadataRoute.Sitemap {
-  return [route("", 1), route("/work", 0.9), route("/about", 0.8), route("/contact", 0.8)];
+  return [
+    route("", 1),
+    route("/work", 0.9),
+    route("/about", 0.8),
+    route("/contact", 0.8),
+    route("/privacy", 0.3),
+  ];
 }

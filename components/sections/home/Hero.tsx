@@ -29,10 +29,13 @@ export function Hero() {
       <div className="container-x relative z-10 flex flex-1 flex-col">
         {/* headline fills the available height */}
         <div className="flex flex-1 flex-col justify-center">
-          {/* Type fits one line at >=1964px (the locked 2k reference). Below that the
-              widest line ("MOST WORK GETS") would wrap, so we shrink it a touch and hold
-              it on one line. True mobile (<=760px) keeps the base size and wraps as before. */}
-          <h1 className="font-display font-extrabold uppercase leading-[0.85] max-[760px]:leading-[0.9] tracking-[-0.05em] text-[length:clamp(46px,10.8vw,210px)] max-[1963px]:text-[length:clamp(46px,9.8vw,210px)] max-[1963px]:whitespace-nowrap max-[760px]:text-[length:clamp(30px,9vw,210px)] max-[760px]:whitespace-normal">
+          {/* Two wide lines - the binding one is "ПОДНИМАЕТ ИМЯ." (~9.17em). The type is
+              WIDTH-driven: 9.6vw holds that line at ~0.88 of the content box (a ~5-6% gutter
+              on every screen), capped at 210px so ultrawide (>=~2190px) stops growing. It
+              stays nowrap down to 760px so the two lines never break; true mobile (<=760px)
+              switches to whitespace-normal at a smaller clamp so the long line can wrap on
+              the narrowest phones instead of overflowing. */}
+          <h1 className="font-display font-extrabold uppercase leading-[0.85] max-[760px]:leading-[0.9] tracking-[-0.05em] whitespace-nowrap text-[length:clamp(46px,9.6vw,210px)] max-[760px]:whitespace-normal max-[760px]:text-[length:clamp(30px,9vw,210px)]">
             {lines.map((line, i) => {
               const isLast = i === lastIdx;
               return (
