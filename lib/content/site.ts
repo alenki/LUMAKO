@@ -11,9 +11,9 @@ export const site = {
     { label: "Контакты", href: "/contact" },
   ],
   socials: [
-    { label: "Instagram", href: "https://instagram.com" },
-    { label: "LinkedIn", href: "https://linkedin.com" },
-    { label: "WhatsApp", href: "https://wa.me/" },
+    { label: "Instagram", href: "https://instagram.com/lumako.ru" },
+    { label: "Telegram", href: "https://t.me/lumakostudio" },
+    { label: "WhatsApp", href: "https://wa.me/79289996640" },
   ],
 } as const;
 
