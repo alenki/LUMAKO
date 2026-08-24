@@ -28,7 +28,7 @@ export interface CaseStudy {
   disciplines: Discipline[];
   /** Brand tone used as the load-in color behind the cover image. */
   accent: string;
-  /** Real cover image served from /public, e.g. "/work/balance-coffee.webp". */
+  /** Real cover image served from /public, e.g. "/work/harmony-coffee.webp". */
   cover: string;
   /** CSS object-position for the cover crop (defaults to "center"). */
   coverPosition?: string;

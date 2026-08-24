@@ -2,16 +2,16 @@ import type { CaseStudy, Discipline } from "./types";
 
 export const work: CaseStudy[] = [
   {
-    slug: "balance-coffee",
-    title: "Balance Coffee",
+    slug: "harmony-coffee",
+    title: "Harmony Coffee",
     client: "Спешелти-кофе и обжарка",
     sector: "Концепт-сайт",
     year: "2025",
     disciplines: ["Веб", "Концепт"],
     accent: "#a1957e",
-    cover: "/work/balance-coffee.webp",
+    cover: "/work/harmony-coffee.webp",
     coverPosition: "center",
-    href: "https://balance-coffee.ru/",
+    href: "https://harmonycoffee.netlify.app/",
     featured: true,
     summary:
       "Тёплый редакционный сайт для спешелти-кофейни и обжарщика - меню, дейли и вакансии, с двуязычным переключателем RU/EN.",

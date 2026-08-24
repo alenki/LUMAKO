@@ -4,7 +4,7 @@ import { CoverPanel } from "@/components/ui/CoverPanel";
 import type { CaseStudy } from "@/lib/content/types";
 import { cn } from "@/lib/utils";
 
-/** Uniform card shape - the Balance cover's ratio. Wider covers center-crop to fit. */
+/** Uniform card shape - the Harmony cover's ratio. Wider covers center-crop to fit. */
 const CARD_RATIO = 1916 / 1263;
 
 type Props = {

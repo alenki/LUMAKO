@@ -15,16 +15,16 @@ vi.mock("next/image", () => ({
 }));
 
 const ITEM: CaseStudy = {
-  slug: "balance-coffee",
-  title: "Balance Coffee",
+  slug: "harmony-coffee",
+  title: "Harmony Coffee",
   client: "Specialty coffee & roaster",
   sector: "Concept site",
   year: "2025",
   disciplines: ["Веб", "Бренд"],
   accent: "#a1957e",
-  cover: "/work/balance-coffee.webp",
+  cover: "/work/harmony-coffee.webp",
   coverPosition: "center",
-  href: "https://balancecoffee.netlify.app/",
+  href: "https://harmonycoffee.netlify.app/",
   featured: true,
   summary: "A warm, editorial site.",
 };
@@ -42,7 +42,7 @@ describe("WorkSlide", () => {
 
   it("shows the project name and a chip per discipline (no client/sector or year)", () => {
     const { container } = render(<WorkSlide item={ITEM} />);
-    expect(container.querySelector("h3")?.textContent).toBe("Balance Coffee");
+    expect(container.querySelector("h3")?.textContent).toBe("Harmony Coffee");
     const chips = [...container.querySelectorAll("span")].map((s) => s.textContent);
     expect(chips).toContain("Веб");
     expect(chips).toContain("Бренд");
