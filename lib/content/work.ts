@@ -11,7 +11,7 @@ export const work: CaseStudy[] = [
     accent: "#a1957e",
     cover: "/work/harmony-coffee.webp",
     coverPosition: "center",
-    href: "https://harmonycoffee.netlify.app/",
+    href: "https://lumako.ru/harmonycoffee",
     featured: true,
     summary:
       "Тёплый редакционный сайт для спешелти-кофейни и обжарщика - меню, дейли и вакансии, с двуязычным переключателем RU/EN.",
@@ -26,7 +26,7 @@ export const work: CaseStudy[] = [
     accent: "#e8261f",
     cover: "/work/master-auto.webp",
     coverPosition: "top",
-    href: "https://masterauto-07.ru/",
+    href: "https://lumako.ru/masterauto",
     featured: true,
     summary:
       "Смелый одностраничный сайт для студии тюнинга и детейлинга - оклейка, тонировка, PPF, керамика и тюнинг, в один тап от контакта.",
@@ -71,7 +71,7 @@ export const work: CaseStudy[] = [
     accent: "#1a1a1a",
     cover: "/work/okaraf.webp",
     coverPosition: "top",
-    href: "https://okaraf.netlify.app/",
+    href: "https://lumako.ru/okaraf",
     featured: false,
     summary:
       "Монохромное портфолио разработчика - текучий мраморный hero и кейсы проектов, создано, чтобы привлекать клиентов, которым важен дизайн.",
