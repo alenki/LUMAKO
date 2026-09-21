@@ -12,6 +12,12 @@ const eslintConfig = defineConfig([
     "out/**",
     "build/**",
     "next-env.d.ts",
+    // Generated / vendored output, none of it source: the OpenNext + wrangler
+    // build artifacts, and public/ (which ships the prebuilt bloomroastery
+    // Vite bundle as a static asset).
+    ".open-next/**",
+    ".wrangler/**",
+    "public/**",
   ]),
 ]);
 
