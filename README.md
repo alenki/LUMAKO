@@ -105,19 +105,3 @@ docs/superpowers/  # design specs + implementation plans
     `--color-fg-body` `#3f3f3f` (body) → `--color-fg-muted` `#737373` (labels / meta) →
     `--color-fg-dim` `#a1a1a1` (fine print).
 
----
-
-## Aesthetic discipline (project north star)
-
-The brand system is the source of truth - see `AGENTS.md` for the full type & color spec. The
-short version, so the site never drifts toward generic "AI slop":
-
-- **One deliberate type family** - Inter (variable), weighted not thin, wired as `--font-grotesk`
-  → `--font-display` / `--font-sans`. Inter is the intentional Lumako brand font, not a default to
-  avoid; Geist Mono is code / ledger only.
-- **One accent, used minimally** - lume gold (`#D49A2E`). No second accent, no purple-gradient or
-  cookie-cutter defaults, no timid evenly-distributed palettes.
-- **Motion as signature** - favour one well-orchestrated, staggered page load over scattered
-  micro-interactions, and keep every motion `prefers-reduced-motion` aware.
-- **Atmosphere over flat fills** - the light monochrome surface plus the single self-drawing gold
-  marker carry the design; reach for depth and craft, not stock effects.
